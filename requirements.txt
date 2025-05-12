@@ -1,0 +1,29 @@
+# Core dependencies
+numpy>=1.22.0
+scipy>=1.8.0
+pandas>=1.4.0
+
+# Computer Vision
+opencv-python>=4.5.0
+Pillow>=9.0.0
+
+# API Framework
+fastapi>=0.95.0
+uvicorn[standard]>=0.20.0
+python-multipart>=0.0.5
+pydantic>=1.9.0
+
+# Machine Learning
+ultralytics>=8.0.0  # YOLOv8
+tensorflow>=2.13.0  # Optional, uncomment if needed
+# torch>=2.0.0  # Optional, uncomment if needed for PyTorch
+
+# Utilities
+python-dotenv>=0.20.0
+requests>=2.27.0
+tqdm>=4.64.0
+
+# Development tools
+pytest>=7.0.0  # For testing
+black>=22.0.0  # For code formatting
+flake8>=4.0.0  # For linting
