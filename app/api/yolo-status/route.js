@@ -7,6 +7,7 @@ import fs from 'fs';
 // Keep track of the YOLOv8 API process
 let yoloProcess = null;
 let isStarting = false;
+const YOLO_VERSION = 'v8'; // Explicitly set YOLO version
 
 // Function to get the current port from the port file
 const getApiPort = () => {
@@ -78,28 +79,34 @@ export async function GET() {
     const YOLO_URL = `http://localhost:${port}`;
     
     try {
-      const response = await axios.get(YOLO_URL, { timeout: 2000 });
+      // Check not just if API is running but also if model is loaded
+      const response = await axios.get(`${YOLO_URL}/model-status`, { timeout: 2000 });
       return NextResponse.json({
-        status: 'running',
-        message: response.data
+        status: response.data.model_loaded ? 'running' : 'model_missing',
+        message: response.data.status,
+        yoloVersion: YOLO_VERSION,
+        modelStatus: response.data
       });
     } catch (error) {
       if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT') {
         return NextResponse.json({
           status: 'stopped',
-          message: 'YOLOv8 API is not running'
+          message: 'YOLOv8 API is not running',
+          yoloVersion: YOLO_VERSION
         });
       }
       
       return NextResponse.json({
         status: 'error',
-        message: `Error connecting to API: ${error.message}`
+        message: `Error connecting to API: ${error.message}`,
+        yoloVersion: YOLO_VERSION
       });
     }
   } catch (error) {
     return NextResponse.json({
       status: 'error',
-      message: `Unknown error: ${error.message}`
+      message: `Unknown error: ${error.message}`,
+      yoloVersion: YOLO_VERSION
     }, { status: 500 });
   }
 }
@@ -114,29 +121,34 @@ export async function POST(request) {
       if (started) {
         return NextResponse.json({
           status: 'started',
-          message: 'YOLOv8 API has been started'
+          message: 'YOLOv8 API has been started',
+          yoloVersion: YOLO_VERSION
         });
       } else {
         return NextResponse.json({
           status: 'error',
-          message: 'Failed to start YOLOv8 API'
+          message: 'Failed to start YOLOv8 API',
+          yoloVersion: YOLO_VERSION
         }, { status: 500 });
       }
     } else if (isStarting) {
       return NextResponse.json({
         status: 'starting',
-        message: 'YOLOv8 API is already starting'
+        message: 'YOLOv8 API is already starting',
+        yoloVersion: YOLO_VERSION
       });
     } else {
       return NextResponse.json({
         status: 'running',
-        message: 'YOLOv8 API is already running'
+        message: 'YOLOv8 API is already running',
+        yoloVersion: YOLO_VERSION
       });
     }
   } catch (error) {
     return NextResponse.json({
       status: 'error',
-      message: `Error starting YOLOv8 API: ${error.message}`
+      message: `Error starting YOLOv8 API: ${error.message}`,
+      yoloVersion: YOLO_VERSION
     }, { status: 500 });
   }
 }

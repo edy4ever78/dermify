@@ -12,6 +12,7 @@ import FormData from 'form-data';
 let YOLO_URL = 'http://localhost:5000'; // Default, will be updated dynamically
 let yoloProcess = null;
 let isStarting = false;
+const YOLO_VERSION = 'v8';
 
 // Function to get the current port from the port file
 const getApiPort = () => {
@@ -162,7 +163,12 @@ async function uploadImageForAnalysis(formData) {
       console.error(`Error removing temporary file: ${cleanupError}`);
     }
     
-    return response.data;
+    // Add YOLO version info to the response
+    const results = response.data;
+    results.yoloVersion = YOLO_VERSION;
+    results.api = 'local';
+    
+    return results;
   } catch (error) {
     console.error(`Error in uploadImageForAnalysis: ${error}`);
     throw error;
@@ -180,20 +186,26 @@ export async function GET() {
     const response = await axios.get(YOLO_URL, { timeout: 2000 });
     return NextResponse.json({
       status: 'running',
-      message: response.data
+      message: response.data,
+      yoloVersion: YOLO_VERSION,
+      api: 'local'
     });
   } catch (error) {
     if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT') {
       return NextResponse.json({
         status: 'stopped',
-        message: 'YOLOv8 API is not running'
+        message: 'YOLOv8 API is not running',
+        yoloVersion: YOLO_VERSION,
+        api: 'local'
       });
     }
     
     console.error('Error checking API status:', error.message);
     return NextResponse.json({
       status: 'error',
-      message: `Error connecting to API: ${error.message}`
+      message: `Error connecting to API: ${error.message}`,
+      yoloVersion: YOLO_VERSION,
+      api: 'local'
     });
   }
 }
@@ -211,13 +223,17 @@ export async function PUT() {
     
     return NextResponse.json({
       status: 'starting',
-      message: 'YOLOv8 API is starting'
+      message: 'YOLOv8 API is starting',
+      yoloVersion: YOLO_VERSION,
+      api: 'local'
     });
   } catch (error) {
     console.error('Error starting API:', error);
     return NextResponse.json({
       status: 'error',
-      message: error.message
+      message: error.message,
+      yoloVersion: YOLO_VERSION,
+      api: 'local'
     }, { status: 500 });
   }
 }
@@ -238,7 +254,12 @@ export async function POST(request) {
     // Upload the image and get analysis results
     const results = await uploadImageForAnalysis(formData);
     
-    return NextResponse.json(results);
+    return NextResponse.json({
+      status: 'success',
+      results,
+      yoloVersion: YOLO_VERSION,
+      api: 'local'
+    });
   } catch (error) {
     console.error('Error analyzing image:', error);
     
@@ -250,7 +271,9 @@ export async function POST(request) {
     
     return NextResponse.json({
       status: 'error',
-      message: errorMessage
+      message: errorMessage,
+      yoloVersion: YOLO_VERSION,
+      api: 'local'
     }, { status: 500 });
   }
 }

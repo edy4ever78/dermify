@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
+import ChatbotIcon from '@/components/ChatbotIcon';
 import { useLoading } from '@/context/loading-context';
 import { useRouter } from 'next/navigation';
 
@@ -271,6 +272,9 @@ export default function Home() {
             </div>
           </div>
         </footer>
+
+        {/* Add ChatbotIcon component */}
+        <ChatbotIcon />
       </main>
     </>
   );

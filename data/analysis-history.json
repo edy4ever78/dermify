@@ -143,5 +143,234 @@
     ],
     "userId": "demo_token_for_testing",
     "hasAnnotatedImage": true
+  },
+  {
+    "id": "fabcb948-f978-4111-afbe-582d91d91f12",
+    "date": "2025-05-14T09:07:47.091Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "demo_token_for_testing",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "72c0abd5-508f-4a20-af30-d7874dcbacfc",
+    "date": "2025-05-14T09:35:45.307Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "anonymous",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "8772c92e-7260-438a-ab42-065330808518",
+    "date": "2025-05-14T09:42:06.615Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "demo_token_for_testing",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "eb5bdb63-5b0c-452e-9869-e71277478dd2",
+    "date": "2025-05-14T11:59:05.114Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "demo_token_for_testing",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "617e471f-f932-4556-9cbf-603567e9d58a",
+    "date": "2025-05-14T11:59:09.065Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "demo_token_for_testing",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "cdfdb19d-8997-466b-b292-673b34cea08a",
+    "date": "2025-05-14T11:59:10.552Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "demo_token_for_testing",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "8610a6b6-d251-41e3-b3fe-7b8ef87fe0a7",
+    "date": "2025-05-14T11:59:15.938Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "demo_token_for_testing",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "186e0c90-2444-44af-ac56-e424e91eaad6",
+    "date": "2025-05-14T12:26:04.738Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "demo_token_for_testing",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "2651492e-fb18-4a24-b669-6d2151b51482",
+    "date": "2025-05-17T09:17:57.720Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "anonymous",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "4dbecc74-a42f-4719-935e-384184d8e96b",
+    "date": "2025-05-17T09:22:10.659Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "anonymous",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "dd5e6066-b0bc-4d31-ac5e-743e015de236",
+    "date": "2025-05-17T09:22:34.721Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "anonymous",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "0c21081a-1c43-4417-9c0d-87fd9d327a76",
+    "date": "2025-05-17T09:38:10.038Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "edy4ever6@gmai.com",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "13f132d9-37a5-4fd0-bf23-986422e6aae0",
+    "date": "2025-05-17T09:42:02.724Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "edy4ever6@gmai.com",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "0fa9a00a-507f-431b-b1f9-8a27431bb15b",
+    "date": "2025-05-17T09:42:29.908Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "edy4ever6@gmai.com",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "886902db-4027-4a84-9363-fb527734d8b0",
+    "date": "2025-05-17T09:42:34.912Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "edy4ever6@gmai.com",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "5c3e68c0-0a42-4ada-a813-fa33e6f826e6",
+    "date": "2025-05-17T09:42:44.064Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "edy4ever6@gmai.com",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "32ddf3f2-bb15-483d-b98d-26364753035d",
+    "date": "2025-05-17T09:43:55.341Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "edy4ever6@gmai.com",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "c1fb470f-743d-4b55-8d6e-7f4500a1ec32",
+    "date": "2025-05-17T09:46:22.430Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "normal skin"
+    ],
+    "userId": "edy4ever6@gmai.com",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "877af294-e0b9-4525-b5a6-8e76bf15ff4d",
+    "date": "2025-05-17T09:46:32.824Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "normal skin"
+    ],
+    "userId": "edy4ever6@gmai.com",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "9609c374-804b-47e4-ab95-90143208e2e6",
+    "date": "2025-05-17T09:46:38.509Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "edy4ever6@gmai.com",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "e4d6287a-0ed9-4069-9077-83704c5284e4",
+    "date": "2025-05-17T09:47:07.395Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "edy4ever6@gmai.com",
+    "hasAnnotatedImage": true
+  },
+  {
+    "id": "08c34ed8-dfed-4bba-942d-00e87e3c0dcb",
+    "date": "2025-05-17T09:47:10.927Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "normal skin"
+    ],
+    "userId": "edy4ever6@gmai.com",
+    "hasAnnotatedImage": true
+  },
+  {
+    "date": "2025-05-17T20:31:06.644Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "t@g.c",
+    "hasAnnotatedImage": true
   }
 ]

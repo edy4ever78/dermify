@@ -13,6 +13,8 @@ export default function SkinAnalysis() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loadingAuth, setLoadingAuth] = useState(true);
   const [previousAnalyses, setPreviousAnalyses] = useState([]);
+  const [modelStatus, setModelStatus] = useState(null);
+  const [checkingModel, setCheckingModel] = useState(false);
   const fileInputRef = useRef(null);
   const router = useRouter();
 
@@ -20,9 +22,11 @@ export default function SkinAnalysis() {
   useEffect(() => {
     const checkUserLogin = async () => {
       try {
+        const authToken = localStorage.getItem('authToken');
         const response = await fetch('/api/auth/check-auth', {
           method: 'GET',
           headers: {
+            'Authorization': authToken || '',
             'Content-Type': 'application/json',
           },
         });
@@ -44,11 +48,38 @@ export default function SkinAnalysis() {
 
     checkUserLogin();
   }, [router]);
+  
+  // Check YOLO model status when page loads
+  useEffect(() => {
+    const checkYoloStatus = async () => {
+      try {
+        setCheckingModel(true);
+        const response = await fetch('/api/yolo-status', {
+          method: 'GET',
+        });
+        
+        const data = await response.json();
+        setModelStatus(data);
+        
+        if (data.status === 'model_missing') {
+          setError("The skin analysis model is not properly loaded. The system will attempt to use alternative analysis methods.");
+        }
+      } catch (e) {
+        console.error('Error checking YOLO status:', e);
+        setError("Could not verify skin analysis system status. Analysis may be limited.");
+      } finally {
+        setCheckingModel(false);
+      }
+    };
+    
+    checkYoloStatus();
+  }, []);
 
-  // Fetch previous analyses from Redis
+  // Fetch previous analyses
   const fetchPreviousAnalyses = async () => {
     try {
-      const response = await fetch('/api/skin-analysis/history', {
+      const userId = JSON.parse(localStorage.getItem('user'))?.email || 'anonymous';
+      const response = await fetch(`/api/skin-analysis/history?userId=${encodeURIComponent(userId)}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -113,7 +144,7 @@ export default function SkinAnalysis() {
         
         const statusData = await statusResponse.json();
         
-        if (statusData.status === 'stopped') {
+        if (statusData.status === 'stopped' || statusData.status === 'error') {
           console.log('YOLOv8 API is not running, starting it...');
           await fetch('/api/yolo-status', {
             method: 'POST',
@@ -121,6 +152,11 @@ export default function SkinAnalysis() {
           
           // Wait a moment for the API to start
           await new Promise(resolve => setTimeout(resolve, 5000));
+        }
+        
+        // Check if model is loaded
+        if (statusData.status === 'model_missing') {
+          console.log('YOLOv8 model is missing, analysis may be limited');
         }
       } catch (e) {
         console.error('Error checking/starting YOLOv8 API:', e);
@@ -135,13 +171,17 @@ export default function SkinAnalysis() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ image: base64Image }),
+        body: JSON.stringify({ image: imagePreview }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Analysis failed');
+        if (data.apiStatus && !data.apiStatus.modelLoaded) {
+          throw new Error("The skin analysis model could not be loaded. Please try again later.");
+        } else {
+          throw new Error(data.message || 'Analysis failed');
+        }
       }
 
       // Ensure skinConditions are unique - extra safety check on client side
@@ -153,12 +193,18 @@ export default function SkinAnalysis() {
       
       // Save the analysis to history
       try {
+        const user = JSON.parse(localStorage.getItem('user')) || {};
+        const userId = user.email || 'anonymous';
+        
         await fetch('/api/skin-analysis/history', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ analysis: data }),
+          body: JSON.stringify({ 
+            analysis: data,
+            userId: userId
+          }),
         });
       } catch (historyError) {
         console.error('Failed to save analysis to history:', historyError);
@@ -259,6 +305,25 @@ export default function SkinAnalysis() {
             <p className="mt-3 max-w-2xl mx-auto text-lg text-gray-600 dark:text-gray-400">
               Upload a clear, well-lit photo of your face to receive personalized skincare recommendations based on your skin conditions.
             </p>
+            
+            {/* Show model status warning if there are issues */}
+            {modelStatus && modelStatus.status === 'model_missing' && (
+              <div className="mt-4 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-900 rounded-md p-4 text-yellow-700 dark:text-yellow-400">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium">Limited Analysis Mode</h3>
+                    <div className="mt-2 text-sm">
+                      <p>The skin analysis model is not properly loaded. Analysis results may be limited.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="mb-8">

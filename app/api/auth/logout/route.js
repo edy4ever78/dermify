@@ -1,10 +1,8 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 
 export async function POST() {
-  // Clear session cookie
-  const cookie = cookies();
-  cookie.delete('session');
-
+  // In a token-based auth system, the client is responsible for removing the token
+  // The server doesn't need to do anything for logout
+  
   return NextResponse.json({ success: true });
 }

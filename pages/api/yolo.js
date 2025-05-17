@@ -9,6 +9,7 @@ import { Readable } from 'stream';
 let FLASK_URL = 'http://localhost:5000'; // Default, will be updated dynamically
 let flaskProcess = null;
 let isStarting = false;
+const YOLO_VERSION = 'v8'; // Explicitly set YOLO version
 
 // Function to get the current port from the port file
 const getApiPort = () => {
@@ -111,20 +112,23 @@ export default async function handler(req, res) {
         const response = await axios.get(FLASK_URL, { timeout: 2000 });
         return res.status(200).json({
           status: 'running',
-          message: response.data
+          message: response.data,
+          yoloVersion: YOLO_VERSION
         });
       } catch (error) {
         if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT') {
           return res.status(200).json({
             status: 'stopped',
-            message: 'YOLOv8 API is not running'
+            message: 'YOLOv8 API is not running',
+            yoloVersion: YOLO_VERSION
           });
         }
         
         console.error('Error in GET handler:', error.message);
         return res.status(200).json({
           status: 'error',
-          message: `Error connecting to API: ${error.message}`
+          message: `Error connecting to API: ${error.message}`,
+          yoloVersion: YOLO_VERSION
         });
       }
       

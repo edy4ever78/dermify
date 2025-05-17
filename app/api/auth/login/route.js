@@ -1,6 +1,5 @@
 import { validateCredentials } from '@/lib/redis';
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 
 export async function POST(req) {
   try {
@@ -24,17 +23,14 @@ export async function POST(req) {
       );
     }
 
-    // Set session cookie
-    const cookie = cookies();
-    cookie.set('session', JSON.stringify({ email: user.email }), { 
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24 * 7, // 1 week
-      path: '/',
-    });
+    // Generate a simple token (in a real app, use JWT or other secure token method)
+    const authToken = Buffer.from(`${user.email}-${Date.now()}`).toString('base64');
 
-    // Return user data (without sensitive info)
-    return NextResponse.json({ user });
+    // Return user data along with the token
+    return NextResponse.json({ 
+      user,
+      token: authToken
+    });
   } catch (error) {
     console.error('Login error:', error);
     

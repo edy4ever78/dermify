@@ -1,6 +1,5 @@
 import { saveUser, getUserByEmail } from '@/lib/redis';
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 
 export async function POST(req) {
   try {
@@ -51,17 +50,14 @@ export async function POST(req) {
       skinConcerns: [] // Default empty skin concerns
     });
 
-    // Set session cookie
-    const cookie = cookies();
-    cookie.set('session', JSON.stringify({ email: newUser.email }), { 
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24 * 7, // 1 week
-      path: '/',
-    });
+    // Generate a token for the new user
+    const authToken = Buffer.from(`${newUser.email}-${Date.now()}`).toString('base64');
 
     // Return user data (without password)
-    return NextResponse.json({ user: newUser });
+    return NextResponse.json({ 
+      user: newUser,
+      token: authToken
+    });
   } catch (error) {
     console.error('Signup error:', error);
     

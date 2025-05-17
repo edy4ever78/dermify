@@ -1,4 +1,3 @@
-import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
@@ -44,20 +43,19 @@ function writeHistory(history) {
   }
 }
 
-export async function GET() {
+export async function GET(request) {
   try {
-    // Get user information from cookie
-    const cookieStore = cookies();
-    const userCookie = cookieStore.get('auth_token');
+    // Get user ID from request header or query parameter
+    const searchParams = request.nextUrl.searchParams;
+    const userId = searchParams.get('userId') || 'anonymous';
     
     // Read all history
     const allHistory = readHistory();
     
-    // If we have a user cookie, filter by user ID
-    // Otherwise, return all history (for demo purposes)
+    // Filter history by user ID if provided
     let userHistory = allHistory;
-    if (userCookie && userCookie.value) {
-      userHistory = allHistory.filter(item => item.userId === userCookie.value);
+    if (userId !== 'anonymous') {
+      userHistory = allHistory.filter(item => item.userId === userId);
     }
     
     // Return the history
@@ -79,9 +77,8 @@ export async function POST(request) {
       return NextResponse.json({ error: 'No analysis data provided' }, { status: 400 });
     }
     
-    // Get user information from cookie
-    const cookieStore = cookies();
-    const userCookie = cookieStore.get('auth_token');
+    // Get user ID from the request body instead of cookies
+    const userId = data.userId || 'anonymous';
     
     // Ensure skin conditions are unique
     const skinConditions = data.analysis.skinConditions ? 
@@ -93,7 +90,7 @@ export async function POST(request) {
       date: data.analysis.date || new Date().toISOString(),
       skinType: data.analysis.skinType,
       skinConditions: skinConditions,
-      userId: userCookie ? userCookie.value : 'anonymous',
+      userId: userId,
       // Don't store the full annotated image in history to save space
       hasAnnotatedImage: !!data.analysis.annotatedImage
     };

@@ -26,14 +26,20 @@ export function AuthProvider({ children }) {
       try {
         // First check localStorage for faster loading experience
         const storedUser = localStorage.getItem('user');
-        if (storedUser) {
+        const authToken = localStorage.getItem('authToken');
+        
+        if (storedUser && authToken) {
           setUser(JSON.parse(storedUser));
           setIsLoading(false);
           return;
         }
 
         // If not found in localStorage, validate session with server
-        const response = await fetch('/api/auth/session');
+        const response = await fetch('/api/auth/session', {
+          headers: {
+            'Authorization': authToken || ''
+          }
+        });
         const data = await response.json();
         
         if (data.user) {
@@ -44,12 +50,14 @@ export function AuthProvider({ children }) {
           setUser(null);
           localStorage.removeItem('user');
           localStorage.removeItem('userEmail');
+          localStorage.removeItem('authToken');
         }
       } catch (error) {
         console.error('Authentication check error:', error);
         setUser(null);
         localStorage.removeItem('user');
         localStorage.removeItem('userEmail');
+        localStorage.removeItem('authToken');
       } finally {
         setIsLoading(false);
       }
@@ -78,6 +86,7 @@ export function AuthProvider({ children }) {
       setUser(data.user);
       localStorage.setItem('user', JSON.stringify(data.user));
       localStorage.setItem('userEmail', data.user.email);
+      localStorage.setItem('authToken', data.token);
       
       return data.user;
     } catch (error) {
@@ -108,6 +117,7 @@ export function AuthProvider({ children }) {
       setUser(data.user);
       localStorage.setItem('user', JSON.stringify(data.user));
       localStorage.setItem('userEmail', data.user.email);
+      localStorage.setItem('authToken', data.token);
       
       return data.user;
     } catch (error) {
@@ -129,6 +139,7 @@ export function AuthProvider({ children }) {
       setUser(null);
       localStorage.removeItem('user');
       localStorage.removeItem('userEmail');
+      localStorage.removeItem('authToken');
       router.push('/signin');
     } catch (error) {
       console.error('Logout error:', error);

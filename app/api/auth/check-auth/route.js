@@ -1,19 +1,22 @@
 import { getUserByEmail } from '@/lib/redis';
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 
-export async function GET() {
+export async function GET(request) {
   try {
-    // Get session cookie
-    const cookie = cookies();
-    const session = cookie.get('session');
+    // Get auth token from request header
+    const authToken = request.headers.get('authorization');
     
-    if (!session || !session.value) {
+    if (!authToken) {
       return NextResponse.json({ authenticated: false }, { status: 401 });
     }
     
     try {
-      const { email } = JSON.parse(session.value);
+      // In a real app, you would verify the token properly
+      // This is a simplified implementation
+      
+      // Extract email from the token (assuming token format is base64 of "email-timestamp")
+      const decodedToken = Buffer.from(authToken, 'base64').toString();
+      const email = decodedToken.split('-')[0];
       
       if (!email) {
         return NextResponse.json({ authenticated: false }, { status: 401 });
@@ -23,8 +26,6 @@ export async function GET() {
       const user = await getUserByEmail(email);
       
       if (!user) {
-        // Clear invalid session
-        cookie.delete('session');
         return NextResponse.json({ authenticated: false }, { status: 401 });
       }
       
@@ -37,9 +38,8 @@ export async function GET() {
         }
       });
     } catch (error) {
-      // Invalid session format
-      console.error('Invalid session format:', error);
-      cookie.delete('session');
+      // Invalid token format
+      console.error('Invalid token format:', error);
       return NextResponse.json({ authenticated: false }, { status: 401 });
     }
   } catch (error) {
