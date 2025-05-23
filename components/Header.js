@@ -51,6 +51,9 @@ export default function Header() {
               <Link href="/skin-analysis" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-teal-500 dark:hover:text-teal-400">
                 Skin Analysis
               </Link>
+              <Link href="/routines" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-teal-500 dark:hover:text-teal-400">
+                Routines
+              </Link>
             </div>
           </div>
           
@@ -164,6 +167,9 @@ export default function Header() {
             <Link href="/skin-analysis" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800">
               Skin Analysis
             </Link>
+              <Link href="/routines" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-teal-500 dark:hover:text-teal-400">
+                Routines
+              </Link>
             
             {/* Mobile auth links */}
             {isAuthenticated ? (

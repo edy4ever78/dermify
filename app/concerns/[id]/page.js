@@ -93,11 +93,11 @@ export default function ConcernPage() {
           <div className="border-b border-gray-200 dark:border-gray-700 mb-8">
             <nav className="-mb-px flex space-x-8 overflow-x-auto">
               {[
-                { id: 'overview', label: t('concernOverview') },
-                { id: 'causes', label: t('concernCauses') },
-                { id: 'treatments', label: t('concernTreatments') },
-                { id: 'ingredients', label: t('concernIngredients') },
-                { id: 'tips', label: t('concernTips') },
+                { id: 'overview', label: 'Concern Overview' },
+                { id: 'causes', label: 'Concern Causes' },
+                { id: 'treatments', label: 'Concern Treatments' },
+                { id: 'ingredients', label: 'Concern Ingredients' },
+                { id: 'tips', label: 'Concern Tips' },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -122,7 +122,7 @@ export default function ConcernPage() {
               {activeTab === 'overview' && (
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                    {t(concern.id) || concern.id}
+                    {concern.id.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')} Overview
                   </h2>
                   <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">
                     {concern.overview}
@@ -134,7 +134,7 @@ export default function ConcernPage() {
               {activeTab === 'causes' && (
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                    {t('concernCauses')}
+                    {concern.id.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')} Causes
                   </h2>
                   <ul className="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
                     {concern.causes.map((cause, index) => (
@@ -148,7 +148,7 @@ export default function ConcernPage() {
               {activeTab === 'treatments' && (
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                    {t('concernTreatments')}
+                    {concern.id.charAt(0).toUpperCase() + concern.id.slice(1)} Treatments
                   </h2>
                   <ul className="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
                     {concern.treatments.map((treatment, index) => (
@@ -162,7 +162,7 @@ export default function ConcernPage() {
               {activeTab === 'ingredients' && (
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                    {t('concernIngredients')}
+                    {concern.id.charAt(0).toUpperCase() + concern.id.slice(1)} Ingredients
                   </h2>
                   <div className="grid gap-6 mt-6">
                     {concern.recommendedIngredients.map((ingredient, index) => (
@@ -183,7 +183,7 @@ export default function ConcernPage() {
               {activeTab === 'tips' && (
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                    {t('concernTips')}
+                    {concern.id.charAt(0).toUpperCase() + concern.id.slice(1)} Tips
                   </h2>
                   <ul className="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
                     {concern.tips.map((tip, index) => (
@@ -199,7 +199,7 @@ export default function ConcernPage() {
           {concern?.relatedConcerns && concern.relatedConcerns.length > 0 && (
             <div className="mt-16">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">
-                {t('relatedConcerns')}
+                {t('Rrelated Concerns')}
               </h2>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -214,7 +214,7 @@ export default function ConcernPage() {
                         {relatedId.replace(/-/g, ' ')}
                       </h3>
                       <div className="mt-4 text-teal-600 dark:text-teal-400 inline-flex items-center">
-                        {t('readMore')}
+                        {t('Read More')}
                         <svg className="ml-1 h-4 w-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>

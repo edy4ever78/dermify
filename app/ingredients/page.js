@@ -112,11 +112,8 @@ export default function Ingredients() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">
-              {t('ingredientDatabase')}
+              {t('Ingredients')}
             </h1>
-            <p className="mt-3 max-w-2xl mx-auto text-lg text-gray-600 dark:text-gray-300">
-              {t('ingredientDatabaseDesc')}
-            </p>
           </div>
           
           {/* Search and Filters */}
@@ -133,7 +130,7 @@ export default function Ingredients() {
                     name="search"
                     id="search"
                     className="block w-full pr-10 border-gray-300 dark:border-gray-600 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white rounded-md"
-                    placeholder={t('searchIngredientsPlaceholder')}
+                    placeholder={t('Search Ingredients')}
                     value={searchQuery}
                     onChange={handleSearchChange}
                   />
@@ -148,7 +145,7 @@ export default function Ingredients() {
               {/* Category Filter */}
               <div>
                 <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {t('category')}
+                  {t('Category')}
                 </label>
                 <select
                   id="category"
@@ -157,7 +154,7 @@ export default function Ingredients() {
                   value={selectedCategory}
                   onChange={handleCategoryChange}
                 >
-                  <option value="">{t('allCategories')}</option>
+                  <option value="">{t('All Categories')}</option>
                   {categories.filter(cat => cat !== '').map((category) => (
                     <option key={category} value={category}>{category}</option>
                   ))}
@@ -167,7 +164,7 @@ export default function Ingredients() {
               {/* Skin Type Filter */}
               <div>
                 <label htmlFor="skinType" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {t('skinType')}
+                  {t('Skin Type')}
                 </label>
                 <select
                   id="skinType"
@@ -176,7 +173,7 @@ export default function Ingredients() {
                   value={selectedSkinType}
                   onChange={handleSkinTypeChange}
                 >
-                  <option value="">{t('allSkinTypes')}</option>
+                  <option value="">{t('All Skin Types')}</option>
                   {skinTypes.filter(type => type !== '').map((type, index) => (
                     <option key={`${type}-${index}`} value={type}>{type}</option>
                   ))}
@@ -206,7 +203,7 @@ export default function Ingredients() {
               <p>{t('loading')}</p>
             ) : (
               <p>
-                {t('showing')} <span className="font-medium">{filteredIngredients.length}</span> {' '}
+                {t('Showing')} <span className="font-medium">{filteredIngredients.length}</span> {' '}
                 {filteredIngredients.length === 1 ? t('ingredient') : t('ingredients')}
               </p>
             )}

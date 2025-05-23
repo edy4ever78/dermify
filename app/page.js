@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import ChatbotIcon from '@/components/ChatbotIcon';
 import { useLoading } from '@/context/loading-context';
 import { useRouter } from 'next/navigation';
+import { handleSearch } from '@/utils/search';
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -19,11 +20,9 @@ export default function Home() {
   };
 
   // Handle search form submission
-  const handleSearch = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      navigateTo(`/search?q=${encodeURIComponent(searchQuery)}`);
-    }
+    handleSearch(searchQuery, router, setIsLoading);
   };
 
   return (
@@ -52,20 +51,20 @@ export default function Home() {
             Loading...
           </video>
           
-          {/* Gradient overlay that only darkens the bottom where text appears */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10"></div>
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/30 z-10"></div>
 
           {/* Content */}
-          <div className="relative z-20 py-20">
+          <div className="relative z-20 py-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
               <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl drop-shadow-md">
-                Your Skin Journey Starts Here
+                Know What's in Your Skincare
               </h1>
               <p className="mt-4 max-w-md mx-auto text-base text-white sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-                Analyze skincare products, learn about ingredients, and build personalized routines
+                Check safety ratings, analyze ingredients, and find safer products for your skin
               </p>
               <div className="mt-10 max-w-md mx-auto">
-                <form onSubmit={handleSearch} className="flex items-center shadow-lg rounded-md overflow-hidden">
+                <form onSubmit={handleSubmit} className="flex items-center shadow-lg rounded-md overflow-hidden">
                   <input
                     type="text"
                     value={searchQuery}
@@ -89,8 +88,33 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Feature Sections - Improved cards with hover effects */}
+        {/* Safety Score Section */}
         <div className="py-16 bg-white dark:bg-gray-900">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-extrabold text-center mb-12 dark:text-white">
+              Understanding Safety Scores
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+              {[
+                { score: 1, color: 'bg-green-500', label: 'Low Hazard' },
+                { score: 3, color: 'bg-lime-500', label: 'Moderate' },
+                { score: 5, color: 'bg-yellow-500', label: 'Moderate' },
+                { score: 7, color: 'bg-orange-500', label: 'High Hazard' },
+                { score: 9, color: 'bg-red-500', label: 'High Hazard' },
+              ].map((item) => (
+                <div key={item.score} className="text-center">
+                  <div className={`${item.color} w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto`}>
+                    {item.score}
+                  </div>
+                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{item.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Feature Sections */}
+        <div className="py-16 bg-gray-50 dark:bg-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-extrabold text-center mb-12 dark:text-white">
               What Dermify Offers
@@ -169,6 +193,31 @@ export default function Home() {
                   </button>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Latest Analyzed Products */}
+        <div className="py-16 bg-white dark:bg-gray-900">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-extrabold text-center mb-12 dark:text-white">
+              Recently Analyzed Products
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { name: "Gentle Cleanser", brand: "CeraVe", score: 2 },
+                { name: "Vitamin C Serum", brand: "The Ordinary", score: 3 },
+                { name: "Daily Moisturizer", brand: "Cetaphil", score: 4 },
+                { name: "Sunscreen SPF 50", brand: "La Roche-Posay", score: 1 }
+              ].map((product) => (
+                <div key={product.name} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                  <div className={`w-12 h-12 rounded-full ${product.score <= 2 ? 'bg-green-500' : product.score <= 4 ? 'bg-yellow-500' : 'bg-red-500'} text-white font-bold flex items-center justify-center mb-4`}>
+                    {product.score}
+                  </div>
+                  <h3 className="font-bold dark:text-white">{product.name}</h3>
+                  <p className="text-gray-600 dark:text-gray-300">{product.brand}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>

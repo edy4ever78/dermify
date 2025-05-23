@@ -20,7 +20,7 @@ const routinesData = [
     skinTypes: ['All Skin Types'],
     timeRequired: '5-10 minutes',
     difficulty: 'Beginner',
-    imageUrl: '/images/routines/morning-basic.jpg',
+    imageUrl: 'https://i0.wp.com/blog.organicharvest.in/wp-content/uploads/2023/05/Morning-Skincare-Routine.jpg?resize=950%2C500&ssl=1',
     description: 'A simple yet effective morning routine suitable for all skin types. This routine focuses on cleansing, hydration, and sun protection to prepare your skin for the day ahead.',
     notes: 'For best results, be consistent with your routine every morning. Allow each product to absorb for about 30 seconds before applying the next one.'
   },
@@ -36,7 +36,7 @@ const routinesData = [
     skinTypes: ['All Skin Types'],
     timeRequired: '5-10 minutes',
     difficulty: 'Beginner',
-    imageUrl: '/images/routines/evening-basic.jpg',
+    imageUrl: 'https://saturn.health/cdn/shop/articles/10_Beauty_Tips_For_Face_At_Home_You_Must_Inculcate_In_Your_Daily_Skincare_Regimen_720x.jpg?v=1672752885',
     description: 'A straightforward evening routine that focuses on removing the day\'s impurities and replenishing your skin overnight. Includes optional treatments to address specific skin concerns.',
     notes: 'If using retinol, start with 1-2 times per week and gradually increase frequency. Always patch test new products, especially active treatments.'
   },
@@ -53,7 +53,7 @@ const routinesData = [
     skinTypes: ['Oily', 'Combination', 'Acne-Prone'],
     timeRequired: '5-10 minutes',
     difficulty: 'Intermediate',
-    imageUrl: '/images/routines/acne-prone.jpg',
+    imageUrl: 'https://cdn-cdgdl.nitrocdn.com/NuHQviBvmmEbJjrsyBBmTIMsXPDRmbhb/assets/images/optimized/rev-d522591/cureskin.com/wp-content/uploads/2024/07/Relationship-Between-Oily-Skin-and-Acne.jpg',
     description: 'Tailored for those struggling with breakouts, this routine focuses on controlling oil production, clearing pores, and reducing inflammation.',
     notes: 'Be cautious not to over-cleanse or use too many actives at once, as this can irritate skin and potentially worsen acne. Introduce new products one at a time to identify any triggers.'
   },
@@ -72,7 +72,7 @@ const routinesData = [
     skinTypes: ['Mature', 'Dry', 'Normal'],
     timeRequired: '10-15 minutes',
     difficulty: 'Advanced',
-    imageUrl: '/images/routines/anti-aging.jpg',
+    imageUrl: 'https://m.clinique.com/media/export/cms/editorial_hub/article/anti_aging_skincare_routine/anti_aging_skincare_routine_548.jpg',
     description: 'A comprehensive routine designed to target signs of aging such as fine lines, wrinkles, and loss of elasticity.',
     notes: 'Consistency is key with anti-aging routines. Results typically take 6-12 weeks to become visible. Make sure to incorporate preventive measures like sunscreen daily.'
   },
@@ -103,12 +103,32 @@ export default function RoutineDetail() {
   const [routine, setRoutine] = useState(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
+  const [productLinks, setProductLinks] = useState({});
   
-  // Get routine data
+  // Get routine data and product links
   useEffect(() => {
     const foundRoutine = routinesData.find(r => r.id === id);
     if (foundRoutine) {
       setRoutine(foundRoutine);
+      
+      // Fetch product links
+      const fetchProductLinks = async () => {
+        try {
+          const response = await fetch('/api/products');
+          const products = await response.json();
+          
+          // Create a map of product names to their URLs
+          const links = {};
+          products.forEach(product => {
+            links[product.name.toLowerCase()] = `/products/${product.category}/${product.id}`;
+          });
+          setProductLinks(links);
+        } catch (error) {
+          console.error('Error fetching product links:', error);
+        }
+      };
+      
+      fetchProductLinks();
       
       // Check if routine is saved in local storage
       const savedRoutines = JSON.parse(localStorage.getItem('savedRoutines') || '[]');
@@ -132,6 +152,12 @@ export default function RoutineDetail() {
       localStorage.setItem('savedRoutines', JSON.stringify(savedRoutines));
       setIsSaved(true);
     }
+  };
+  
+  const handleDeleteProduct = (stepIndex, productIndex) => {
+    const updatedRoutine = { ...routine };
+    updatedRoutine.steps[stepIndex].products.splice(productIndex, 1);
+    setRoutine(updatedRoutine);
   };
   
   if (!routine) {
@@ -193,12 +219,19 @@ export default function RoutineDetail() {
           {/* Routine Header */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-8">
             <div className="h-64 bg-gray-200 dark:bg-gray-700 relative">
-              {/* Placeholder for routine image */}
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-700">
-                <svg className="h-24 w-24 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-              </div>
+              {routine.imageUrl ? (
+                <img
+                  src={routine.imageUrl}
+                  alt={routine.title}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-700">
+                  <svg className="h-24 w-24 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              )}
             </div>
             
             <div className="p-6">
@@ -336,25 +369,44 @@ export default function RoutineDetail() {
                   {routine.steps[currentStep].description}
                 </p>
                 
+                {/* Update the product links section */}
                 {routine.steps[currentStep].products.length > 0 && (
                   <div>
                     <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Recommended Products:
                     </h4>
                     <ul className="space-y-2">
-                      {routine.steps[currentStep].products.map((product, index) => (
-                        <li key={index} className="flex items-center">
-                          <svg className="h-4 w-4 text-teal-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          <Link
-                            href={`/products/${product.toLowerCase().replace(/\s+/g, '-')}`}
-                            className="text-teal-600 dark:text-teal-400 hover:underline"
-                          >
-                            {product}
-                          </Link>
-                        </li>
-                      ))}
+                      {routine.steps[currentStep].products.map((product, index) => {
+                        const productLink = productLinks[product.toLowerCase()];
+                        return (
+                          <li key={index} className="flex items-center justify-between">
+                            <div className="flex items-center">
+                              <svg className="h-4 w-4 text-teal-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              {productLink ? (
+                                <Link
+                                  href={productLink}
+                                  className="text-teal-600 dark:text-teal-400 hover:underline"
+                                >
+                                  {product}
+                                </Link>
+                              ) : (
+                                <span className="text-gray-600 dark:text-gray-400">{product}</span>
+                              )}
+                            </div>
+                            <button
+                              onClick={() => handleDeleteProduct(currentStep, index)}
+                              className="text-red-500 hover:text-red-600 p-1"
+                              aria-label="Delete product"
+                            >
+                              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 )}
@@ -374,41 +426,6 @@ export default function RoutineDetail() {
                   </button>
                 </div>
               )}
-            </div>
-          </div>
-          
-          {/* Related Products */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
-            <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Recommended Products</h2>
-            </div>
-            
-            <div className="p-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {/* Get unique products across all steps */}
-                {Array.from(new Set(routine.steps.flatMap(step => step.products))).slice(0, 3).map((product, index) => (
-                  <Link href={`/products/${product.toLowerCase().replace(/\s+/g, '-')}`} key={index}>
-                    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 hover:shadow-md transition-all">
-                      <div className="h-32 bg-gray-200 dark:bg-gray-600 rounded-md mb-3 flex items-center justify-center">
-                        {/* Product image placeholder */}
-                        <svg className="h-10 w-10 text-gray-300 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m-8-4l8 4m8 0l-8 4-8-4m16-4l-8 4m-8-4l8 4" />
-                        </svg>
-                      </div>
-                      <h3 className="text-gray-900 dark:text-white font-medium">{product}</h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        Perfect for this routine
-                      </p>
-                      <div className="mt-3 flex items-center justify-between">
-                        <span className="text-sm font-medium text-teal-500">View Details</span>
-                        <svg className="h-4 w-4 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
             </div>
           </div>
         </div>

@@ -91,7 +91,21 @@ async function importProducts() {
       process.exit(1);
     }
     
-    // Read the CSV file
+    // Load existing products if the file exists
+    let existingProducts = [];
+    if (fs.existsSync(OUTPUT_FILE_PATH)) {
+      try {
+        const fileContent = fs.readFileSync(OUTPUT_FILE_PATH, 'utf8');
+        const match = fileContent.match(/const products = (\[[\s\S]*?\]);/);
+        if (match) {
+          existingProducts = JSON.parse(match[1]);
+        }
+      } catch (err) {
+        console.warn('Could not parse existing products:', err);
+      }
+    }
+    
+    // Read and parse the CSV file
     const csvData = fs.readFileSync(CSV_FILE_PATH, 'utf8');
     console.log(`CSV file loaded: ${CSV_FILE_PATH}`);
     
@@ -100,7 +114,7 @@ async function importProducts() {
     
     console.log(`Found ${productsData.length} products in the CSV file.`);
     
-    // Transform CSV data to the format needed for our application
+    // Transform CSV data and merge with existing products
     const formattedProducts = productsData.map((row, index) => {
       // Generate an ID if not present
       const id = toKebabCase(row.brand) + '-' + toKebabCase(row.name) || `product-${index}`;
@@ -144,13 +158,24 @@ async function importProducts() {
       };
     });
     
+    // Merge products, using ID as unique identifier
+    const mergedProducts = [...existingProducts];
+    formattedProducts.forEach(newProduct => {
+      const existingIndex = mergedProducts.findIndex(p => p.id === newProduct.id);
+      if (existingIndex >= 0) {
+        mergedProducts[existingIndex] = { ...mergedProducts[existingIndex], ...newProduct };
+      } else {
+        mergedProducts.push(newProduct);
+      }
+    });
+
     // Generate the JavaScript module content
     const moduleContent = `/**
- * Products data imported from CSV
+ * Products data merged from multiple sources
  * Generated on ${new Date().toISOString()}
  */
 
-const products = ${JSON.stringify(formattedProducts, null, 2)};
+const products = ${JSON.stringify(mergedProducts, null, 2)};
 
 // Helper functions to work with the product data
 export const getAllProducts = () => products;
@@ -159,13 +184,11 @@ export const getProductById = (id) => products.find(product => product.id === id
 
 export const getProductsByCategory = (category) => products.filter(product => product.category === category);
 
-export const getProductsByBrand = (brand) => products.filter(product => product.brand === brand);
+export const getProductsBySkinType = (skinType) => 
+  products.filter(product => product.skinTypes && product.skinTypes[skinType.toLowerCase()]);
 
-export const getProductsBySkinType = (skinType) => {
-  return products.filter(product => {
-    return product.skinTypes && product.skinTypes[skinType.toLowerCase()];
-  });
-};
+export const getProductsByBrand = (brand) => 
+  products.filter(product => product.brand.toLowerCase() === brand.toLowerCase());
 
 export default products;
 `;
@@ -178,7 +201,7 @@ export default products;
     
     // Write to the output file
     fs.writeFileSync(OUTPUT_FILE_PATH, moduleContent, 'utf8');
-    console.log(`Successfully imported ${formattedProducts.length} products to ${OUTPUT_FILE_PATH}`);
+    console.log(`Successfully merged and imported ${mergedProducts.length} products to ${OUTPUT_FILE_PATH}`);
     
   } catch (error) {
     console.error('Error importing products:', error);

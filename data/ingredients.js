@@ -16,7 +16,8 @@ const ingredients = [
     ],
     skinTypes: ["All", "Dry", "Dehydrated", "Mature"],
     commonProducts: ["Serums", "Moisturizers", "Sheet Masks"],
-    imageUrl: "/images/ingredients/hyaluronic-acid.jpg",
+    imageUrl: "https://ethique.co.uk/cdn/shop/articles/hyaluronic_acid.jpg?v=1632455825",
+    images: ["https://ethique.co.uk/cdn/shop/articles/hyaluronic_acid.jpg?v=1632455825"],
     safetyRating: 5, // 1-5 scale, 5 being extremely safe
     scientificEvidence: 4 // 1-5 scale, 5 being strongest evidence
   },
@@ -40,7 +41,8 @@ const ingredients = [
     ],
     skinTypes: ["Normal", "Combination", "Oily", "Mature", "Acne-Prone"],
     commonProducts: ["Serums", "Creams", "Oils"],
-    imageUrl: "/images/ingredients/retinol.jpg",
+    imageUrl: "https://cloudfront-eu-central-1.images.arcpublishing.com/irishtimes/OEIZMJI44JCJHBCWLJ3TGKJHEQ.jpg",
+    images: ["https://cloudfront-eu-central-1.images.arcpublishing.com/irishtimes/OEIZMJI44JCJHBCWLJ3TGKJHEQ.jpg"],
     safetyRating: 3,
     scientificEvidence: 5
   },
@@ -63,7 +65,8 @@ const ingredients = [
     ],
     skinTypes: ["All", "Dull", "Hyperpigmented", "Mature"],
     commonProducts: ["Serums", "Moisturizers", "Masks"],
-    imageUrl: "/images/ingredients/vitamin-c.jpg",
+    imageUrl: "https://www.skinandme.com/the-dose/wp-content/uploads/2023/02/VITAMIN-C.jpg",
+    images: ["https://www.skinandme.com/the-dose/wp-content/uploads/2023/02/VITAMIN-C.jpg"],
     safetyRating: 5,
     scientificEvidence: 5
   },
@@ -86,7 +89,8 @@ const ingredients = [
     ],
     skinTypes: ["All", "Oily", "Acne-Prone", "Sensitive"],
     commonProducts: ["Serums", "Moisturizers", "Toners"],
-    imageUrl: "/images/ingredients/niacinamide.jpg",
+    imageUrl: "https://www.dermalogica.co.nz/cdn/shop/articles/new-year-new-skin_520x500_copy_2e16a123-f2c8-41bf-a10d-389c1ae4c65f_520x297_crop_center.jpg?v=1642468904",
+    images: ["https://www.dermalogica.co.nz/cdn/shop/articles/new-year-new-skin_520x500_copy_2e16a123-f2c8-41bf-a10d-389c1ae4c65f_520x297_crop_center.jpg?v=1642468904"],
     safetyRating: 5,
     scientificEvidence: 4
   },
@@ -110,7 +114,8 @@ const ingredients = [
     ],
     skinTypes: ["Oily", "Combination", "Acne-Prone"],
     commonProducts: ["Cleansers", "Toners", "Spot Treatments"],
-    imageUrl: "/images/ingredients/salicylic-acid.jpg",
+    imageUrl: "https://www.clinique.ro/media/export/cms/ingredients/salicyclic_overview_pc.jpg",
+    images: ["https://www.clinique.ro/media/export/cms/ingredients/salicyclic_overview_pc.jpg"],
     safetyRating: 3,
     scientificEvidence: 5
   },
@@ -134,7 +139,8 @@ const ingredients = [
     ],
     skinTypes: ["Normal", "Combination", "Oily", "Sun-Damaged"],
     commonProducts: ["Toners", "Peels", "Serums"],
-    imageUrl: "/images/ingredients/glycolic-acid.jpg",
+    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ646tJjZFFRFKNIdRXPE0_BG5H8MxbX2D2ww&s",
+    images: ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ646tJjZFFRFKNIdRXPE0_BG5H8MxbX2D2ww&s"],
     safetyRating: 3,
     scientificEvidence: 5
   },
@@ -157,7 +163,8 @@ const ingredients = [
     ],
     skinTypes: ["All", "Mature", "Normal", "Dry"],
     commonProducts: ["Serums", "Eye Creams", "Moisturizers"],
-    imageUrl: "/images/ingredients/peptides.jpg",
+    imageUrl: "https://www.skinandme.com/the-dose/wp-content/uploads/2023/12/231206_INGREDIENT_DEEP_DIVE_RESIZED.jpg",
+    images: ["https://www.skinandme.com/the-dose/wp/content/uploads/2023/12/231206_INGREDIENT_DEEP_DIVE_RESIZED.jpg"],
     safetyRating: 5,
     scientificEvidence: 3
   },
@@ -179,7 +186,8 @@ const ingredients = [
     ],
     skinTypes: ["All", "Dry", "Sensitive", "Eczema-Prone"],
     commonProducts: ["Moisturizers", "Serums", "Barrier Repair Creams"],
-    imageUrl: "/images/ingredients/ceramides.jpg",
+    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6esTUfM5QSkaPgaJhMdL_PbiPOY1fEoccQBLH1FdW30qdzOPee_6RG8z5DRqPgXtIQLw&usqp=CAU",
+    images: ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6esTUfM5QSkaPgaJhMdL_PbiPOY1fEoccQBLH1FdW30qdzOPee_6RG8z5DRqPgXtIQLw&usqp=CAU"],
     safetyRating: 5,
     scientificEvidence: 4
   },
@@ -200,7 +208,8 @@ const ingredients = [
     ],
     skinTypes: ["All", "Oily", "Acne-Prone", "Sensitive", "Dry"],
     commonProducts: ["Oils", "Moisturizers", "Serums"],
-    imageUrl: "/images/ingredients/squalane.jpg",
+    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyBRqslWDOJPP7xZh9iAUarweJFDQrfqNo7M6yyKkjuOsXSOkkFMj_LOgRr6nx1Nzf13w&usqp=CAU",
+    images: ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyBRqslWDOJPP7xZh9iAUarweJFDQrfqNo7M6yyKkjuOsXSOkkFMj_LOgRr6nx1Nzf13w&usqp=CAU"],
     safetyRating: 5,
     scientificEvidence: 3
   },
@@ -222,7 +231,8 @@ const ingredients = [
     ],
     skinTypes: ["Sensitive", "Irritated", "Acne-Prone", "All"],
     commonProducts: ["Serums", "Creams", "Balms"],
-    imageUrl: "/images/ingredients/centella-asiatica.jpg",
+    imageUrl: "https://www.isclinical.co.uk/cdn/shop/articles/ing_centella-asiatica-620x360.png?v=1702560902",
+    images: ["https://www.isclinical.co.uk/cdn/shop/articles/ing_centella-asiatica-620x360.png?v=1702560902"],
     safetyRating: 5,
     scientificEvidence: 3
   },
@@ -244,7 +254,8 @@ const ingredients = [
     ],
     skinTypes: ["All", "Sensitive", "Acne-Prone"],
     commonProducts: ["Sunscreens", "BB Creams", "Mineral Makeup"],
-    imageUrl: "/images/ingredients/zinc-oxide.jpg",
+    imageUrl: "https://shop96018.sfstatic.io/upload_dir/shop/raavarer/_thumbs/zinkoxid-50g.w1200.jpg",
+    images: ["https://shop96018.sfstatic.io/upload_dir/shop/raavarer/_thumbs/zinkoxid-50g.w1200.jpg"],
     safetyRating: 5,
     scientificEvidence: 5
   },
@@ -267,7 +278,8 @@ const ingredients = [
     ],
     skinTypes: ["Oily", "Acne-Prone", "Fungal Acne-Prone"],
     commonProducts: ["Spot Treatments", "Cleansers", "Toners"],
-    imageUrl: "/images/ingredients/tea-tree-oil.jpg",
+    imageUrl: "https://lovebeautyandplanet.in/cdn/shop/articles/oil_520-x-373.jpg?v=1700202704",
+    images: ["https://lovebeautyandplanet.in/cdn/shop/articles/oil_520-x-373.jpg?v=1700202704"],
     safetyRating: 3,
     scientificEvidence: 3
   }

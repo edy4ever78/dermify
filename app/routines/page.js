@@ -19,7 +19,7 @@ const routinesData = [
     skinTypes: ['All Skin Types'],
     timeRequired: '5-10 minutes',
     difficulty: 'Beginner',
-    imageUrl: '/images/routines/morning-basic.jpg'
+    imageUrl: 'https://i0.wp.com/blog.organicharvest.in/wp-content/uploads/2023/05/Morning-Skincare-Routine.jpg?resize=950%2C500&ssl=1'
   },
   {
     id: 'evening-basic',
@@ -33,7 +33,7 @@ const routinesData = [
     skinTypes: ['All Skin Types'],
     timeRequired: '5-10 minutes',
     difficulty: 'Beginner',
-    imageUrl: '/images/routines/evening-basic.jpg'
+    imageUrl: 'https://saturn.health/cdn/shop/articles/10_Beauty_Tips_For_Face_At_Home_You_Must_Inculcate_In_Your_Daily_Skincare_Regimen_720x.jpg?v=1672752885'
   },
   {
     id: 'acne-prone',
@@ -48,7 +48,7 @@ const routinesData = [
     skinTypes: ['Oily', 'Combination', 'Acne-Prone'],
     timeRequired: '5-10 minutes',
     difficulty: 'Intermediate',
-    imageUrl: '/images/routines/acne-prone.jpg'
+    imageUrl: 'https://cdn-cdgdl.nitrocdn.com/NuHQviBvmmEbJjrsyBBmTIMsXPDRmbhb/assets/images/optimized/rev-d522591/cureskin.com/wp-content/uploads/2024/07/Relationship-Between-Oily-Skin-and-Acne.jpg'
   },
   {
     id: 'anti-aging',
@@ -65,7 +65,7 @@ const routinesData = [
     skinTypes: ['Mature', 'Dry', 'Normal'],
     timeRequired: '10-15 minutes',
     difficulty: 'Advanced',
-    imageUrl: '/images/routines/anti-aging.jpg'
+    imageUrl: 'https://m.clinique.com/media/export/cms/editorial_hub/article/anti_aging_skincare_routine/anti_aging_skincare_routine_548.jpg'
   },
   {
     id: 'hyperpigmentation',
@@ -81,7 +81,8 @@ const routinesData = [
     skinTypes: ['All Skin Types'],
     timeRequired: '10-15 minutes',
     difficulty: 'Intermediate',
-    imageUrl: '/images/routines/hyperpigmentation.jpg'
+    imageUrl: 'https://images-1.eucerin.com/~/media/eucerin/international/about-skin/indications/postinflammatory-hyperpigmentation/pih-update2018/euc-int_about-skin_pih_00_teaser.jpg',
+    description: 'A targeted routine for addressing dark spots, uneven skin tone, and hyperpigmentation issues.',
   }
 ];
 
@@ -208,12 +209,19 @@ export default function Routines() {
                 <Link href={`/routines/${routine.id}`} key={routine.id}>
                   <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden h-full flex flex-col">
                     <div className="h-48 bg-gray-200 dark:bg-gray-700 relative">
-                      {/* Placeholder for routine image */}
-                      <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-700">
-                        <svg className="h-16 w-16 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                        </svg>
-                      </div>
+                      {routine.imageUrl ? (
+                        <img
+                          src={routine.imageUrl}
+                          alt={routine.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-700">
+                          <svg className="h-16 w-16 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                      )}
                     </div>
                     
                     <div className="p-5 flex-grow flex flex-col">

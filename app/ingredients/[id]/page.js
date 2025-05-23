@@ -13,7 +13,6 @@ export default function IngredientDetail() {
   
   const [ingredient, setIngredient] = useState(null);
   const [relatedIngredients, setRelatedIngredients] = useState([]);
-  const [relatedProducts, setRelatedProducts] = useState([]);
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(true);
   
@@ -41,38 +40,6 @@ export default function IngredientDetail() {
       )
       .slice(0, 3);
     setRelatedIngredients(related);
-    
-    // Simulated related products
-    // In a real app, you would fetch actual product data containing this ingredient
-    setRelatedProducts([
-      {
-        id: 'product-1',
-        name: `${ingredientData.name} Serum`,
-        brand: 'DermiCare',
-        price: 24.99,
-        imageUrl: '/images/products/serum-1.jpg',
-        category: 'serums',
-        description: `Concentrated formula with ${ingredientData.name.toLowerCase()} for maximum efficacy.`
-      },
-      {
-        id: 'product-2',
-        name: `Intensive ${ingredientData.name} Treatment`,
-        brand: 'SkinFirst',
-        price: 38.50,
-        imageUrl: '/images/products/serum-2.jpg',
-        category: 'treatments',
-        description: `Advanced treatment featuring ${ingredientData.name.toLowerCase()} to target specific skin concerns.`
-      },
-      {
-        id: 'product-3',
-        name: `Daily ${ingredientData.name} Moisturizer`,
-        brand: 'Pure Skin',
-        price: 29.99,
-        imageUrl: '/images/products/moisturizer-1.jpg',
-        category: 'moisturizers',
-        description: `Lightweight moisturizer enriched with ${ingredientData.name.toLowerCase()} for daily hydration and protection.`
-      }
-    ]);
     
     setLoading(false);
   }, [id, router]);
@@ -292,14 +259,14 @@ export default function IngredientDetail() {
                 </button>
                 
                 <button
-                  onClick={() => setActiveTab('products')}
+                  onClick={() => window.location.href = 'http://localhost:3000/products'}
                   className={`py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'products'
                       ? 'border-teal-500 text-teal-600 dark:text-teal-400'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-500'
                   }`}
                 >
-                  Related Products
+                  Products
                 </button>
               </nav>
             </div>

@@ -5,6 +5,8 @@ import Header from '@/components/Header';
 import Link from 'next/link';
 import { addToRecentlyViewed } from '@/lib/userUtils';
 import Footer from '@/components/Footer';
+import { handleSearch, getSearchQuery } from '@/utils/search';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function Products() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,6 +20,15 @@ export default function Products() {
   const productsPerPage = 10;
 
   const skinTypes = ['All', 'Normal', 'Dry', 'Oily', 'Combination', 'Sensitive'];
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // Initialize search query from URL params
+  useEffect(() => {
+    const query = getSearchQuery(searchParams);
+    if (query) setSearchTerm(query);
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -91,6 +102,12 @@ export default function Products() {
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Handle search submission
+  const onSearch = (e) => {
+    e.preventDefault();
+    handleSearch(searchTerm, router);
+  };
 
   if (loading) {
     return (
@@ -248,9 +265,7 @@ export default function Products() {
                         <p className="text-gray-500 dark:text-gray-400">{category.description}</p>
                       </div>
 
-                      <Link href={`/products/${category.id}`} className="text-teal-500 hover:text-teal-600 text-sm font-medium transition-colors">
-                        View all
-                      </Link>
+                      
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -272,7 +287,13 @@ export default function Products() {
                                 <img
                                   src={product.imageUrl}
                                   alt={product.name}
-                                  className="w-full h-full object-cover"
+                                  className="w-full h-full object-cover transition-opacity duration-300"
+                                  onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = `/images/placeholder-product.png`;
+                                    e.target.classList.add('opacity-70');
+                                  }}
+                                  loading="lazy"
                                 />
                               ) : (
                                 <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-700">
@@ -281,6 +302,8 @@ export default function Products() {
                                   </svg>
                                 </div>
                               )}
+                              {/* Add image overlay for better text contrast */}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                             </div>
 
                             <div className="p-4">

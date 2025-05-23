@@ -35,7 +35,7 @@ Dermify is a comprehensive web application that helps users analyze skincare pro
 
 1. Clone the repository:
    ```powershell
-   git clone https://github.com/yourusername/dermify.git
+   git clone https://github.com/edy4ever78/dermify.git
    cd dermify
    ```
 

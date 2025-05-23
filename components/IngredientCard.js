@@ -48,7 +48,7 @@ export default function IngredientCard({ ingredient }) {
           {/* Common Names / Aliases */}
           {ingredient.aliases && ingredient.aliases.length > 0 && (
             <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-              {t('alsoKnownAs')}: {ingredient.aliases.join(', ')}
+              {t('Also Known As')}: {ingredient.aliases.join(', ')}
             </p>
           )}
           
@@ -60,7 +60,7 @@ export default function IngredientCard({ ingredient }) {
           {/* Suitable Skin Types */}
           <div className="mt-3">
             <h4 className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-              {t('goodFor')}:
+              {t('Good For')}:
             </h4>
             <div className="flex flex-wrap gap-1">
               {ingredient.skinTypes.slice(0, 3).map((type, index) => (
@@ -82,7 +82,7 @@ export default function IngredientCard({ ingredient }) {
           {/* View Details Link */}
           <div className="mt-4 text-right">
             <span className="text-teal-500 dark:text-teal-400 text-sm font-medium inline-flex items-center group">
-              {t('viewDetails')}
+              {t('View Details')}
               <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
