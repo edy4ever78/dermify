@@ -1,39 +1,74 @@
 import { NextResponse } from 'next/server';
 
+// Protected routes that require authentication
 const protectedRoutes = [
   '/account',
   '/account/profile',
   '/skin-analysis',
 ];
 
+// Auth routes that should redirect to home if already logged in
+const authRoutes = [
+  '/signin',
+  '/signup',
+  '/login',
+];
+
 export function middleware(request) {
-  const currentPath = request.nextUrl.pathname;
+  const { pathname } = request.nextUrl;
+  const sessionCookie = request.cookies.get('session');
   
-  // Check if it's a protected route
-  if (protectedRoutes.some(route => currentPath.startsWith(route))) {
-    // Get the session cookie
-    const sessionCookie = request.cookies.get('session');
-    
-    // If no session cookie, redirect to login
-    if (!sessionCookie) {
-      const redirectUrl = new URL('/signin', request.url);
-      redirectUrl.searchParams.set('redirect', currentPath);
-      return NextResponse.redirect(redirectUrl);
-    }
-    
-    // If session cookie exists, let the request continue
+  // Function to validate session cookie
+  const isValidSession = (cookie) => {
+    if (!cookie) return false;
     try {
-      // Parse session cookie to validate format
-      JSON.parse(sessionCookie.value);
-      // If it parses successfully, allow the request
-      return NextResponse.next();
-    } catch (error) {
-      // If session cookie is invalid, redirect to login
-      const redirectUrl = new URL('/signin', request.url);
-      redirectUrl.searchParams.set('redirect', currentPath);
-      return NextResponse.redirect(redirectUrl);
+      const session = JSON.parse(cookie.value);
+      return !!session.id && !!session.email;
+    } catch (e) {
+      return false;
     }
-  }
+  };
+
+  const isAuthenticated = isValidSession(sessionCookie);
   
+  // Case 1: Authenticated user trying to access auth pages
+  if (isAuthenticated && authRoutes.some(route => pathname === route)) {
+    // Check if there's a redirect parameter
+    const redirectParam = request.nextUrl.searchParams.get('redirect');
+    
+    if (redirectParam) {
+      // Only redirect to known protected routes to prevent open redirects
+      if (protectedRoutes.some(route => redirectParam.startsWith(route))) {
+        return NextResponse.redirect(new URL(redirectParam, request.url));
+      }
+    }
+    
+    // Default redirect to home page
+    return NextResponse.redirect(new URL('/', request.url));
+  }
+
+  // Case 2: Unauthenticated user trying to access protected routes
+  if (!isAuthenticated && protectedRoutes.some(route => pathname.startsWith(route))) {
+    const redirectUrl = new URL('/signin', request.url);
+    redirectUrl.searchParams.set('redirect', pathname);
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  // All other cases, just continue
   return NextResponse.next();
 }
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder
+     * - api routes (except auth-related ones)
+     */
+    '/((?!_next/static|_next/image|favicon.ico|public|api/(?!auth)).*)',
+    '/api/auth/:path*',
+  ],
+};
