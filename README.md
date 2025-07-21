@@ -1,197 +1,434 @@
-# Dermify - AI-Powered Skincare Analysis Platform
+# Dermify - Platforma de Analiză a Tenului Alimentată de AI
 
 ![Dermify Logo](./public/dermifylogon.png)
 
-Dermify is a comprehensive web application that helps users analyze skincare products, learn about ingredients, build personalized routines, and perform AI-powered face analysis for skincare recommendations.
+Dermify este o aplicație web cuprinzătoare care ajută utilizatorii să analizeze produsele de îngrijire a tenului, să învețe despre ingrediente, să construiască rutine personalizate și să efectueze analize faciale alimentate de AI pentru recomandări de îngrijire a pielii.
 
-## ✨ Features
+## Funcționalități
 
-- **🔍 Product Analysis**: Detailed information about skincare products, including ingredients and reviews
-- **🧪 Ingredients Database**: Comprehensive database of skincare ingredients with benefits and potential concerns
-- **📅 Customized Routines**: Curated skincare routines for different skin types and concerns
-- **🤖 Face Analysis**: AI-powered analysis to detect skin conditions and provide personalized recommendations
-- **👤 User Accounts**: Personalized experience with saved products, routines and preferences
-- **🌙 Dark/Light Modes**: Comfortable viewing experience in any lighting condition
-- **🌐 Multi-language Support**: Currently supports English and Romanian
+- **Analiza Produselor**: Informații detaliate despre produsele de îngrijire a tenului, inclusiv ingrediente și recenzii
+- **Baza de Date a Ingredientelor**: Bază de date cuprinzătoare a ingredientelor pentru îngrijirea pielii cu beneficii și preocupări potențiale
+- **Rutine Personalizate**: Rutine curatate de îngrijire a tenului pentru diferite tipuri de piele și preocupări
+- **Analiza Facială**: Analiză alimentată de AI pentru detectarea afecțiunilor pielii și recomandări personalizate
+- **Chatbot AI**: Asistent inteligent pentru îngrijirea pielii care oferă sfaturi personalizate
+- **Conturi de Utilizator**: Experiență personalizată cu produse, rutine și preferințe salvate
+- **Moduri Întunecat/Luminos**: Experiență de vizualizare confortabilă în orice iluminare
+- **Suport Multi-limbă**: În prezent suportă engleza și româna
 
-## 🛠️ Tech Stack
+## Arhitectura
 
-- **Frontend**: Next.js 14, React 18, Tailwind CSS 4
-- **AI/ML**: TensorFlow.js, YOLOv8 (Python API)
-- **Authentication**: Next.js App Router with JWT
-- **Database**: Redis (via Upstash, can be replaced with a full database)
-- **Styling**: Tailwind CSS with dark mode support
-- **Deployment**: Vercel (frontend), Python backend for YOLO model
+Dermify folosește o arhitectură de microservicii cu următoarele componente:
 
-## 🚀 Getting Started
+- **Serviciul Web** (Next.js) - Aplicația frontend
+- **API Gateway** - Orchestrarea serviciilor și rutarea cererilor
+- **Serviciul AI** - Analiza pielii bazată pe YOLO
+- **Serviciul Utilizatori** - Autentificare și gestionarea utilizatorilor
+- **Serviciul Produse** - Gestionarea produselor și ingredientelor
+- **Serviciul Chatbot** - Interfață conversațională alimentată de AI
+- **Redis** - Cache și stocare sesiuni
 
-### Prerequisites
+## Tehnologii Folosite
 
-- Node.js 18+ 
-- Python 3.8+ (for the YOLOv8 model API)
-- Redis server (optional, or you can use Upstash)
+### Frontend
+- Next.js 15, React 19, Tailwind CSS 4
+- TypeScript pentru siguranța tipurilor
+- Design responsive cu suport pentru modul întunecat
 
-### Installation
+### Servicii Backend
+- **API Gateway**: Node.js/Express
+- **Serviciul AI**: Python/FastAPI cu YOLOv8
+- **Serviciul Utilizatori**: Node.js/Express cu autentificare JWT
+- **Serviciul Produse**: Node.js/Express
+- **Serviciul Chatbot**: Node.js/Express
 
-1. Clone the repository:
+### Infrastructură
+- **Baza de Date**: Redis pentru cache și sesiuni
+- **Containerizare**: Docker & Docker Compose
+- **Orchestrare**: Scripturi personalizate de gestionare a serviciilor
+
+## Start Rapid
+
+### Opțiunea 1: Configurare Completă Docker (Recomandat)
+
+1. **Clonează repository-ul:**
+   ```bash
+   git clone https://github.com/edy4ever78/dermify.git
+   cd dermify
+   ```
+
+2. **Pornește toate serviciile:**
+   ```bash
+   # Windows
+   npm run services:build
+   npm run services:start
+   
+   # Linux/macOS
+   ./manage-services.sh build
+   ./manage-services.sh start
+   ```
+
+3. **Accesează aplicația:**
+   - Aplicația Web: http://localhost:3000
+   - API Gateway: http://localhost:4000
+   - Status servicii: `npm run services:status`
+
+### Opțiunea 2: Modul Dezvoltare
+
+1. **Pornește infrastructura:**
+   ```bash
+   npm run services:dev
+   ```
+
+2. **Rulează serviciile individual:**
+   ```bash
+   # Terminal 1 - API Gateway
+   cd services/gateway && npm install && npm run dev
+   
+   # Terminal 2 - Serviciul AI
+   cd services/ai && pip install -r requirements.txt && python app.py
+   
+   # Terminal 3 - Serviciul Utilizatori
+   cd services/user && npm install && npm run dev
+   
+   # Terminal 4 - Serviciul Produse
+   cd services/product && npm install && npm run dev
+   
+   # Terminal 5 - Serviciul Chatbot
+   cd services/chatbot && npm install && npm run dev
+   
+   # Terminal 6 - Frontend Web
+   npm run dev
+   ```
+
+## Documentație
+
+- **[Arhitectura Microserviciilor](./MICROSERVICES.md)** - Prezentare detaliată a arhitecturii
+- **[Ghidul Dezvoltării](./DEVELOPMENT.md)** - Configurarea dezvoltării locale
+- **[Documentația API](./API_DOCS.md)** - Referință completă API
+
+## Configurare
+
+1. **Copiază fișierul de mediu:**
+   ```bash
+   copy .env.example .env
+   ```
+
+2. **Configurează variabilele:**
+   ```env
+   REDIS_HOST=localhost
+   REDIS_PORT=6379
+   JWT_SECRET=cheia-ta-secreta
+   API_GATEWAY_URL=http://localhost:4000
+   ```
+
+## Testare
+
+```bash
+# Verificare stare toate serviciile
+npm run services:test
+
+# Vizualizare log-uri
+npm run services:logs
+
+# Testare endpoint-uri specifice
+curl http://localhost:4000/health
+curl http://localhost:4000/api/products
+```
+
+## Scripturi Disponibile
+
+### Gestionarea Serviciilor
+- `npm run services:build` - Construiește toate serviciile
+- `npm run services:start` - Pornește toate serviciile
+- `npm run services:stop` - Oprește toate serviciile
+- `npm run services:status` - Verifică starea serviciilor
+- `npm run services:logs` - Vizualizează log-urile serviciilor
+- `npm run services:dev` - Modul dezvoltare
+
+### Dezvoltare
+- `npm run dev` - Pornește serverul de dezvoltare frontend
+- `npm run build` - Construiește frontend pentru producție
+- `npm run start` - Pornește serverul de producție frontend
+
+## Funcționalități Cheie
+
+### Analiza Pielii Alimentată de AI
+- Încarcă fotografii pentru analiză AI
+- Detectează probleme ale pielii (acnee, pete întunecate, riduri)
+- Primește recomandări personalizate de produse
+- Urmărește istoricul analizelor
+
+### Chatbot Inteligent
+- Conversații în limbaj natural despre îngrijirea pielii
+- Răspunsuri conștiente de context bazate pe analiză
+- Recomandări de produse și ingrediente
+- Asistență pentru construirea rutinelor
+
+### Baza de Date a Produselor
+- Catalog cuprinzător de produse
+- Analiza ingredientelor și evaluări de siguranță
+- Recomandări personalizate
+- Compararea prețurilor și recenzii
+
+### Gestionarea Utilizatorilor
+- Autentificare securizată bazată pe JWT
+- Profile personale și preferințe
+- Urmărirea istoricului analizelor
+- Rutine personalizate de îngrijire a pielii
+
+## Endpoint-uri API
+
+### Workflow-uri Principale
+- `POST /api/workflow/skin-analysis` - Workflow complet de analiză
+- `POST /api/chatbot/message` - Chat cu asistentul pentru îngrijirea pielii
+- `GET /api/products` - Răsfoire produse cu filtrare
+- `GET /api/recommendations` - Primește recomandări personalizate
+
+Consultă [API_DOCS.md](./API_DOCS.md) pentru documentația completă.
+
+## Deployare
+
+### Configurare Producție
+1. **Configurarea mediului:**
+   ```bash
+   NODE_ENV=production
+   JWT_SECRET=cheie-secreta-producție-sigură
+   REDIS_HOST=host-redis-producție
+   ```
+
+2. **Construire și deployare:**
+   ```bash
+   npm run services:build
+   npm run services:start
+   ```
+
+3. **Monitorizarea stării:**
+   ```bash
+   npm run services:test
+   ```
+
+## Depanare
+
+### Probleme Comune
+
+1. **Conflicte de porturi:**
+   ```bash
+   # Verifică ce folosește portul
+   netstat -ano | findstr :3000
+   
+   # Oprește procesele conflictuale
+   taskkill /PID <PID> /F
+   ```
+
+2. **Probleme de conexiune Redis:**
+   ```bash
+   # Verifică starea Redis
+   docker-compose ps redis
+   
+   # Repornește Redis
+   docker-compose restart redis
+   ```
+
+3. **Verificări de stare servicii:**
+   ```bash
+   # Testează toate serviciile
+   npm run services:test
+   
+   # Verifică log-urile unui serviciu specific
+   docker-compose logs ai-service
+   ```
+
+## Structura Proiectului
+
+```
+dermify/
+├── services/           # Microservicii
+│   ├── gateway/       # API Gateway
+│   ├── ai/           # Serviciul Analizei AI
+│   ├── user/         # Gestionarea Utilizatorilor
+│   ├── product/      # Serviciul Produselor
+│   ├── chatbot/      # Serviciul Chatbot
+│   └── web/          # Serviciul Frontend
+├── app/              # Next.js App Router
+├── components/       # Componente React
+├── data/            # Date statice
+├── lib/             # Utilitare
+├── public/          # Asset-uri statice
+├── docker-compose.yml
+├── manage-services.ps1
+└── manage-services.sh
+```
+
+## Contribuții
+
+1. Fă fork la repository
+2. Creează branch-ul tău de funcționalitate (`git checkout -b feature/FuncționalitateUimitoare`)
+3. Comite modificările tale (`git commit -m 'Adaugă o funcționalitate uimitoare'`)
+4. Push la branch (`git push origin feature/FuncționalitateUimitoare`)
+5. Deschide un Pull Request
+
+## Licența
+
+Acest proiect este licențiat sub Licența MIT - consultă fișierul [LICENSE](LICENSE) pentru detalii.
+
+## Mulțumiri
+
+- YOLOv8 pentru capacitățile de analiză a pielii
+- Echipa Next.js pentru framework-ul excelent
+- Tailwind CSS pentru sistemul de stilizare
+- Redis pentru cache și gestionarea sesiunilor
+
+---
+
+Pentru documentația detaliată, consultă:
+- [Arhitectura Microserviciilor](./MICROSERVICES.md)
+- [Ghidul Dezvoltării](./DEVELOPMENT.md)
+- [Documentația API](./API_DOCS.md)
+## Configurarea Dezvoltării Locale
+
+### Prerechizituri
+
+Înainte de a începe, asigură-te că ai instalate următoarele:
+
+- [Node.js](https://nodejs.org/) (versiunea 18 sau mai nouă)
+- [npm](https://www.npmjs.com/) sau [yarn](https://yarnpkg.com/)
+- [Python](https://www.python.org/) (versiunea 3.8 sau mai nouă)
+- [Redis](https://redis.io/) pentru cache (opțional, pentru dezvoltare locală)
+
+### Instalare
+
+1. Clonează repository-ul:
    ```powershell
    git clone https://github.com/edy4ever78/dermify.git
    cd dermify
    ```
 
-2. Install JavaScript dependencies:
+2. Instalează dependențele Node.js:
    ```powershell
    npm install
    ```
 
-3. Set up Python environment for face analysis:
+3. Configurează mediul Python (opțional, pentru analiza facială):
    ```powershell
-   # Create a virtual environment (optional but recommended)
+   # Creează un mediu virtual
    python -m venv venv
+   
+   # Activează mediul virtual
    .\venv\Scripts\Activate.ps1
    
-   # Install required packages
+   # Instalează pachetele necesare
    pip install -r requirements.txt
    ```
 
-4. Configure environment variables:
-   - Copy `.env.local.example` to `.env.local` (or create a new file)
-   - Update Redis connection details if needed
+4. Configurează variabilele de mediu:
+   - Copiază `.env.local.example` în `.env.local` (sau creează un fișier nou)
+   - Actualizează detaliile conexiunii Redis dacă este necesar
 
-5. Start the development server:
+5. Pornește serverul de dezvoltare:
    ```powershell
    npm run dev
    ```
 
-6. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+6. Deschide [http://localhost:3000](http://localhost:3000) în browser pentru a vedea rezultatul.
 
-### AI Face Analysis Setup
+### Configurarea Analizei Faciale AI
 
-The face analysis feature requires a YOLOv8 model and Python backend:
+Funcționalitatea de analiză facială necesită un model YOLOv8 și backend Python:
 
-1. Make sure Python and required packages are installed:
+1. Asigură-te că Python și pachetele necesare sunt instalate:
    ```powershell
    pip install ultralytics fastapi uvicorn python-multipart pillow
    ```
 
-2. YOLOv8 model file (`best.pt`) should be placed in one of these locations:
-   - Primary location: `/api/best.pt`
-   - Alternative location: `/public/models/best.pt`
+2. Fișierul modelului YOLOv8 (`best.pt`) trebuie plasat în una din aceste locații:
+   - Locația principală: `/api/best.pt`
+   - Locația alternativă: `/public/models/best.pt`
    
-3. The Next.js application will automatically start the Python API when needed
+3. Aplicația Next.js va porni automat API-ul Python când este necesar
 
-## 📁 Project Structure
+## Structura Proiectului
 
-- `app/` - Next.js App Router pages and layouts
-  - `api/` - API routes for authentication, products, and skin analysis
-  - `concerns/` - Skin concerns pages
-  - `ingredients/` - Ingredients database pages
-  - `products/` - Products catalog pages
-  - `routines/` - Skincare routines pages
-  - `skin-analysis/` - AI-powered skin analysis pages
-- `components/` - Reusable React components
-- `context/` - React context providers (theme, locale, loading)
-- `public/` - Static assets
-  - `models/` - AI model files
-- `api/` - Python API for face analysis with YOLOv8
-- `data/` - Static data files
-- `lib/` - Utility functions and helpers
-- `hooks/` - Custom React hooks
-- `locales/` - Language translations
+- `app/` - Pagini și layout-uri Next.js App Router
+  - `api/` - Rute API pentru autentificare, produse și analiza pielii
+  - `concerns/` - Pagini preocupări piele
+  - `ingredients/` - Pagini baza de date ingrediente
+  - `products/` - Pagini catalog produse
+  - `routines/` - Pagini rutine îngrijire piele
+  - `skin-analysis/` - Pagini analiză piele alimentată de AI
+- `components/` - Componente React reutilizabile
+- `context/` - Provideri React context (temă, locale, loading)
+- `public/` - Asset-uri statice
+  - `models/` - Fișiere model AI
+- `api/` - API Python pentru analiza facială cu YOLOv8
+- `data/` - Fișiere date statice
+- `lib/` - Funcții utilitare și helperi
+- `hooks/` - Hook-uri React personalizate
+- `locales/` - Traduceri limbi
 
-## 📱 Main Pages
+## Pagini Principale
 
-- **Home** (`/`) - Landing page with feature highlights
-- **Products** (`/products`) - Browse all skincare products
-- **Ingredients** (`/ingredients`) - Browse skincare ingredients database
-- **Skin Concerns** (`/concerns`) - Explore different skin concerns and solutions
-- **Routines** (`/routines`) - View curated skincare routines
-- **Skin Analysis** (`/skin-analysis`) - Analyze your skin with AI
-- **Account** (`/account/profile`) - User profile and settings
-- **Authentication** - Sign in (`/signin`) and sign up (`/signup`) pages
+- **Acasă** (`/`) - Pagina de destinație cu evidențierea funcționalităților
+- **Produse** (`/products`) - Răsfoiește toate produsele de îngrijire a pielii
+- **Ingrediente** (`/ingredients`) - Răsfoiește baza de date a ingredientelor pentru îngrijirea pielii
+- **Preocupări Piele** (`/concerns`) - Explorează diferite preocupări ale pielii și soluții
+- **Rutine** (`/routines`) - Vizualizează rutinele curatate de îngrijire a pielii
+- **Analiza Pielii** (`/skin-analysis`) - Analizează pielea ta cu AI
+- **Cont** (`/account/profile`) - Profilul utilizatorului și setări
+- **Autentificare** - Pagini de conectare (`/signin`) și înregistrare (`/signup`)
 
-## 🧑‍💻 Development
+## Dezvoltare
 
-### Environment Variables
+### Variabile de Mediu
 
-Create a `.env.local` file in the root directory with the following variables:
+Creează un fișier `.env.local` în directorul rădăcină cu următoarele variabile:
 
 ```
-# Redis configuration
+# Configurarea Redis
 REDIS_HOST=localhost
 REDIS_PORT=6379
-# REDIS_PASSWORD=your_password_if_needed
+# REDIS_PASSWORD=parola_ta_dacă_este_necesară
 
-# Optional: Upstash Redis configuration
-# UPSTASH_REDIS_REST_URL=your-upstash-url
-# UPSTASH_REDIS_REST_TOKEN=your-upstash-token
+# Opțional: configurarea Upstash Redis
+# UPSTASH_REDIS_REST_URL=url-ul-tău-upstash
+# UPSTASH_REDIS_REST_TOKEN=token-ul-tău-upstash
 ```
 
-### Available Scripts
+### Scripturi Disponibile
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint to check for code quality
-- `node scripts/importProducts.js` - Import products from CSV to the products data module
+- `npm run dev` - Pornește serverul de dezvoltare
+- `npm run build` - Construiește pentru producție
+- `npm run start` - Pornește serverul de producție
+- `npm run lint` - Rulează ESLint pentru verificarea calității codului
+- `node scripts/importProducts.js` - Importă produse din CSV în modulul de date produse
 
-## 📚 API Routes
+## Rute API
 
-### Authentication
+### Autentificare
 
-- `POST /api/auth/signup` - Register a new user
-- `POST /api/auth/signin` - Log in a user
-- `GET /api/auth/check-auth` - Check authentication status
-- `POST /api/auth/signout` - Log out a user
+- `POST /api/auth/signup` - Înregistrează un utilizator nou
+- `POST /api/auth/signin` - Conectează un utilizator
+- `GET /api/auth/check-auth` - Verifică starea autentificării
+- `POST /api/auth/signout` - Deconectează un utilizator
 
-### Products & Ingredients
+### Produse și Ingrediente
 
-- `GET /api/products` - Get all products (with optional filters)
-- `GET /api/products/[id]` - Get a specific product by ID
-- `GET /api/user/profile` - Get user profile data
-- `PUT /api/user/profile/update` - Update user profile
+- `GET /api/products` - Obține toate produsele (cu filtre opționale)
+- `GET /api/products/[id]` - Obține un produs specific după ID
+- `GET /api/user/profile` - Obține datele profilului utilizatorului
+- `PUT /api/user/profile/update` - Actualizează profilul utilizatorului
 
-### Skin Analysis
+### Analiza Pielii
 
-- `POST /api/skin-analysis/analyze` - Analyze a skin image 
-- `GET /api/skin-analysis/history` - Get user's analysis history
-- `GET /api/yolo-status` - Check YOLOv8 API status
+- `POST /api/skin-analysis/analyze` - Analizează o imagine a pielii
+- `GET /api/skin-analysis/history` - Obține istoricul analizelor utilizatorului
+- `GET /api/yolo-status` - Verifică starea API YOLOv8
 
-## 🌐 Python YOLO API
+## API Python YOLO
 
-The YOLOv8 API provides the following endpoints:
+API-ul YOLOv8 oferă următoarele endpoint-uri:
 
-- `POST /analyze` - Analyze a skin image and detect skin conditions
-- `GET /` - Health check and API information
+- `POST /analyze` - Analizează o imagine a pielii și detectează afecțiunile pielii
+- `GET /` - Verificare stare și informații API
 
-## 🤝 Contributing
 
-Contributions are welcome! Please follow these steps:
 
-1. Fork the repository
-2. Create your feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add some amazing feature'`
-4. Push to the branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 📝 Roadmap
-
-- [ ] Add support for additional languages
-- [ ] Implement product recommendation system
-- [ ] Develop mobile app version
-- [ ] Add camera support for real-time analysis
-- [ ] Integrate with e-commerce platforms
-
-## 👥 Authors
-
-- **Your Name** - *Initial work* - [YourGitHub](https://github.com/yourusername)
-
-## 🙏 Acknowledgments
-
-- YOLOv8 and Ultralytics for the computer vision capabilities
-- Next.js team for the amazing React framework
-- All open-source contributors
