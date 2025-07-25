@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  ollama:
+    image: ollama/ollama
+    container_name: dermify-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+      - OLLAMA_LLM_LIBRARY=cuda
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Optional: Add a model initialization service
+  ollama-init:
+    image: ollama/ollama
+    container_name: dermify-ollama-init
+    depends_on:
+      ollama:
+        condition: service_healthy
+    volumes:
+      - ollama:/root/.ollama
+    environment:
+      - OLLAMA_HOST=dermify-ollama:11434
+    command: >
+      sh -c "
+        echo 'Waiting for Ollama server to be ready...' &&
+        sleep 10 &&
+        ollama pull orca-mini:latest &&
+        ollama pull llama3:8b &&
+        echo 'Models pulled successfully!'
+      "
+    restart: "no"
+
+volumes:
+  ollama:

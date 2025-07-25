@@ -9,11 +9,28 @@ const ChatbotIcon = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isHealthy, setIsHealthy] = useState(null);
   const chatEndRef = useRef(null);
   
   const toggleChat = () => {
     setIsOpen(!isOpen);
   };
+
+  // Check chatbot health on component mount and when chat opens
+  useEffect(() => {
+    const checkHealth = async () => {
+      try {
+        const response = await fetch('/api/chatbot');
+        setIsHealthy(response.ok);
+      } catch (error) {
+        setIsHealthy(false);
+      }
+    };
+
+    if (isOpen) {
+      checkHealth();
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     // Scroll to bottom whenever messages change
@@ -35,42 +52,35 @@ const ChatbotIcon = () => {
     setIsLoading(true);
     
     try {
-      // Call Ollama API running in Docker
-      // Using the Docker host - change this if your Docker setup uses a different IP or hostname
-      const response = await fetch('http://host.docker.internal:11434/api/chat', {
+      // Call our Next.js API route which handles the Ollama communication
+      const response = await fetch('/api/chatbot', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Origin': window.location.origin,
         },
         body: JSON.stringify({
-          model: 'llama3:8b', // using the configured model name
-          messages: [
-            ...messages.map(msg => ({ role: msg.role, content: msg.content })),
-            { role: 'user', content: userMessage }
-          ],
-          stream: false
+          message: userMessage,
+          model: 'orca-mini:latest' // Using the smaller model for better performance
         }),
       });
       
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Ollama API error:', response.status, errorText);
-        throw new Error(`Failed to get response from Ollama (${response.status})`);
-      }
-      
       const data = await response.json();
+      
+      if (!response.ok) {
+        console.error('Chatbot API error:', response.status, data);
+        throw new Error(data.error || 'Failed to get response from chatbot');
+      }
       
       // Add AI response to chat
       setMessages(prev => [...prev, { 
         role: 'system', 
-        content: data.message?.content || "Sorry, I couldn't process your request."
+        content: data.message || "Sorry, I couldn't process your request."
       }]);
     } catch (error) {
-      console.error('Error querying Ollama:', error);
+      console.error('Error querying chatbot:', error);
       setMessages(prev => [...prev, { 
         role: 'system', 
-        content: "I'm having trouble connecting to my brain. Please check the Docker container is running and accessible."
+        content: "I'm having trouble connecting to my AI brain. Please make sure the Docker container is running. You can start it by running the 'start-chatbot.bat' file in the project folder."
       }]);
     } finally {
       setIsLoading(false);
@@ -82,7 +92,14 @@ const ChatbotIcon = () => {
       {isOpen ? (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-80 sm:w-96 overflow-hidden flex flex-col mb-4 border border-gray-200 dark:border-gray-700">
           <div className="bg-teal-500 dark:bg-teal-600 px-4 py-3 flex justify-between items-center">
-            <h3 className="text-white font-medium">Skincare Assistant</h3>
+            <div className="flex items-center space-x-2">
+              <h3 className="text-white font-medium">Skincare Assistant</h3>
+              {isHealthy !== null && (
+                <div className={`w-2 h-2 rounded-full ${isHealthy ? 'bg-green-400' : 'bg-red-400'}`} 
+                     title={isHealthy ? 'AI is online' : 'AI is offline - check Docker container'}>
+                </div>
+              )}
+            </div>
             <button 
               onClick={toggleChat}
               className="text-white hover:bg-teal-600 dark:hover:bg-teal-700 rounded-full p-1"
