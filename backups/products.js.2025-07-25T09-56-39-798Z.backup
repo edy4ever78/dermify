@@ -255,6 +255,24 @@ const products = [
       "combination": true,
       "oily": true
     }
+  },
+  {
+    "id": "sa-as",
+    "brand": "sa",
+    "name": "as",
+    "price": 0.01,
+    "rank": 0.1,
+    "description": "w1",
+    "imageUrl": "",
+    "category": "moisturizers",
+    "purchaseUrl": "",
+    "skinTypes": {
+      "normal": false,
+      "dry": false,
+      "sensitive": false,
+      "combination": false,
+      "oily": false
+    }
   }
 ];
 

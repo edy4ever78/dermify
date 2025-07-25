@@ -108,6 +108,12 @@ export default function Header() {
                     <Link href="/account/profile" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                       Profile
                     </Link>
+                    {/* Developer access - only show for authorized emails */}
+                    {(user?.email === 'admin@dermify.com' || user?.email === 'dev@dermify.com') && (
+                      <Link href="/dev" className="block px-4 py-2 text-sm text-purple-600 dark:text-purple-400 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        🛠️ Developer
+                      </Link>
+                    )}
                     <button
                       onClick={logout}
                       className="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -177,6 +183,12 @@ export default function Header() {
                 <Link href="/account/profile" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800">
                   Profile
                 </Link>
+                {/* Developer access - only show for authorized emails */}
+                {(user?.email === 'admin@dermify.com' || user?.email === 'dev@dermify.com') && (
+                  <Link href="/dev" className="block px-3 py-2 rounded-md text-base font-medium text-purple-600 dark:text-purple-400 hover:bg-gray-50 dark:hover:bg-gray-800">
+                    🛠️ Developer
+                  </Link>
+                )}
                 <button
                   onClick={logout}
                   className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:bg-gray-50 dark:hover:bg-gray-800"
