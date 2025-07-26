@@ -257,21 +257,21 @@ const products = [
     }
   },
   {
-    "id": "sa-as",
-    "brand": "sa",
-    "name": "as",
-    "price": 0.01,
-    "rank": 0.1,
-    "description": "w1",
-    "imageUrl": "",
-    "category": "moisturizers",
-    "purchaseUrl": "",
+    "id": "la-roche-posay-effaclar-gel-facial-wash-for-oily-skin",
+    "brand": "La Roche-Posay",
+    "name": "Effaclar Gel Facial Wash for Oily Skin",
+    "price": 22.99,
+    "rank": 4.5,
+    "description": "This gentle facial wash for oily skin with zinc pidolate effectively cleanses away dirt and oil while respecting skin's pH balance. Cleanses and purifies skin without over drying. Tested on acne-prone skin (non comedogenicity test).",
+    "imageUrl": "https://www.laroche-posay.us/dw/image/v2/AANG_PRD/on/demandware.static/-/Sites-acd-laroche-posay-master-catalog/default/dw5a856f03/img/effaclargelcleanser/effaclar-facial-wash-for-oily-skin-3337872411991-1.jpg?sw=1080&sh=1080&sm=cut&sfrm=jpg&q=70",
+    "category": "cleansers",
+    "purchaseUrl": "https://www.laroche-posay.us/our-products/face/acne-products/effaclar-gel-facial-wash-for-oily-skin-effaclargelcleanser.html?srsltid=AfmBOopZpg-f44e_CH3HeJbsUVIc7X-d7FmaO_dqRQcWdzo6KpU4e--P",
     "skinTypes": {
       "normal": false,
       "dry": false,
       "sensitive": false,
-      "combination": false,
-      "oily": false
+      "combination": true,
+      "oily": true
     }
   }
 ];

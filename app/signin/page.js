@@ -38,8 +38,14 @@ export default function SignIn() {
     setIsSubmitting(true);
     
     try {
-      await login(email, password);
-      router.push(redirect);
+      const user = await login(email, password);
+      
+      // Check if user has completed onboarding
+      if (!user.onboardingCompleted) {
+        router.push('/onboarding');
+      } else {
+        router.push(redirect);
+      }
     } catch (error) {
       setError(error.message || t('loginFailed'));
     } finally {

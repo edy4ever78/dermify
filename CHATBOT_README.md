@@ -1,8 +1,8 @@
-# Dermify AI Chatbot - Complete Setup Guide
+# Dermify AI Chatbot & Redis - Complete Setup Guide
 
-**AI-Powered Skincare Assistant with GPU Support**
+**AI-Powered Skincare Assistant with GPU Support + Redis Caching**
 
-This guide explains how to set up the AI-powered chatbot for Dermify using Docker and Ollama with NVIDIA GPU acceleration.
+This guide explains how to set up the AI-powered chatbot and Redis caching for Dermify using Docker and Ollama with NVIDIA GPU acceleration.
 
 ## Quick Start (Recommended)
 
@@ -11,7 +11,7 @@ This guide explains how to set up the AI-powered chatbot for Dermify using Docke
 setup-complete.bat
 ```
 This automated script will:
-- Start Docker container with GPU support
+- Start Docker containers (Ollama + Redis) with GPU support
 - Download AI models (orca-mini for optimal performance)
 - Start Next.js development server
 - Open website in browser for testing
@@ -24,8 +24,8 @@ npm run dev
 
 ### Option 3: Manual Step-by-Step
 ```cmd
-# 1. Start chatbot services
-npm run chatbot:start
+# 1. Start all services (Ollama + Redis)
+npm run services:start
 
 # 2. Wait for initialization (30 seconds)
 # 3. Start development server
@@ -48,14 +48,18 @@ test-chatbot.bat
 | Command | Description | Use Case |
 |---------|-------------|----------|
 | `setup-complete.bat` | **Complete automated setup** | First-time setup |
-| `start-chatbot.ps1` | Start chatbot services (PowerShell) | Development |
-| `test-chatbot.bat` | Test chatbot functionality | Verification |
-| `npm run chatbot:start` | Start Ollama container | Manual control |
+| `start-chatbot.ps1` | Start all services (PowerShell) | Development |
+| `test-chatbot.bat` | Test all functionality | Verification |
+| `npm run services:start` | Start Ollama + Redis containers | Manual control |
+| `npm run services:stop` | Stop all services | Cleanup |
+| `npm run services:status` | Check all container status | Debugging |
+| `npm run chatbot:start` | Start only Ollama container | Chatbot only |
 | `npm run chatbot:init` | Download AI models | Model management |
-| `npm run chatbot:stop` | Stop all services | Cleanup |
-| `npm run chatbot:status` | Check container status | Debugging |
-| `npm run chatbot:logs` | View container logs | Troubleshooting |
-| `npm run dev:full` | Start chatbot + dev server | Development |
+| `npm run chatbot:logs` | View Ollama logs | Troubleshooting |
+| `npm run redis:start` | Start only Redis container | Redis only |
+| `npm run redis:stop` | Stop Redis container | Redis management |
+| `npm run redis:logs` | View Redis logs | Redis debugging |
+| `npm run dev:full` | Start all services + dev server | Development |
 
 ## AI Models & Performance
 
@@ -84,6 +88,7 @@ const { message, model = 'orca-mini:latest' } = await request.json();
 | **Dermify Website** | http://localhost:3000 | Main application |
 | **Chatbot API** | http://localhost:3000/api/chatbot | Internal API |
 | **Ollama API** | http://localhost:11434 | AI model interface |
+| **Redis Server** | localhost:6379 | Caching & sessions |
 | **Health Check** | http://localhost:3000/api/chatbot | Service status |
 
 ## Testing the Chatbot

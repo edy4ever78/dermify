@@ -5,6 +5,8 @@ const protectedRoutes = [
   '/account',
   '/account/profile',
   '/skin-analysis',
+  '/onboarding',
+  '/dashboard',
 ];
 
 // Auth routes that should redirect to home if already logged in

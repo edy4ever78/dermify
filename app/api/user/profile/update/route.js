@@ -1,4 +1,4 @@
-import { updateUserProfile } from '@/lib/redis';
+import { updateUser } from '@/lib/redis';
 import { NextResponse } from 'next/server';
 
 export async function PUT(request) {
@@ -14,7 +14,7 @@ export async function PUT(request) {
     }
     
     // Update user profile in Redis
-    const updatedUser = await updateUserProfile(email, profileData);
+    const updatedUser = await updateUser(email, profileData);
     
     if (!updatedUser) {
       return NextResponse.json(

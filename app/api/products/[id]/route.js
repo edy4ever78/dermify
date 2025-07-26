@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getProductById, getValidImageUrl } from '@/data/products';
 
 export async function GET(request, { params }) {
-  const { id } = params;
+  const { id } = await params;
   
   const product = getProductById(id);
   

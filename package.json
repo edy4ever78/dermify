@@ -12,7 +12,13 @@
     "chatbot:stop": "docker-compose down",
     "chatbot:status": "docker-compose ps",
     "chatbot:logs": "docker-compose logs ollama",
-    "dev:full": "npm run chatbot:start && timeout /t 15 && npm run dev"
+    "redis:start": "docker-compose up -d redis",
+    "redis:stop": "docker-compose stop redis",
+    "redis:logs": "docker-compose logs redis",
+    "services:start": "docker-compose up -d ollama redis",
+    "services:stop": "docker-compose down",
+    "services:status": "docker-compose ps",
+    "dev:full": "npm run services:start && timeout /t 15 && npm run dev"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.3",

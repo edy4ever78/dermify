@@ -257,20 +257,128 @@ const products = [
     }
   },
   {
-    "id": "da-da",
-    "brand": "da",
-    "name": "da",
-    "price": 12,
-    "rank": 4,
-    "description": "sa",
-    "imageUrl": "https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D",
+    "id": "la-roche-posay-effaclar-gel-facial-wash-for-oily-skin",
+    "brand": "La Roche-Posay",
+    "name": "Effaclar Gel Facial Wash for Oily Skin",
+    "price": 22.99,
+    "rank": 4.5,
+    "description": "This gentle facial wash for oily skin with zinc pidolate effectively cleanses away dirt and oil while respecting skin's pH balance. Cleanses and purifies skin without over drying. Tested on acne-prone skin (non comedogenicity test).",
+    "imageUrl": "https://www.laroche-posay.us/dw/image/v2/AANG_PRD/on/demandware.static/-/Sites-acd-laroche-posay-master-catalog/default/dw5a856f03/img/effaclargelcleanser/effaclar-facial-wash-for-oily-skin-3337872411991-1.jpg?sw=1080&sh=1080&sm=cut&sfrm=jpg&q=70",
     "category": "cleansers",
-    "purchaseUrl": "https://letsenhance.io/",
+    "purchaseUrl": "https://www.laroche-posay.us/our-products/face/acne-products/effaclar-gel-facial-wash-for-oily-skin-effaclargelcleanser.html?srsltid=AfmBOopZpg-f44e_CH3HeJbsUVIc7X-d7FmaO_dqRQcWdzo6KpU4e--P",
     "skinTypes": {
       "normal": false,
       "dry": false,
       "sensitive": false,
-      "combination": false,
+      "combination": true,
+      "oily": true
+    }
+  },
+  {
+    "id": "la-roche-posay-effaclar-a-z-gel-cream",
+    "brand": "La Roche-Posay",
+    "name": "Effaclar A.Z. Gel-Cream",
+    "price": 63,
+    "rank": 4.4,
+    "description": "Innovation for adult, acne-prone and aging skin. A daily lightweight moisturizer, enriched with a potent tri-acid complex of 10% Azelaic Acid, Salicylic Acid and Hyaluronic Acid. This gel-cream immediately hydrates while delivering triple efficacy against post-acne marks, signs of aging and evens skin tone.",
+    "imageUrl": "https://www.laroche-posay.ca/dw/image/v2/AATL_PRD/on/demandware.static/-/Sites-larocheposay-master-catalog/default/dw15f852a0/2025/3337875920742/3337875920742_1.jpg?sw=1080&sh=1080&sm=cut&sfrm=jpg&q=70",
+    "category": "moisturizers",
+    "purchaseUrl": "https://www.laroche-posay.ca/en_CA/face-care-face-moisturizers/effaclar-az-gel-cream.html",
+    "skinTypes": {
+      "normal": true,
+      "dry": true,
+      "sensitive": true,
+      "combination": true,
+      "oily": true
+    }
+  },
+  {
+    "id": "la-roche-posay-anthelios-ultra-fluid-spf-50-facial-sunscreen",
+    "brand": "La Roche-Posay",
+    "name": "Anthelios Ultra-Fluid SPF 50+ Facial Sunscreen",
+    "price": 35.95,
+    "rank": 4.4,
+    "description": "Our best sunscreen for the face, this ultra-light, fragrance-free sunscreen has NETLOCK Technology and delivers an ultra invisible protection against sun damage. This high broad-spectrum UVA and UVB protection is ultra-resistant, protective and safe.",
+    "imageUrl": "https://www.laroche-posay.ca/dw/image/v2/AATL_PRD/on/demandware.static/-/Sites-larocheposay-master-catalog/default/dw4e525f92/2021/03337875709361/LRP-Sun-Protection-Anthelios-Ultra-Fluid-Face-Lotion-SPF50+-50ml-03337875709361.jpg?sw=1080&sh=1080&sm=cut&sfrm=jpg&q=70",
+    "category": "sunscreens",
+    "purchaseUrl": "https://www.laroche-posay.ca/en_CA/sunscreen/sun-product-type/sun-fluid/anthelios-ultra-fluid-spf-50-facial-sunscreen/3337875709361.html",
+    "skinTypes": {
+      "normal": true,
+      "dry": true,
+      "sensitive": true,
+      "combination": true,
+      "oily": true
+    }
+  },
+  {
+    "id": "kylie-cosmetics-detox-face-mask",
+    "brand": "Kylie Cosmetics",
+    "name": "Detox Face Mask",
+    "price": 24,
+    "rank": 5,
+    "description": "Give your skin an instant reboot with my detox face mask that draws out impurities, tackles excess oil, and helps visibly improve the appearance of pores. this quick-drying clay formula works to deeply cleanse and renew the skin, leaving it feeling soft and balanced without tightness.",
+    "imageUrl": "https://kyliecosmetics.com/cdn/shop/products/KS_Detox-Mask_Ecomm-Pink_01_800x.jpg?v=1676679013",
+    "category": "masks",
+    "purchaseUrl": "https://kyliecosmetics.com/products/detox-face-mask?variant=43927614062834",
+    "skinTypes": {
+      "normal": true,
+      "dry": true,
+      "sensitive": true,
+      "combination": true,
+      "oily": true
+    }
+  },
+  {
+    "id": "dr-jart-cryo-rubber-firming-mask",
+    "brand": "Dr. Jart+",
+    "name": "Cryo Rubber Firming Mask",
+    "price": 14.15,
+    "rank": 4.7,
+    "description": "A two‑step, cryotherapy-inspired rubber mask designed to visibly firm, hydrate, and plump the skin while delivering a cooling, soothing sensation.",
+    "imageUrl": "https://d1flfk77wl2xk4.cloudfront.net/Assets/62/039/XXL_p0211803962.jpg",
+    "category": "masks",
+    "purchaseUrl": "https://www.yesstyle.com/en/tcuc.EUR/coc.RO/info.html/pid.1129591313?googtrans=ro&utm_source=GoogleAds&utm_campaign=22261450933&utm_term=&utm_content=178779750121_733700162159&utm_medium=Shopping&bac=6PTLZZNQ&mcg=paidsearch&gad_source=1&gad_campaignid=22261450933&gbraid=0AAAAAD3WTkkd5UDti7E9eQb_B5SEIVlGQ&gclid=CjwKCAjw1ozEBhAdEiwAn9qbzf9fX61K3mjTcLSlOg6qmVjXyoyopS4gPNMZRVn9gbVacBtNWfM4QBoCbjsQAvD_BwE",
+    "skinTypes": {
+      "normal": true,
+      "dry": true,
+      "sensitive": false,
+      "combination": true,
+      "oily": true
+    }
+  },
+  {
+    "id": "kylie-cosmetics-vanilla-milk-toner",
+    "brand": "Kylie Cosmetics",
+    "name": "Vanilla Milk Toner",
+    "price": 23,
+    "rank": 5,
+    "description": "Vanilla milk toner is an alcohol-free formula that helps balance skin, smooth texture, and minimize the appearance of pores. this skin-perfecting toner is an essential step for smooth, replenished skin after each cleanse.",
+    "imageUrl": "https://kyliecosmetics.com/cdn/shop/products/KS_Vanilla-Milk-Toner_Ecomm-Pink_01_800x.jpg?v=1676681091",
+    "category": "toners",
+    "purchaseUrl": "https://kyliecosmetics.com/products/vanilla-milk-toner?variant=43927626809586",
+    "skinTypes": {
+      "normal": true,
+      "dry": true,
+      "sensitive": true,
+      "combination": true,
+      "oily": true
+    }
+  },
+  {
+    "id": "the-ordinary-glycolic-acid-7-exfoliating-toner",
+    "brand": "The Ordinary",
+    "name": "Glycolic Acid 7% Exfoliating Toner",
+    "price": 13,
+    "rank": 4.5,
+    "description": "A daily glycolic acid toner that smooths skin texture, evens tone, and enhances luminosity.",
+    "imageUrl": "https://theordinary.com/dw/image/v2/BFKJ_PRD/on/demandware.static/-/Sites-deciem-master/default/dw7d9b7362/Images/products/The%20Ordinary/rdn-glycolic-acid-7pct-exfoliating-toner-100ml.png?sw=800&sh=800&sm=fit",
+    "category": "toners",
+    "purchaseUrl": "https://theordinary.com/en-us/glycolic-acid-7-exfoliating-toner-100418.html",
+    "skinTypes": {
+      "normal": true,
+      "dry": true,
+      "sensitive": true,
+      "combination": true,
       "oily": true
     }
   }

@@ -47,11 +47,12 @@ export async function POST(req) {
       email,
       password,
       skinType: 'Normal', // Default skin type
-      skinConcerns: [] // Default empty skin concerns
+      skinConcerns: [], // Default empty skin concerns
+      onboardingCompleted: false // New users need to complete onboarding
     });
 
     // Generate a token for the new user
-    const authToken = Buffer.from(`${newUser.email}-${Date.now()}`).toString('base64');
+    const authToken = Buffer.from(`${newUser.email}-${Date.now()}`, 'utf8').toString('base64');
 
     // Return user data (without password)
     return NextResponse.json({ 

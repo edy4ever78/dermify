@@ -15,7 +15,7 @@ export async function GET(request) {
       // This is a simplified implementation
       
       // Extract email from the token (assuming token format is base64 of "email-timestamp")
-      const decodedToken = Buffer.from(authToken, 'base64').toString();
+      const decodedToken = Buffer.from(authToken, 'base64').toString('utf8');
       const email = decodedToken.split('-')[0];
       
       if (!email) {

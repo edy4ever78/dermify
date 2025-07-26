@@ -1,4 +1,33 @@
-# Dermify Chatbot Startup Script
+# Dermify Chatbot and Redis Start# Start the Ollama and Redis services
+Write-H# Test model availability
+WrWrite-Host "===============================================" -ForegroundColor Green
+Write-Host "Dermify Services Started Successfully!" -ForegroundColor Green
+Write-Host "===============================================" -ForegroundColor Green
+Write-Host ""
+Write-Host "Ollama API: http://localhost:11434" -ForegroundColor White
+Write-Host "Redis Server: localhost:6379" -ForegroundColor White
+Write-Host "Health Check: http://localhost:11434/api/tags" -ForegroundColor Whitest ""
+Write-Host "Testing services..." -ForegroundColor Cyan
+try {
+    $models = docker exec dermify-ollama ollama list
+    Write-Host $models
+    Write-Host "Ollama models loaded successfully!" -ForegroundColor Green
+} catch {
+    Write-Host "Warning: Could not list Ollama models. They may still be downloading." -ForegroundColor Yellow
+}
+
+try {
+    $redisTest = docker exec dermify-redis redis-cli ping
+    if ($redisTest -eq "PONG") {
+        Write-Host "Redis is responding correctly!" -ForegroundColor Green
+    }
+} catch {
+    Write-Host "Warning: Could not connect to Redis." -ForegroundColor Yellow
+}ite-Host "Starting Ollama and Redis containers..." -ForegroundColor Cyan
+docker-compose up -d ollama rediscript
+# PowerShell version for better error handling and cross-platform support
+
+Write-Host "Starting Dermify Services (Chatbot + Redis)..." -ForegroundColor Cyanrmify Chatbot Startup Script
 # PowerShell version for better error handling and cross-platform support
 
 Write-Host "🤖 Starting Dermify Chatbot Services..." -ForegroundColor Cyan

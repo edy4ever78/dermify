@@ -29,6 +29,9 @@ export async function POST(request) {
       name: `${user.firstName} ${user.lastName}`,
       timestamp: Date.now()
     };
+
+    // Generate auth token (same format as signup)
+    const authToken = Buffer.from(`${user.email}-${Date.now()}`, 'utf8').toString('base64');
     
     // Set cookie and return success
     const response = NextResponse.json({ 
@@ -38,8 +41,12 @@ export async function POST(request) {
         email: user.email,
         name: `${user.firstName} ${user.lastName}`,
         firstName: user.firstName,
-        lastName: user.lastName
-      }
+        lastName: user.lastName,
+        skinType: user.skinType,
+        skinConcerns: user.skinConcerns,
+        onboardingCompleted: user.onboardingCompleted
+      },
+      token: authToken
     });
     
     // Set the session cookie

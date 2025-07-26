@@ -10,6 +10,7 @@ const AuthContext = createContext({
   login: async () => {},
   signup: async () => {},
   logout: () => {},
+  refreshUser: async () => {},
   error: null,
 });
 
@@ -28,8 +29,12 @@ export function AuthProvider({ children }) {
         const storedUser = localStorage.getItem('user');
         const authToken = localStorage.getItem('authToken');
         
+        console.log('Auth Context: useEffect - storedUser:', storedUser ? 'exists' : 'missing');
+        console.log('Auth Context: useEffect - authToken:', authToken ? `"${authToken.substring(0, 20)}..."` : 'missing');
+        
         if (storedUser && authToken) {
           setUser(JSON.parse(storedUser));
+          console.log('Auth Context: useEffect - restored user from localStorage');
           setIsLoading(false);
           return;
         }
@@ -88,6 +93,9 @@ export function AuthProvider({ children }) {
       localStorage.setItem('userEmail', data.user.email);
       localStorage.setItem('authToken', data.token);
       
+      console.log('Auth Context: Login - stored token:', data.token ? `"${data.token.substring(0, 20)}..."` : 'missing');
+      console.log('Auth Context: Login - localStorage check:', localStorage.getItem('authToken') ? 'token stored' : 'token NOT stored');
+      
       return data.user;
     } catch (error) {
       setError(error.message);
@@ -128,6 +136,28 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const refreshUser = async () => {
+    try {
+      const authToken = localStorage.getItem('authToken');
+      if (!authToken) return;
+
+      const response = await fetch('/api/auth/session', {
+        headers: {
+          'Authorization': authToken
+        }
+      });
+      const data = await response.json();
+      
+      if (data.user) {
+        setUser(data.user);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('userEmail', data.user.email);
+      }
+    } catch (error) {
+      console.error('Failed to refresh user data:', error);
+    }
+  };
+
   const logout = async () => {
     setGlobalLoading(true);
     
@@ -156,6 +186,7 @@ export function AuthProvider({ children }) {
       login,
       signup,
       logout,
+      refreshUser,
       error,
     }}>
       {children}

@@ -1,5 +1,5 @@
 @echo off
-echo Starting Dermify Chatbot Services...
+echo Starting Dermify Services (Chatbot + Redis)...
 echo.
 
 REM Check if Docker is running
@@ -15,8 +15,8 @@ echo Stopping existing containers...
 docker-compose down
 
 REM Start the services
-echo Starting Ollama container with GPU support...
-docker-compose up -d ollama
+echo Starting Ollama and Redis containers...
+docker-compose up -d ollama redis
 
 REM Wait for Ollama to be ready
 echo Waiting for Ollama to be ready...
@@ -39,11 +39,12 @@ docker-compose ps
 
 echo.
 echo ===============================================
-echo Dermify Chatbot Services Started Successfully!
+echo Dermify Services Started Successfully!
 echo ===============================================
 echo.
 echo Ollama API: http://localhost:11434
-echo Health Check: http://localhost:11434/api/health
+echo Redis Server: localhost:6379
+echo Health Check: http://localhost:11434/api/tags
 echo.
 echo You can now start your Next.js development server:
 echo npm run dev

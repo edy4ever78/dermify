@@ -1,17 +1,63 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import ChatbotIcon from '@/components/ChatbotIcon';
 import { useLoading } from '@/context/loading-context';
+import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { handleSearch } from '@/utils/search';
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [hasRedirected, setHasRedirected] = useState(false);
   const { setIsLoading } = useLoading();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const router = useRouter();
+  
+  // Check if user wants to bypass redirects (for debugging or accessing landing page)
+  const [bypassRedirect, setBypassRedirect] = useState(false);
+  
+  // Check for bypass parameter on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      setBypassRedirect(urlParams.get('bypass') === 'true');
+    }
+  }, []);
+
+  // Handle user redirection based on authentication and onboarding status
+  useEffect(() => {
+    // Prevent redirect if still loading, already redirected, or bypass is enabled
+    if (authLoading || hasRedirected || bypassRedirect) {
+      return;
+    }
+
+    // ONLY redirect authenticated users who haven't completed onboarding
+    // Users who have completed onboarding can freely access the landing page
+    if (isAuthenticated && user && typeof window !== 'undefined') {
+      const currentPath = window.location.pathname;
+      
+      console.log('Redirect check:', { 
+        authLoading, 
+        isAuthenticated, 
+        userExists: !!user,
+        onboardingCompleted: user?.onboardingCompleted,
+        hasRedirected,
+        bypassRedirect,
+        currentPath 
+      });
+      
+      // Only redirect if user hasn't completed onboarding
+      if (currentPath === '/' && user.onboardingCompleted === false) {
+        setHasRedirected(true);
+        console.log('Redirecting to onboarding - user has not completed onboarding');
+        window.location.href = '/onboarding';
+      }
+      // Do NOT redirect users who have completed onboarding - let them use the landing page
+    }
+  }, [authLoading, isAuthenticated, user, hasRedirected, bypassRedirect]);
 
   // Helper function to navigate with loading indicator
   const navigateTo = (path) => {
@@ -25,9 +71,47 @@ export default function Home() {
     handleSearch(searchQuery, router, setIsLoading);
   };
 
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-teal-500"></div>
+      </div>
+    );
+  }
+
+  // Show redirecting screen only for authenticated users who haven't completed onboarding
+  if (isAuthenticated && user && user.onboardingCompleted === false && !hasRedirected && !bypassRedirect) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-teal-500 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-300">Redirecting to onboarding...</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+            If you're stuck, <a href="/?bypass=true" className="text-teal-500 underline">click here</a> to access the home page
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // For all other cases (not authenticated, completed onboarding, or bypass), show the landing page
+
   return (
     <>
       <Header />
+      
+      {/* Debug info for development */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="fixed top-16 right-4 z-50 bg-black bg-opacity-80 text-white p-2 rounded text-xs max-w-xs">
+          <div><strong>Auth Loading:</strong> {authLoading ? 'Yes' : 'No'}</div>
+          <div><strong>Is Authenticated:</strong> {isAuthenticated ? 'Yes' : 'No'}</div>
+          <div><strong>User:</strong> {user ? 'Exists' : 'None'}</div>
+          <div><strong>Onboarding:</strong> {user?.onboardingCompleted ? 'Complete' : 'Incomplete'}</div>
+          <div><strong>Has Redirected:</strong> {hasRedirected ? 'Yes' : 'No'}</div>
+          <div><strong>Bypass:</strong> {bypassRedirect ? 'Yes' : 'No'}</div>
+        </div>
+      )}
       
       <main className="min-h-screen">
         {/* Hero Section with Video Background */}
@@ -366,10 +450,7 @@ export default function Home() {
                       } text-white font-bold flex items-center justify-center text-lg shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                         {product.score}
                       </div>
-                      <div className="text-right">
-                        <div className="text-xs text-gray-500 dark:text-gray-400">Recently viewed</div>
-                        <div className="text-sm font-medium text-gray-700 dark:text-gray-300">{product.users} times</div>
-                      </div>
+                      
                     </div>
                     
                     {/* Product Info */}
@@ -463,13 +544,7 @@ export default function Home() {
                       } text-white font-bold flex items-center justify-center text-sm`}>
                         {ingredient.safetyScore}
                       </div>
-                      <div className="flex items-center">
-                        <span className={`text-sm font-medium ${
-                          ingredient.trendingUp ? 'text-green-600' : 'text-orange-600'
-                        }`}>
-                          {ingredient.trendingUp ? '↗' : '↘'} {ingredient.popularity}%
-                        </span>
-                      </div>
+                      
                     </div>
                     
                     {/* Ingredient Name */}

@@ -106,6 +106,13 @@ export default function ProfilePage() {
           skinConcerns: Array.isArray(userData.skinConcerns) && userData.skinConcerns.length > 0
             ? userData.skinConcerns
             : [],
+          ageRange: userData.ageRange || '',
+          skincareExperience: userData.skincareExperience || '',
+          budget: userData.budget || '',
+          lifestyle: userData.lifestyle || '',
+          goals: userData.goals || '',
+          allergies: userData.allergies || '',
+          currentRoutine: userData.currentRoutine || ''
         });
 
         loadSavedRoutines();
@@ -176,7 +183,14 @@ export default function ProfilePage() {
         firstName,
         lastName,
         skinType: formData.skinType,
-        skinConcerns: formData.skinConcerns
+        skinConcerns: formData.skinConcerns,
+        ageRange: formData.ageRange,
+        skincareExperience: formData.skincareExperience,
+        budget: formData.budget,
+        lifestyle: formData.lifestyle,
+        goals: formData.goals,
+        allergies: formData.allergies,
+        currentRoutine: formData.currentRoutine
       };
       
       const response = await fetch('/api/user/profile/update', {
@@ -444,10 +458,132 @@ export default function ProfilePage() {
                           ))}
                         </div>
                       </div>
+
+                      <div>
+                        <label htmlFor="ageRange" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Age Range
+                        </label>
+                        <select
+                          id="ageRange"
+                          name="ageRange"
+                          value={formData.ageRange}
+                          onChange={handleInputChange}
+                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
+                        >
+                          <option value="">Select Age Range</option>
+                          <option value="Under 18">Under 18</option>
+                          <option value="18-24">18-24</option>
+                          <option value="25-34">25-34</option>
+                          <option value="35-44">35-44</option>
+                          <option value="45-54">45-54</option>
+                          <option value="55+">55+</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label htmlFor="skincareExperience" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Skincare Experience
+                        </label>
+                        <select
+                          id="skincareExperience"
+                          name="skincareExperience"
+                          value={formData.skincareExperience}
+                          onChange={handleInputChange}
+                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
+                        >
+                          <option value="">Select Experience Level</option>
+                          <option value="beginner">Beginner</option>
+                          <option value="intermediate">Intermediate</option>
+                          <option value="advanced">Advanced</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label htmlFor="budget" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Budget Range
+                        </label>
+                        <select
+                          id="budget"
+                          name="budget"
+                          value={formData.budget}
+                          onChange={handleInputChange}
+                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
+                        >
+                          <option value="">Select Budget Range</option>
+                          <option value="budget">Budget-Friendly (Under $50/month)</option>
+                          <option value="moderate">Moderate ($50-150/month)</option>
+                          <option value="premium">Premium ($150-300/month)</option>
+                          <option value="luxury">Luxury ($300+/month)</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label htmlFor="lifestyle" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Lifestyle
+                        </label>
+                        <select
+                          id="lifestyle"
+                          name="lifestyle"
+                          value={formData.lifestyle}
+                          onChange={handleInputChange}
+                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
+                        >
+                          <option value="">Select Lifestyle</option>
+                          <option value="minimal">Minimal Routine (5 minutes or less)</option>
+                          <option value="normal">Standard Routine (10-15 minutes)</option>
+                          <option value="extensive">Extensive Routine (20+ minutes)</option>
+                          <option value="travel">Always Traveling (Need portable solutions)</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label htmlFor="goals" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Skincare Goals
+                        </label>
+                        <textarea
+                          id="goals"
+                          name="goals"
+                          value={formData.goals}
+                          onChange={handleInputChange}
+                          rows="3"
+                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
+                          placeholder="What do you hope to achieve with your skincare routine?"
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="allergies" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Allergies & Sensitivities
+                        </label>
+                        <textarea
+                          id="allergies"
+                          name="allergies"
+                          value={formData.allergies}
+                          onChange={handleInputChange}
+                          rows="2"
+                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
+                          placeholder="e.g., fragrance, retinol, sulfates..."
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="currentRoutine" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Current Skincare Routine
+                        </label>
+                        <textarea
+                          id="currentRoutine"
+                          name="currentRoutine"
+                          value={formData.currentRoutine}
+                          onChange={handleInputChange}
+                          rows="3"
+                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
+                          placeholder="Describe your current products and routine..."
+                        />
+                      </div>
                     </div>
                   ) : (
                     <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div>
                           <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Full Name')}</h3>
                           <p className="mt-1 text-gray-900 dark:text-gray-100">{user.name}</p>
@@ -469,6 +605,47 @@ export default function ProfilePage() {
                             {renderSkinConcerns()}
                           </div>
                         </div>
+
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Age Range</h3>
+                          <p className="mt-1 text-gray-900 dark:text-gray-100">{user.ageRange || 'Not specified'}</p>
+                        </div>
+
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Experience Level</h3>
+                          <p className="mt-1 text-gray-900 dark:text-gray-100 capitalize">{user.skincareExperience || 'Not specified'}</p>
+                        </div>
+
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Budget Range</h3>
+                          <p className="mt-1 text-gray-900 dark:text-gray-100 capitalize">{user.budget || 'Not specified'}</p>
+                        </div>
+
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Lifestyle</h3>
+                          <p className="mt-1 text-gray-900 dark:text-gray-100 capitalize">{user.lifestyle || 'Not specified'}</p>
+                        </div>
+
+                        {user.goals && (
+                          <div className="col-span-2">
+                            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Skincare Goals</h3>
+                            <p className="mt-1 text-gray-900 dark:text-gray-100">{user.goals}</p>
+                          </div>
+                        )}
+
+                        {user.allergies && (
+                          <div className="col-span-2">
+                            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Allergies & Sensitivities</h3>
+                            <p className="mt-1 text-gray-900 dark:text-gray-100">{user.allergies}</p>
+                          </div>
+                        )}
+
+                        {user.currentRoutine && (
+                          <div className="col-span-2">
+                            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Current Routine</h3>
+                            <p className="mt-1 text-gray-900 dark:text-gray-100">{user.currentRoutine}</p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}

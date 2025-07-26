@@ -61,8 +61,10 @@ export default function SignUp() {
     setIsSubmitting(true);
     
     try {
-      await signup({ firstName, lastName, email, password });
-      router.push('/');
+      const newUser = await signup({ firstName, lastName, email, password });
+      
+      // Redirect to onboarding for new users
+      router.push('/onboarding');
     } catch (error) {
       setError(error.message || t('signupFailed'));
     } finally {
