@@ -1,6 +1,32 @@
 version: '3.8'
 
 services:
+  # Dermify Next.js Application
+  dermify-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dermify-app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - REDIS_URL=redis://dermify-redis:6379
+      - OLLAMA_HOST=http://dermify-ollama:11434
+      - NEXT_PUBLIC_API_URL=http://localhost:3000
+    depends_on:
+      redis:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
   ollama:
     image: ollama/ollama
     container_name: dermify-ollama

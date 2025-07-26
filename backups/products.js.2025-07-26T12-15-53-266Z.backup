@@ -336,12 +336,102 @@ const products = [
     "rank": 4.7,
     "description": "A two‑step, cryotherapy-inspired rubber mask designed to visibly firm, hydrate, and plump the skin while delivering a cooling, soothing sensation.",
     "imageUrl": "https://d1flfk77wl2xk4.cloudfront.net/Assets/62/039/XXL_p0211803962.jpg",
-    "category": "cleansers",
+    "category": "masks",
     "purchaseUrl": "https://www.yesstyle.com/en/tcuc.EUR/coc.RO/info.html/pid.1129591313?googtrans=ro&utm_source=GoogleAds&utm_campaign=22261450933&utm_term=&utm_content=178779750121_733700162159&utm_medium=Shopping&bac=6PTLZZNQ&mcg=paidsearch&gad_source=1&gad_campaignid=22261450933&gbraid=0AAAAAD3WTkkd5UDti7E9eQb_B5SEIVlGQ&gclid=CjwKCAjw1ozEBhAdEiwAn9qbzf9fX61K3mjTcLSlOg6qmVjXyoyopS4gPNMZRVn9gbVacBtNWfM4QBoCbjsQAvD_BwE",
     "skinTypes": {
       "normal": true,
       "dry": true,
       "sensitive": false,
+      "combination": true,
+      "oily": true
+    }
+  },
+  {
+    "id": "kylie-cosmetics-vanilla-milk-toner",
+    "brand": "Kylie Cosmetics",
+    "name": "Vanilla Milk Toner",
+    "price": 23,
+    "rank": 5,
+    "description": "Vanilla milk toner is an alcohol-free formula that helps balance skin, smooth texture, and minimize the appearance of pores. this skin-perfecting toner is an essential step for smooth, replenished skin after each cleanse.",
+    "imageUrl": "https://kyliecosmetics.com/cdn/shop/products/KS_Vanilla-Milk-Toner_Ecomm-Pink_01_800x.jpg?v=1676681091",
+    "category": "toners",
+    "purchaseUrl": "https://kyliecosmetics.com/products/vanilla-milk-toner?variant=43927626809586",
+    "skinTypes": {
+      "normal": true,
+      "dry": true,
+      "sensitive": true,
+      "combination": true,
+      "oily": true
+    }
+  },
+  {
+    "id": "the-ordinary-glycolic-acid-7-exfoliating-toner",
+    "brand": "The Ordinary",
+    "name": "Glycolic Acid 7% Exfoliating Toner",
+    "price": 13,
+    "rank": 4.5,
+    "description": "A daily glycolic acid toner that smooths skin texture, evens tone, and enhances luminosity.",
+    "imageUrl": "https://theordinary.com/dw/image/v2/BFKJ_PRD/on/demandware.static/-/Sites-deciem-master/default/dw7d9b7362/Images/products/The%20Ordinary/rdn-glycolic-acid-7pct-exfoliating-toner-100ml.png?sw=800&sh=800&sm=fit",
+    "category": "toners",
+    "purchaseUrl": "https://theordinary.com/en-us/glycolic-acid-7-exfoliating-toner-100418.html",
+    "skinTypes": {
+      "normal": true,
+      "dry": true,
+      "sensitive": true,
+      "combination": true,
+      "oily": true
+    }
+  },
+  {
+    "id": "fenty-beauty-cookies-n-clean-whipped-clay-pore-detox-face-mask-with-salicylic-acid-charcoal",
+    "brand": "Fenty Beauty",
+    "name": "Cookies N Clean Whipped Clay Pore Detox Face Mask with Salicylic Acid + Charcoal",
+    "price": 38,
+    "rank": 4.5,
+    "description": "The non-drying 10-minute pore detox that delivers: whipped Clay and Charcoal deeply purify pores and clear dirt, while leaving skin soft and conditioned.",
+    "imageUrl": "https://cdn.shopify.com/s/files/1/0341/3458/9485/files/FS_FSPR_SUM22_T2PRODUCT_ECOMM_COOKIES_N_CLEAN_DETOX_FACE_MASK_OPEN_1200x1500_1d582acc-ae1a-41e4-9fb7-74f2cf1ea562.jpg?v=1714762767&width=1920",
+    "category": "masks",
+    "purchaseUrl": "https://fentybeauty.com/en-ro/products/cookies-n-clean-whipped-clay-pore-detox-face-mask-with-salicylic-acid-charcoal?variant=40240683024429",
+    "skinTypes": {
+      "normal": true,
+      "dry": true,
+      "sensitive": true,
+      "combination": true,
+      "oily": true
+    }
+  },
+  {
+    "id": "the-ordinary-salicylic-acid-2-masque",
+    "brand": "The Ordinary",
+    "name": "Salicylic Acid 2% Masque",
+    "price": 13.8,
+    "rank": 4.4,
+    "description": "Salicylic Acid 2% Masque is a charcoal- and clay-infused formula that targets lacklustre tone and textural irregularities, leaving your skin clean and refreshed. With the help of salicylic acid, a lipophilic BHA known to target pore congestion, this deeply cleansing masque removes dead skin cells and excess oil, which promotes soft and smooth skin. The clay and charcoal absorb facial impurities that would otherwise clog pores, helping to boost radiance.",
+    "imageUrl": "https://theordinary.com/dw/image/v2/BFKJ_PRD/on/demandware.static/-/Sites-deciem-master/default/dwb391b95c/Images/products/The%20Ordinary/rdn-salicylic-acid-2pct-masque-50ml.png?sw=800&sh=800&sm=fit",
+    "category": "masks",
+    "purchaseUrl": "https://theordinary.com/en-us/salicylic-acid-2-face-masque-100443.html",
+    "skinTypes": {
+      "normal": false,
+      "dry": false,
+      "sensitive": false,
+      "combination": false,
+      "oily": true
+    }
+  },
+  {
+    "id": "fenty-beauty-fat-water-niacinamide-pore-refining-toner-serum-with-barbados-cherry",
+    "brand": "Fenty Beauty",
+    "name": "Fat Water Niacinamide Pore-Refining Toner Serum with Barbados Cherry",
+    "price": 36,
+    "rank": 4.5,
+    "description": "The power of a serum plus the treatment of a toner in one pore-busting step. It tightens the look of pores, helps visibly fade dark spots, smooths and plumps skin, and checks shine–without stripping moisture.",
+    "imageUrl": "https://cdn.shopify.com/s/files/1/0341/3458/9485/products/47151.jpg?v=1619802668&width=1920",
+    "category": "toners",
+    "purchaseUrl": "https://fentybeauty.com/en-ro/products/fat-water-niacinamide-pore-refining-toner-serum-with-barbados-cherry?variant=39329802518573",
+    "skinTypes": {
+      "normal": true,
+      "dry": true,
+      "sensitive": true,
       "combination": true,
       "oily": true
     }

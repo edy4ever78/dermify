@@ -7,6 +7,8 @@ const nextConfig = {
   images: {
     domains: ['localhost', 'dermify.com'],
   },
+  // Enable standalone output for Docker
+  output: 'standalone',
   async headers() {
     return [
       {

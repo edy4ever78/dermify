@@ -6,10 +6,35 @@ import {
   formatRecommendations,
   parseUserMessage 
 } from '@/utils/recommendations';
+import { getUserByEmail } from '@/lib/redis';
+
+// Helper function to extract user data from auth token
+async function getUserFromToken(authToken) {
+  if (!authToken) return null;
+  
+  try {
+    const decodedToken = Buffer.from(authToken, 'base64').toString('utf8');
+    const email = decodedToken.split('-')[0];
+    
+    if (!email) return null;
+    
+    const user = await getUserByEmail(email);
+    return user;
+  } catch (error) {
+    console.error('Error extracting user from token:', error);
+    return null;
+  }
+}
 
 export async function POST(request) {
   try {
     const { message, model = 'orca-mini:latest' } = await request.json();
+    
+    // Get auth token from headers to identify the user
+    const authToken = request.headers.get('authorization');
+    
+    // Extract user data for personalized recommendations
+    const userData = await getUserFromToken(authToken);
 
     if (!message) {
       return NextResponse.json(
@@ -91,14 +116,44 @@ export async function POST(request) {
       hasSkinConcernContext && !hasRecommendationIntent && 
       !messageLower.includes('what is') && !messageLower.includes('explain')
     );
+    
+    // Detect personal profile questions
+    const isPersonalProfileQuery = messageLower.includes('about me') || 
+      messageLower.includes('about myself') || 
+      messageLower.includes('my profile') || 
+      messageLower.includes('my skin') || 
+      messageLower.includes('tell me about') ||
+      (messageLower.includes('what') && (messageLower.includes('my skin type') || messageLower.includes('my concerns')));
 
     // Handle recommendation requests with our local data
     if (isProductRecommendationRequest || isIngredientRecommendationRequest || 
         isSpecificIngredientQuery || isGeneralSkincareQuery) {
       
+      // Parse user message for explicit preferences
       const { skinType, concerns, category, mentionedIngredients } = parseUserMessage(message);
       
+      // Use user's profile data if available, otherwise use parsed data from message
+      const finalSkinType = userData?.skinType?.toLowerCase() || skinType;
+      const finalConcerns = userData?.skinConcerns?.length > 0 ? 
+        userData.skinConcerns.map(c => c.toLowerCase()) : concerns;
+      
       let recommendationResponse = '';
+      
+      // Add personalized greeting if user is logged in
+      if (userData) {
+        const userFirstName = userData.firstName || 'there';
+        recommendationResponse += `Hi ${userFirstName}! Based on your profile `;
+        
+        if (userData.skinType) {
+          recommendationResponse += `(${userData.skinType} skin`;
+          if (userData.skinConcerns?.length > 0) {
+            recommendationResponse += `, concerns: ${userData.skinConcerns.join(', ')}`;
+          }
+          recommendationResponse += '), ';
+        }
+        
+        recommendationResponse += `here are my personalized recommendations:\n\n`;
+      }
       
       // Handle product recommendations
       if (isProductRecommendationRequest || isSpecificIngredientQuery || isGeneralSkincareQuery) {
@@ -118,36 +173,42 @@ export async function POST(request) {
           ).slice(0, 3);
           
           products = uniqueProducts.length > 0 ? uniqueProducts : 
-            getProductRecommendations(skinType, concerns, category, 3);
+            getProductRecommendations(finalSkinType, finalConcerns, category, 3);
           
-          responsePrefix = mentionedIngredients.length === 1 
-            ? `Based on your request for products with ${mentionedIngredients[0]}, here are my recommendations:\n\n`
-            : `Based on your request for products with specific ingredients, here are my recommendations:\n\n`;
+          const responsePrefix = mentionedIngredients.length === 1 
+            ? `Based on your request for products with ${mentionedIngredients[0]}:\n\n`
+            : `Based on your request for products with specific ingredients:\n\n`;
+          
+          if (!userData) {
+            recommendationResponse += responsePrefix;
+          }
         } else {
-          // Regular product recommendations
-          products = getProductRecommendations(skinType, concerns, category, 3);
+          // Regular product recommendations using user profile or parsed data
+          products = getProductRecommendations(finalSkinType, finalConcerns, category, 3);
           
-          const skinTypeText = skinType !== 'all' ? ` for ${skinType} skin` : '';
-          const concernText = concerns.length > 0 ? ` targeting ${concerns.join(' and ')}` : '';
-          const categoryText = category ? ` in the ${category} category` : '';
-          
-          responsePrefix = `Here are my product recommendations${skinTypeText}${concernText}${categoryText}:\n\n`;
+          if (!userData) {
+            const skinTypeText = finalSkinType !== 'all' ? ` for ${finalSkinType} skin` : '';
+            const concernText = finalConcerns.length > 0 ? ` targeting ${finalConcerns.join(' and ')}` : '';
+            const categoryText = category ? ` in the ${category} category` : '';
+            
+            recommendationResponse += `Here are my product recommendations${skinTypeText}${concernText}${categoryText}:\n\n`;
+          }
         }
         
-        recommendationResponse += responsePrefix + formatRecommendations(products, 'products');
+        recommendationResponse += formatRecommendations(products, 'products');
       }
       
       // Handle ingredient recommendations
-      if (isIngredientRecommendationRequest || (isGeneralSkincareQuery && concerns.length > 0)) {
-        const ingredients = getIngredientRecommendations(skinType, concerns, 3);
-        
-        const skinTypeText = skinType !== 'all' ? ` for ${skinType} skin` : '';
-        const concernText = concerns.length > 0 ? ` to address ${concerns.join(' and ')}` : '';
+      if (isIngredientRecommendationRequest || (isGeneralSkincareQuery && finalConcerns.length > 0)) {
+        const ingredients = getIngredientRecommendations(finalSkinType, finalConcerns, 3);
         
         if (recommendationResponse) {
-          recommendationResponse += `\n\n**Recommended Ingredients${skinTypeText}${concernText}:**\n\n`;
+          recommendationResponse += `\n\n**Recommended Ingredients for your ${finalSkinType} skin:**\n\n`;
         } else {
-          recommendationResponse += `Here are the best ingredients${skinTypeText}${concernText}:\n\n`;
+          const ingredientPrefix = userData ? 
+            `Based on your profile, here are the best ingredients for your skin:\n\n` :
+            `Here are the best ingredients${finalSkinType !== 'all' ? ` for ${finalSkinType} skin` : ''}${finalConcerns.length > 0 ? ` to address ${finalConcerns.join(' and ')}` : ''}:\n\n`;
+          recommendationResponse += ingredientPrefix;
         }
         
         recommendationResponse += formatRecommendations(ingredients, 'ingredients');
@@ -155,13 +216,38 @@ export async function POST(request) {
       
       // Add helpful tips if no specific recommendations found
       if (!recommendationResponse || recommendationResponse.includes("I couldn't find any")) {
-        recommendationResponse = `I understand you're looking for skincare advice! While I didn't find specific matches in our database, I can help you with general guidance.\n\n` +
+        const personalizedTip = userData ? 
+          `Based on your profile (${userData.skinType} skin), I can provide better recommendations if you're more specific about what you're looking for!\n\n` :
+          `I understand you're looking for skincare advice! While I didn't find specific matches in our database, I can help you with general guidance.\n\n`;
+          
+        recommendationResponse = personalizedTip +
           `For better recommendations, try being more specific about:\n` +
-          `- Your skin type (oily, dry, combination, sensitive, normal)\n` +
-          `- Your main concerns (acne, aging, dark spots, dryness)\n` +
-          `- Product type you're looking for (cleanser, serum, moisturizer)\n\n` +
-          `For example: "Recommend a vitamin C serum for oily skin with dark spots"`;
+          `- Product type you're looking for (cleanser, serum, moisturizer)\n` +
+          `- Specific concerns you want to address\n` +
+          `- Ingredients you're interested in\n\n` +
+          `For example: "Recommend a vitamin C serum for acne" or "Best moisturizer for my skin type"`;
       }
+      
+      // Add allergy warning if user has specified allergies
+      if (userData?.allergies && recommendationResponse && !recommendationResponse.includes("allergy")) {
+        recommendationResponse += `\n\n⚠️ **Important**: You mentioned having allergies to: ${userData.allergies}. Please check product ingredients carefully before use.`;
+      }
+      
+      // Add user-specific context to the response data
+      const responseData = {
+        skinType: finalSkinType, 
+        concerns: finalConcerns, 
+        category, 
+        mentionedIngredients,
+        userProfile: userData ? {
+          skinType: userData.skinType,
+          skinConcerns: userData.skinConcerns,
+          name: userData.firstName,
+          allergies: userData.allergies,
+          experience: userData.skincareExperience,
+          goals: userData.goals
+        } : null
+      };
       
       // Return recommendation without calling Ollama
       return NextResponse.json({
@@ -169,12 +255,85 @@ export async function POST(request) {
         model: 'dermify-recommendations',
         timestamp: new Date().toISOString(),
         isRecommendation: true,
-        parsedData: { skinType, concerns, category, mentionedIngredients }
+        parsedData: responseData
       });
     }
 
-    // Create system prompt for skincare assistance
-    const systemPrompt = `You are a knowledgeable skincare assistant for Dermify, a skincare analysis platform. 
+    // Handle personal profile questions
+    if (isPersonalProfileQuery && userData) {
+      const userFirstName = userData.firstName || 'User';
+      let profileResponse = `Hi ${userFirstName}! Here's what I know about your skincare profile:\n\n`;
+      
+      profileResponse += `**👤 Personal Information:**\n`;
+      profileResponse += `- Name: ${userData.firstName} ${userData.lastName || ''}\n`;
+      profileResponse += `- Age Range: ${userData.ageRange || 'Not specified'}\n\n`;
+      
+      profileResponse += `**🔬 Skin Profile:**\n`;
+      profileResponse += `- Skin Type: ${userData.skinType || 'Not specified'}\n`;
+      profileResponse += `- Main Concerns: ${userData.skinConcerns?.length > 0 ? userData.skinConcerns.join(', ') : 'None specified'}\n`;
+      if (userData.allergies) {
+        profileResponse += `- Allergies/Sensitivities: ${userData.allergies}\n`;
+      }
+      profileResponse += `\n`;
+      
+      profileResponse += `**💡 Experience & Goals:**\n`;
+      profileResponse += `- Skincare Experience: ${userData.skincareExperience || 'Not specified'}\n`;
+      profileResponse += `- Goals: ${userData.goals || 'Not specified'}\n`;
+      profileResponse += `- Budget: ${userData.budget || 'Not specified'}\n`;
+      profileResponse += `- Lifestyle: ${userData.lifestyle || 'Not specified'}\n\n`;
+      
+      if (userData.currentRoutine) {
+        profileResponse += `**🧴 Current Routine:**\n${userData.currentRoutine}\n\n`;
+      }
+      
+      profileResponse += `Based on this profile, I can provide personalized skincare recommendations! Try asking me:\n`;
+      profileResponse += `- "What products should I use?"\n`;
+      profileResponse += `- "Help me with my ${userData.skinConcerns?.[0] || 'skin concerns'}"\n`;
+      profileResponse += `- "Recommend a routine for my skin type"\n`;
+      
+      if (userData.allergies) {
+        profileResponse += `\n⚠️ **Important**: I'll always consider your allergies (${userData.allergies}) when making recommendations.`;
+      }
+      
+      return NextResponse.json({
+        message: profileResponse,
+        model: 'dermify-profile',
+        timestamp: new Date().toISOString(),
+        isRecommendation: false,
+        parsedData: {
+          userProfile: {
+            skinType: userData.skinType,
+            skinConcerns: userData.skinConcerns,
+            name: userData.firstName,
+            allergies: userData.allergies,
+            experience: userData.skincareExperience,
+            goals: userData.goals
+          }
+        }
+      });
+    } else if (isPersonalProfileQuery && !userData) {
+      const profileResponse = `I'd love to tell you about your skincare profile, but I don't have access to your personal information right now.\n\n` +
+        `To get personalized skincare advice, please:\n` +
+        `1. **Sign in** to your account\n` +
+        `2. **Complete your profile** in the onboarding process\n\n` +
+        `Once you've done that, I'll be able to provide personalized recommendations based on your:\n` +
+        `- Skin type and concerns\n` +
+        `- Age and experience level\n` +
+        `- Allergies and preferences\n` +
+        `- Skincare goals\n\n` +
+        `In the meantime, feel free to ask me general skincare questions!`;
+      
+      return NextResponse.json({
+        message: profileResponse,
+        model: 'dermify-profile',
+        timestamp: new Date().toISOString(),
+        isRecommendation: false,
+        parsedData: { userProfile: null }
+      });
+    }
+
+    // Create system prompt for skincare assistance with user context
+    let systemPrompt = `You are a knowledgeable skincare assistant for Dermify, a skincare analysis platform. 
     You help users with:
     - Skincare ingredient analysis and safety
     - Product recommendations based on skin type and concerns
@@ -183,9 +342,33 @@ export async function POST(request) {
     - General skincare advice and education
     
     Keep responses helpful, accurate, and focused on skincare topics. If asked about medical conditions, advise users to consult a dermatologist.
-    Be concise but informative. Use a friendly, professional tone.
+    Be concise but informative. Use a friendly, professional tone.`;
     
-    IMPORTANT: Our system has an intelligent recommendation engine that can provide personalized product and ingredient suggestions. 
+    // Add user-specific context to system prompt if available
+    if (userData) {
+      systemPrompt += `\n\nUSER PROFILE CONTEXT:
+      - Name: ${userData.firstName || 'User'}
+      - Skin Type: ${userData.skinType || 'Not specified'}
+      - Skin Concerns: ${userData.skinConcerns?.length > 0 ? userData.skinConcerns.join(', ') : 'Not specified'}
+      - Age Range: ${userData.ageRange || 'Not specified'}
+      - Skincare Experience: ${userData.skincareExperience || 'Not specified'}
+      - Allergies/Sensitivities: ${userData.allergies || 'None specified'}
+      - Current Routine: ${userData.currentRoutine || 'Not specified'}
+      - Goals: ${userData.goals || 'Not specified'}
+      - Budget: ${userData.budget || 'Not specified'}
+      - Lifestyle: ${userData.lifestyle || 'Not specified'}
+      
+      IMPORTANT PERSONALIZATION GUIDELINES:
+      - Address the user by their first name when appropriate
+      - Always consider their specific skin type and concerns when giving advice
+      - Adjust complexity of explanations based on their skincare experience level
+      - If they have allergies, always mention to check ingredients and avoid known allergens
+      - Reference their goals when making recommendations
+      - Consider their lifestyle when suggesting routine complexity
+      - Use this profile information to provide highly personalized and relevant advice`;
+    }
+    
+    systemPrompt += `\n\nIMPORTANT: Our system has an intelligent recommendation engine that can provide personalized product and ingredient suggestions. 
     If users ask about skincare concerns, skin types, or need product advice, encourage them to be specific about their needs.
     
     Examples of questions our recommendation system handles:

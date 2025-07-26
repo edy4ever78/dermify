@@ -28,6 +28,32 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Chatbot text wrapping utilities */
+.chatbot-message {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
+}
+
+.chatbot-link {
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
+/* Custom scrollbar for chatbot */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thumb-teal-300 {
+  scrollbar-color: #5eead4 transparent;
+}
+
+.dark .scrollbar-thumb-teal-600 {
+  scrollbar-color: #0d9488 transparent;
+}
+
 @keyframes gradient-slow {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }

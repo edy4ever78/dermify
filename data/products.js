@@ -417,6 +417,78 @@ const products = [
       "combination": false,
       "oily": true
     }
+  },
+  {
+    "id": "fenty-beauty-fat-water-niacinamide-pore-refining-toner-serum-with-barbados-cherry",
+    "brand": "Fenty Beauty",
+    "name": "Fat Water Niacinamide Pore-Refining Toner Serum with Barbados Cherry",
+    "price": 36,
+    "rank": 4.5,
+    "description": "The power of a serum plus the treatment of a toner in one pore-busting step. It tightens the look of pores, helps visibly fade dark spots, smooths and plumps skin, and checks shine–without stripping moisture.",
+    "imageUrl": "https://cdn.shopify.com/s/files/1/0341/3458/9485/products/47151.jpg?v=1619802668&width=1920",
+    "category": "toners",
+    "purchaseUrl": "https://fentybeauty.com/en-ro/products/fat-water-niacinamide-pore-refining-toner-serum-with-barbados-cherry?variant=39329802518573",
+    "skinTypes": {
+      "normal": true,
+      "dry": true,
+      "sensitive": true,
+      "combination": true,
+      "oily": true
+    }
+  },
+  {
+    "id": "cerave-hydrating-toner",
+    "brand": "CeraVe",
+    "name": "Hydrating Toner",
+    "price": 10,
+    "rank": 4.6,
+    "description": "pH balanced toner gently removes impurities after cleansing. With ceramides, hyaluronic acid, and niacinamide the lightweight toner helps soften and smooth skin while locking in moisture for refreshed, healthy-looking skin.",
+    "imageUrl": "https://m.media-amazon.com/images/I/61I5vVH68JL._AC_SX679_.jpg",
+    "category": "toners",
+    "purchaseUrl": "https://www.amazon.co.uk/dp/B09LKXR62L?th=1gp&m=ATVPDKIKX0DER&linkCode=gs2&tag=clidenotser04-21",
+    "skinTypes": {
+      "normal": false,
+      "dry": true,
+      "sensitive": true,
+      "combination": false,
+      "oily": false
+    }
+  },
+  {
+    "id": "cetaphil-gentle-exfoliating-cleanser",
+    "brand": "Cetaphil",
+    "name": "Gentle Exfoliating Cleanser",
+    "price": 9.37,
+    "rank": 4.4,
+    "description": "Cetaphil exfoliator cleansing scrub is a light scrub specially formulated for the deep cleansing of normal, dry or combination skin. It gently and effectively removes environmental pollutants, unclogs the pores and lifts dead skin cells, leaving the skin feeling clean, refreshed and invigorated.",
+    "imageUrl": "https://m.media-amazon.com/images/I/61bcOPpZlSL._AC_SX522_.jpg",
+    "category": "exfoliants",
+    "purchaseUrl": "https://www.amazon.co.uk/dp/B07PQH6BGW/ref=sspa_dk_detail_0?psc=1&pd_rd_i=B07PQH6BGW&pd_rd_w=wdXu6&content-id=amzn1.sym.7c2bff8e-4ce3-4cc7-b3f6-35ac6c74cf9b&pf_rd_p=7c2bff8e-4ce3-4cc7-b3f6-35ac6c74cf9b&pf_rd_r=7MV91S39HP1K25CJ0KV2&pd_rd_wg=vfAq7&pd_rd_r=8c23fb0d-357a-40fb-a39b-b9d19248b973&sp_csd=d2lkZ2V0TmFtZT1zcF9kZXRhaWw",
+    "skinTypes": {
+      "normal": false,
+      "dry": true,
+      "sensitive": false,
+      "combination": true,
+      "oily": true
+    }
+  },
+  {
+    "id": "v55-max-double-strength-salicylic-acid-skin-cleansing-cream-with-tea-tree-oil-and-sulphur",
+    "brand": "V55",
+    "name": "MAX Double Strength Salicylic Acid Skin Cleansing Cream with Tea Tree Oil and Sulphur",
+    "price": 6,
+    "rank": 4.1,
+    "description": "he unique and powerful combination of the 3 ingredients work synergistically to cleanse the skin to prevent spots and blackheads.",
+    "imageUrl": "https://m.media-amazon.com/images/I/61iM-PpIG8S._AC_SX679_.jpg",
+    "category": "exfoliants",
+    "purchaseUrl": "https://www.amazon.co.uk/dp/B00WR4MRHG?ascsubtag=5111961|n3e05ace2e20a4f84a4e37120002cf57912|B08TMDRF1L|1753532499593||&linkCode=gs4&tag=dotdash21-21",
+    "skinTypes": {
+      "normal": false,
+      "dry": false,
+      "sensitive": false,
+      "combination": false,
+      "oily": true
+    }
   }
 ];
 

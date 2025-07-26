@@ -26,7 +26,10 @@ const ChatbotIcon = () => {
   useEffect(() => {
     const checkHealth = async () => {
       try {
-        const response = await fetch('/api/chatbot');
+        const authToken = localStorage.getItem('authToken');
+        const response = await fetch('/api/chatbot', {
+          headers: authToken ? { 'Authorization': authToken } : {}
+        });
         setIsHealthy(response.ok);
       } catch (error) {
         setIsHealthy(false);
@@ -59,11 +62,15 @@ const ChatbotIcon = () => {
     setIsTyping(true);
     
     try {
+      // Get auth token for personalized recommendations
+      const authToken = localStorage.getItem('authToken');
+      
       // Call our Next.js API route which handles the Ollama communication
       const response = await fetch('/api/chatbot', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(authToken && { 'Authorization': authToken })
         },
         body: JSON.stringify({
           message: userMessage,
@@ -106,7 +113,7 @@ const ChatbotIcon = () => {
     // Split content by lines and render with proper formatting
     const lines = content.split('\n');
     return (
-      <div className="space-y-1">
+      <div className="space-y-1 break-words overflow-wrap-anywhere">
         {lines.map((line, index) => {
           // Handle product and ingredient links first
           if (line.includes('[PRODUCT_LINK:') || line.includes('[INGREDIENT_LINK:')) {
@@ -138,16 +145,16 @@ const ChatbotIcon = () => {
                   boldParts.forEach((part, partIndex) => {
                     if (part.startsWith('**') && part.endsWith('**')) {
                       parts.push(
-                        <strong key={`${match.index}-before-${partIndex}`} className="font-semibold text-teal-600 dark:text-teal-300">
+                        <strong key={`${match.index}-before-${partIndex}`} className="font-semibold text-teal-600 dark:text-teal-300 break-words">
                           {part.slice(2, -2)}
                         </strong>
                       );
                     } else if (part) {
-                      parts.push(part);
+                      parts.push(<span key={`${match.index}-text-${partIndex}`} className="break-words">{part}</span>);
                     }
                   });
                 } else if (beforeText) {
-                  parts.push(beforeText);
+                  parts.push(<span key={`${match.index}-before`} className="break-words">{beforeText}</span>);
                 }
               }
               
@@ -161,7 +168,7 @@ const ChatbotIcon = () => {
                         window.open(`/products/${match[1]}`, '_blank');
                       }
                     }}
-                    className="font-semibold text-teal-600 dark:text-teal-300 hover:text-teal-800 dark:hover:text-teal-100 underline cursor-pointer transition-colors duration-200"
+                    className="font-semibold text-teal-600 dark:text-teal-300 hover:text-teal-800 dark:hover:text-teal-100 underline cursor-pointer transition-colors duration-200 break-words"
                   >
                     {match[2] || 'Product'}
                   </button>
@@ -175,7 +182,7 @@ const ChatbotIcon = () => {
                         window.open(`/ingredients/${match[1]}`, '_blank');
                       }
                     }}
-                    className="font-semibold text-teal-600 dark:text-teal-300 hover:text-teal-800 dark:hover:text-teal-100 underline cursor-pointer transition-colors duration-200"
+                    className="font-semibold text-teal-600 dark:text-teal-300 hover:text-teal-800 dark:hover:text-teal-100 underline cursor-pointer transition-colors duration-200 break-words"
                   >
                     {match[2] || 'Ingredient'}
                   </button>
@@ -193,21 +200,21 @@ const ChatbotIcon = () => {
                 boldParts.forEach((part, partIndex) => {
                   if (part.startsWith('**') && part.endsWith('**')) {
                     parts.push(
-                      <strong key={`end-${partIndex}`} className="font-semibold text-teal-600 dark:text-teal-300">
+                      <strong key={`end-${partIndex}`} className="font-semibold text-teal-600 dark:text-teal-300 break-words">
                         {part.slice(2, -2)}
                       </strong>
                     );
                   } else if (part) {
-                    parts.push(part);
+                    parts.push(<span key={`end-text-${partIndex}`} className="break-words">{part}</span>);
                   }
                 });
               } else if (remainingText) {
-                parts.push(remainingText);
+                parts.push(<span key="end-remaining" className="break-words">{remainingText}</span>);
               }
             }
             
             return (
-              <div key={index} className="leading-relaxed">
+              <div key={index} className="leading-relaxed break-words">
                 {parts}
               </div>
             );
@@ -217,16 +224,16 @@ const ChatbotIcon = () => {
           if (line.includes('**')) {
             const parts = line.split(/(\*\*.*?\*\*)/);
             return (
-              <div key={index} className="leading-relaxed">
+              <div key={index} className="leading-relaxed break-words">
                 {parts.map((part, partIndex) => {
                   if (part.startsWith('**') && part.endsWith('**')) {
                     return (
-                      <strong key={partIndex} className="font-semibold text-teal-600 dark:text-teal-300">
+                      <strong key={partIndex} className="font-semibold text-teal-600 dark:text-teal-300 break-words">
                         {part.slice(2, -2)}
                       </strong>
                     );
                   }
-                  return part;
+                  return <span key={partIndex} className="break-words">{part}</span>;
                 })}
               </div>
             );
@@ -235,11 +242,11 @@ const ChatbotIcon = () => {
           // Handle numbered lists
           if (line.match(/^\d+\./)) {
             return (
-              <div key={index} className="ml-2 leading-relaxed">
+              <div key={index} className="ml-2 leading-relaxed break-words">
                 <span className="font-medium text-teal-600 dark:text-teal-300">
                   {line.substring(0, line.indexOf('.') + 1)}
                 </span>
-                <span className="ml-1">{line.substring(line.indexOf('.') + 1)}</span>
+                <span className="ml-1 break-words">{line.substring(line.indexOf('.') + 1)}</span>
               </div>
             );
           }
@@ -248,8 +255,8 @@ const ChatbotIcon = () => {
           if (line.trim().startsWith('- ')) {
             return (
               <div key={index} className="ml-4 leading-relaxed flex items-start">
-                <span className="text-teal-500 mr-2 mt-1 text-xs">•</span>
-                <span>{line.substring(line.indexOf('- ') + 2)}</span>
+                <span className="text-teal-500 mr-2 mt-1 text-xs flex-shrink-0">•</span>
+                <span className="break-words">{line.substring(line.indexOf('- ') + 2)}</span>
               </div>
             );
           }
@@ -264,7 +271,7 @@ const ChatbotIcon = () => {
             while ((match = linkRegex.exec(line)) !== null) {
               // Add text before the link
               if (match.index > lastIndex) {
-                parts.push(line.substring(lastIndex, match.index));
+                parts.push(<span key={`before-${match.index}`} className="break-words">{line.substring(lastIndex, match.index)}</span>);
               }
               
               // Add the link
@@ -274,7 +281,7 @@ const ChatbotIcon = () => {
                   href={match[2]}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 underline"
+                  className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 underline break-all"
                 >
                   {match[1]}
                 </a>
@@ -285,11 +292,11 @@ const ChatbotIcon = () => {
             
             // Add remaining text
             if (lastIndex < line.length) {
-              parts.push(line.substring(lastIndex));
+              parts.push(<span key="remaining" className="break-words">{line.substring(lastIndex)}</span>);
             }
             
             return (
-              <div key={index} className="leading-relaxed">
+              <div key={index} className="leading-relaxed break-words">
                 {parts}
               </div>
             );
@@ -297,7 +304,7 @@ const ChatbotIcon = () => {
           
           // Regular line
           return line.trim() ? (
-            <div key={index} className="leading-relaxed">
+            <div key={index} className="leading-relaxed break-words">
               {line}
             </div>
           ) : (
@@ -329,7 +336,7 @@ const ChatbotIcon = () => {
       )}
       
       {isOpen ? (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-80 sm:w-96 overflow-hidden flex flex-col mb-4 border border-gray-200 dark:border-gray-700 transform transition-all duration-300 animate-in slide-in-from-bottom-5 fade-in">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-80 sm:w-96 overflow-hidden flex flex-col mb-4 border border-gray-200 dark:border-gray-700 transform transition-all duration-300 animate-in slide-in-from-bottom-5 fade-in max-w-[calc(100vw-3rem)]">
           {/* Header with gradient */}
           <div className="bg-gradient-to-r from-teal-500 via-blue-500 to-purple-500 px-4 py-3 flex justify-between items-center relative overflow-hidden">
             {/* Animated background pattern */}
@@ -381,7 +388,7 @@ const ChatbotIcon = () => {
                   msg.role === 'user' 
                     ? 'bg-gradient-to-r from-teal-500 to-blue-500 text-white shadow-lg hover:shadow-xl transition-shadow duration-200' 
                     : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow-md border border-gray-100 dark:border-gray-600 hover:shadow-lg transition-shadow duration-200'
-                  } max-w-[85%] group`}
+                  } max-w-[85%] group break-words overflow-hidden`}
                 >
                   {msg.role === 'system' && (
                     <div className="absolute -left-2 top-3 w-0 h-0 border-t-4 border-t-transparent border-b-4 border-b-transparent border-r-4 border-r-white dark:border-r-gray-700"></div>
@@ -390,7 +397,7 @@ const ChatbotIcon = () => {
                     <div className="absolute -right-2 top-3 w-0 h-0 border-t-4 border-t-transparent border-b-4 border-b-transparent border-l-4 border-l-teal-500"></div>
                   )}
                   
-                  <div className="relative z-10">
+                  <div className="relative z-10 chatbot-message">
                     {renderMessageContent(msg.content)}
                   </div>
                   
@@ -430,6 +437,8 @@ const ChatbotIcon = () => {
                 <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">Try these recommendations:</div>
                 <div className="flex flex-wrap gap-2">
                   {[
+                    "Recommend products for my skin type",
+                    "What's best for my concerns?",
                     "I have oily skin with acne",
                     "Best moisturizer for dry skin",
                     "Help with dark spots",
