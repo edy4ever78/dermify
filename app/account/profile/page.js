@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import Link from 'next/link';
 import { useTranslation } from '@/hooks/useTranslation';
+import { getProductRecommendations, getIngredientRecommendations } from '@/utils/recommendations';
 
 // Available skin types for dropdown
 const skinTypes = [
@@ -42,6 +43,7 @@ const formatSkinConcerns = (concerns) => {
 
 export default function ProfilePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { t } = useTranslation();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -51,6 +53,17 @@ export default function ProfilePage() {
   const [error, setError] = useState(null);
   const [savedRoutines, setSavedRoutines] = useState([]);
   const [recentlyViewed, setRecentlyViewed] = useState([]);
+  const [analysisHistory, setAnalysisHistory] = useState([]);
+  const [dashboardStats, setDashboardStats] = useState({
+    totalAnalyses: 0,
+    recentAnalyses: 0,
+    favoriteProducts: 0,
+    savedRoutines: 0
+  });
+  const [activeTab, setActiveTab] = useState('overview');
+  const [showWelcome, setShowWelcome] = useState(searchParams?.get('welcome') === 'true');
+  const [recommendations, setRecommendations] = useState({ products: [], ingredients: [] });
+  const [savedProducts, setSavedProducts] = useState([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -117,6 +130,10 @@ export default function ProfilePage() {
 
         loadSavedRoutines();
         loadRecentlyViewed();
+        loadAnalysisHistory();
+        loadDashboardStats();
+        loadRecommendations(userData);
+        loadSavedProducts();
       } catch (error) {
         console.error('Error fetching user data:', error.message);
         setError('Failed to load profile. Please try again later.');
@@ -130,21 +147,152 @@ export default function ProfilePage() {
   
   const loadSavedRoutines = () => {
     try {
-      const savedRoutinesData = JSON.parse(localStorage.getItem('savedRoutines') || '[]');
-      setSavedRoutines(savedRoutinesData);
+      const rawData = localStorage.getItem('savedRoutines');
+      if (!rawData || rawData === 'null' || rawData === 'undefined') {
+        setSavedRoutines([]);
+        return;
+      }
+      const savedRoutinesData = JSON.parse(rawData);
+      setSavedRoutines(Array.isArray(savedRoutinesData) ? savedRoutinesData : []);
     } catch (e) {
       console.error('Error loading saved routines:', e);
+      localStorage.removeItem('savedRoutines'); // Clear corrupted data
       setSavedRoutines([]);
     }
   };
   
   const loadRecentlyViewed = () => {
     try {
-      const recentlyViewedData = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
-      setRecentlyViewed(recentlyViewedData.slice(0, 5));
+      const rawData = localStorage.getItem('recentlyViewed');
+      if (!rawData || rawData === 'null' || rawData === 'undefined') {
+        setRecentlyViewed([]);
+        return;
+      }
+      const recentlyViewedData = JSON.parse(rawData);
+      setRecentlyViewed(Array.isArray(recentlyViewedData) ? recentlyViewedData.slice(0, 5) : []);
     } catch (e) {
       console.error('Error loading recently viewed products:', e);
+      localStorage.removeItem('recentlyViewed'); // Clear corrupted data
       setRecentlyViewed([]);
+    }
+  };
+
+  const loadAnalysisHistory = async () => {
+    try {
+      const response = await fetch('/api/skin-analysis/history');
+      if (response.ok) {
+        const text = await response.text();
+        if (!text || text.trim() === '') {
+          setAnalysisHistory([]);
+          return;
+        }
+        
+        try {
+          const historyData = JSON.parse(text);
+          const userEmail = localStorage.getItem('userEmail');
+          const userHistory = Array.isArray(historyData) 
+            ? historyData.filter(item => item.userId === userEmail)
+            : [];
+          setAnalysisHistory(userHistory.slice(0, 5));
+        } catch (parseError) {
+          console.error('Error parsing analysis history JSON:', parseError);
+          setAnalysisHistory([]);
+        }
+      } else {
+        console.error('Failed to fetch analysis history:', response.status);
+        setAnalysisHistory([]);
+      }
+    } catch (e) {
+      console.error('Error loading analysis history:', e);
+      setAnalysisHistory([]);
+    }
+  };
+
+  const loadDashboardStats = () => {
+    try {
+      const userEmail = localStorage.getItem('userEmail');
+      
+      // Safe parsing of localStorage data
+      const getLocalStorageArray = (key) => {
+        try {
+          const rawData = localStorage.getItem(key);
+          if (!rawData || rawData === 'null' || rawData === 'undefined') {
+            return [];
+          }
+          const parsed = JSON.parse(rawData);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+          console.error(`Error parsing ${key} from localStorage:`, e);
+          localStorage.removeItem(key); // Clear corrupted data
+          return [];
+        }
+      };
+      
+      const recentlyViewedData = getLocalStorageArray('recentlyViewed');
+      const savedRoutinesData = getLocalStorageArray('savedRoutines');
+      const savedProductsData = getLocalStorageArray('savedProducts');
+      
+      // Load analysis history for stats
+      fetch('/api/skin-analysis/history')
+        .then(response => response.json())
+        .then(historyData => {
+          const userHistory = Array.isArray(historyData) 
+            ? historyData.filter(item => item.userId === userEmail)
+            : [];
+          const recentAnalyses = userHistory.filter(item => {
+            const analysisDate = new Date(item.date);
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+            return analysisDate >= oneWeekAgo;
+          });
+
+          setDashboardStats({
+            totalAnalyses: userHistory.length,
+            recentAnalyses: recentAnalyses.length,
+            favoriteProducts: savedProductsData.length,
+            savedRoutines: savedRoutinesData.length
+          });
+        })
+        .catch(e => {
+          console.error('Error loading stats:', e);
+          setDashboardStats({
+            totalAnalyses: 0,
+            recentAnalyses: 0,
+            favoriteProducts: savedProductsData.length,
+            savedRoutines: savedRoutinesData.length
+          });
+        });
+    } catch (e) {
+      console.error('Error loading dashboard stats:', e);
+    }
+  };
+
+  const loadRecommendations = (userData) => {
+    try {
+      if (userData.skinType && userData.skinConcerns) {
+        const productRecs = getProductRecommendations(userData.skinType, userData.skinConcerns, null, 3);
+        const ingredientRecs = getIngredientRecommendations(userData.skinType, userData.skinConcerns, 3);
+        setRecommendations({ products: productRecs, ingredients: ingredientRecs });
+      }
+    } catch (e) {
+      console.error('Error loading recommendations:', e);
+      setRecommendations({ products: [], ingredients: [] });
+    }
+  };
+
+  const loadSavedProducts = () => {
+    try {
+      const rawData = localStorage.getItem('savedProducts');
+      if (!rawData || rawData === 'null' || rawData === 'undefined') {
+        setSavedProducts([]);
+        return;
+      }
+      const savedProductsData = JSON.parse(rawData);
+      setSavedProducts(Array.isArray(savedProductsData) ? savedProductsData.slice(0, 5) : []);
+    } catch (e) {
+      console.error('Error loading saved products:', e);
+      localStorage.removeItem('savedProducts'); // Clear corrupted data
+      setSavedProducts([]);
     }
   };
 
@@ -214,6 +362,9 @@ export default function ProfilePage() {
       
       localStorage.setItem('user', JSON.stringify(updatedUser));
       localStorage.setItem('userEmail', updatedUser.email);
+      
+      // Reload recommendations with updated profile
+      loadRecommendations(updatedUser);
       
       setTimeout(() => setSaveStatus(null), 3000);
     } catch (error) {
@@ -299,42 +450,321 @@ export default function ProfilePage() {
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
       <Header />
+      
+      <div className="container mx-auto px-4 py-8">
+        {/* Welcome Message */}
+        {showWelcome && (
+          <div className="mb-8 bg-gradient-to-r from-teal-500 to-blue-500 rounded-2xl p-6 text-white relative overflow-hidden">
+            <div className="relative z-10">
+              <h1 className="text-3xl font-bold mb-2">
+                Welcome back, {user?.firstName || 'User'}! 🎉
+              </h1>
+              <p className="text-teal-100 mb-4">
+                Your personalized skincare dashboard is ready. Track your progress and discover new recommendations.
+              </p>
+              <button
+                onClick={() => setShowWelcome(false)}
+                className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-lg transition-all duration-200"
+              >
+                Got it!
+              </button>
+            </div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12"></div>
+          </div>
+        )}
 
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-            {/* Profile Header */}
-            <div className="relative h-36 bg-gradient-to-r from-teal-500 to-blue-500">
-              <div className="absolute -bottom-12 left-8">
-                <div className="h-24 w-24 rounded-full bg-white dark:bg-gray-700 border-4 border-white dark:border-gray-700 flex items-center justify-center overflow-hidden">
-                  {user.avatarUrl ? (
-                    <img 
-                      src={user.avatarUrl} 
-                      alt={user.name} 
-                      className="h-full w-full object-cover"
-                    />
+        {/* Dashboard Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <div className="flex items-center">
+              <div className="p-3 bg-teal-100 dark:bg-teal-900/30 rounded-full">
+                <svg className="h-6 w-6 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Analyses</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{dashboardStats.totalAnalyses}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <div className="flex items-center">
+              <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                <svg className="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Saved Products</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{dashboardStats.favoriteProducts}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <div className="flex items-center">
+              <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-full">
+                <svg className="h-6 w-6 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 002 2h10a2 2 002-2V7a2 2 002-2h-2M9 5a2 2 002 2h2a2 2 002-2M9 5a2 2 0 012-2h2a2 2 012 2m-6 9l2 2 4-4" />
+                </svg>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Saved Routines</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{dashboardStats.savedRoutines}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <div className="flex items-center">
+              <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-full">
+                <svg className="h-6 w-6 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">This Week</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{dashboardStats.recentAnalyses}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tab Navigation */}
+        <div className="mb-8">
+          <nav className="flex space-x-8">
+            {[
+              { id: 'overview', name: 'Overview', icon: '📊' },
+              { id: 'profile', name: 'Profile', icon: '👤' },
+              { id: 'recommendations', name: 'Recommendations', icon: '💡' },
+              { id: 'history', name: 'History', icon: '📈' },
+              { id: 'saved', name: 'Saved Items', icon: '❤️' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
+                  activeTab === tab.id
+                    ? 'border-teal-500 text-teal-600 dark:text-teal-400'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+                }`}
+              >
+                <span className="mr-2">{tab.icon}</span>
+                {tab.name}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        {/* Tab Content */}
+        {activeTab === 'overview' && (
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Main Overview */}
+            <div className="lg:col-span-2 space-y-8">
+              {/* Skin Profile Summary */}
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  Your Skin Profile
+                </h2>
+                
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="p-4 bg-teal-50 dark:bg-teal-900/20 rounded-xl">
+                    <h3 className="font-semibold text-teal-800 dark:text-teal-200 mb-1">
+                      Skin Type
+                    </h3>
+                    <p className="text-teal-700 dark:text-teal-300 capitalize">
+                      {user?.skinType || 'Not specified'}
+                    </p>
+                  </div>
+                  
+                  <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+                    <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-1">
+                      Main Concerns
+                    </h3>
+                    <p className="text-blue-700 dark:text-blue-300 text-sm">
+                      {user?.skinConcerns && user.skinConcerns.length > 0 
+                        ? user.skinConcerns.slice(0, 2).join(', ') + (user.skinConcerns.length > 2 ? '...' : '')
+                        : 'None specified'}
+                    </p>
+                  </div>
+                  
+                  <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl">
+                    <h3 className="font-semibold text-purple-800 dark:text-purple-200 mb-1">
+                      Experience
+                    </h3>
+                    <p className="text-purple-700 dark:text-purple-300 capitalize">
+                      {user?.skincareExperience || 'Not specified'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex gap-3">
+                  <button
+                    onClick={() => setActiveTab('profile')}
+                    className="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg transition-colors duration-200"
+                  >
+                    Edit Profile
+                  </button>
+                  <Link 
+                    href="/onboarding"
+                    className="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors duration-200"
+                  >
+                    Retake Quiz
+                  </Link>
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  Quick Actions
+                </h2>
+                
+                <div className="grid md:grid-cols-2 gap-4">
+                  <Link 
+                    href="/skin-analysis"
+                    className="p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl hover:border-teal-500 dark:hover:border-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-all duration-200 group"
+                  >
+                    <div className="text-center">
+                      <div className="text-2xl mb-2">📸</div>
+                      <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400">
+                        Analyze Your Skin
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Upload a photo for AI analysis
+                      </p>
+                    </div>
+                  </Link>
+                  
+                  <Link 
+                    href="/products"
+                    className="p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group"
+                  >
+                    <div className="text-center">
+                      <div className="text-2xl mb-2">🧴</div>
+                      <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                        Browse Products
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Find products for your skin
+                      </p>
+                    </div>
+                  </Link>
+                  
+                  <Link 
+                    href="/ingredients"
+                    className="p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl hover:border-purple-500 dark:hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-200 group"
+                  >
+                    <div className="text-center">
+                      <div className="text-2xl mb-2">🧪</div>
+                      <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400">
+                        Learn Ingredients
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Understand what's in your products
+                      </p>
+                    </div>
+                  </Link>
+                  
+                  <Link 
+                    href="/routines"
+                    className="p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl hover:border-green-500 dark:hover:border-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all duration-200 group"
+                  >
+                    <div className="text-center">
+                      <div className="text-2xl mb-2">📋</div>
+                      <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400">
+                        Create Routine
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Build your skincare routine
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Sidebar */}
+            <div className="space-y-6">
+              {/* Today's Tip */}
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+                  💡 Today's Tip
+                </h3>
+                <div className="p-4 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-xl">
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">
+                    Always apply sunscreen as your last step in the morning routine, even on cloudy days!
+                  </p>
+                </div>
+              </div>
+
+              {/* Recent Activity */}
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+                  Recent Activity
+                </h3>
+                <div className="space-y-3 text-sm">
+                  {analysisHistory.length > 0 ? (
+                    analysisHistory.slice(0, 3).map((analysis, index) => (
+                      <div key={index} className="flex items-center gap-3 p-2 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+                        <span className="text-gray-600 dark:text-gray-400">
+                          Skin analysis completed
+                        </span>
+                        <span className="text-xs text-gray-500 ml-auto">
+                          {new Date(analysis.date).toLocaleDateString()}
+                        </span>
+                      </div>
+                    ))
                   ) : (
-                    <div className="bg-teal-100 dark:bg-teal-900/30 h-full w-full flex items-center justify-center">
-                      <span className="text-2xl font-bold text-teal-500">
-                        {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    <div className="flex items-center gap-3 p-2 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Joined Dermify
                       </span>
                     </div>
                   )}
                 </div>
               </div>
-            </div>
 
-            {/* Profile Actions */}
-            <div className="pt-14 pb-4 px-8 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{user.name}</h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {t('Member Since')} {formatDate(user.dateJoined)}
-                </p>
+              {/* Help */}
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+                  Need Help?
+                </h3>
+                <div className="space-y-3">
+                  <Link 
+                    href="/contact"
+                    className="block p-3 bg-gray-50 dark:bg-gray-700 hover:bg-teal-50 dark:hover:bg-teal-900/20 rounded-lg transition-colors duration-200"
+                  >
+                    <div className="font-medium text-gray-900 dark:text-white">Contact Support</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Get help with your skincare</div>
+                  </Link>
+                  <Link 
+                    href="/about"
+                    className="block p-3 bg-gray-50 dark:bg-gray-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors duration-200"
+                  >
+                    <div className="font-medium text-gray-900 dark:text-white">Learn More</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">About Dermify platform</div>
+                  </Link>
+                </div>
               </div>
+            </div>
+          </div>
+        )}
 
+        {/* Profile Tab */}
+        {activeTab === 'profile' && (
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                {isEditing ? 'Edit Profile' : 'Profile Information'}
+              </h2>
               <div className="flex space-x-2">
                 {isEditing ? (
                   <>
@@ -342,7 +772,7 @@ export default function ProfilePage() {
                       onClick={() => setIsEditing(false)}
                       className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     >
-                      {t('Cancel')}
+                      Cancel
                     </button>
                     <button
                       onClick={handleSaveProfile}
@@ -355,413 +785,495 @@ export default function ProfilePage() {
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
                       )}
-                      <span>{saveStatus === 'saving' ? t('saving') : t('saveChanges')}</span>
+                      <span>{saveStatus === 'saving' ? 'Saving...' : 'Save Changes'}</span>
                     </button>
                   </>
                 ) : (
-                  <>
-                    <button
-                      onClick={() => setIsEditing(true)}
-                      className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      {t('Edit Profile')}
-                    </button>
-
-                  </>
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600 transition-colors"
+                  >
+                    Edit Profile
+                  </button>
                 )}
               </div>
             </div>
 
             {/* Save Status Message */}
             {saveStatus === 'success' && (
-              <div className="m-4 p-3 bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-md">
+              <div className="mb-4 p-3 bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-md">
                 <span className="flex items-center">
                   <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  {t('Profile Updated')}
+                  Profile Updated Successfully!
                 </span>
               </div>
             )}
 
-            {/* Profile Content */}
-            <div className="p-8">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {/* Left Column - Personal Info */}
-                <div className="col-span-2">
-                  <h2 className="text-xl font-medium text-gray-900 dark:text-white mb-4">
-                    {isEditing ? t('Edit Profile') : t('Profile Information')}
-                  </h2>
+            {isEditing ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    value={formData.name || ''}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
+                  />
+                </div>
 
-                  {isEditing ? (
-                    <div className="grid grid-cols-1 gap-6">
-                      <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                          {t('Full Name')}
-                        </label>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    value={formData.email || ''}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="skinType" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Skin Type
+                  </label>
+                  <select
+                    id="skinType"
+                    name="skinType"
+                    value={formData.skinType || 'Normal'}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
+                  >
+                    {skinTypes.map(type => (
+                      <option key={type} value={type}>{type}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="ageRange" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Age Range
+                  </label>
+                  <select
+                    id="ageRange"
+                    name="ageRange"
+                    value={formData.ageRange || ''}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
+                  >
+                    <option value="">Select Age Range</option>
+                    <option value="Under 18">Under 18</option>
+                    <option value="18-24">18-24</option>
+                    <option value="25-34">25-34</option>
+                    <option value="35-44">35-44</option>
+                    <option value="45-54">45-54</option>
+                    <option value="55+">55+</option>
+                  </select>
+                </div>
+
+                <div className="md:col-span-2">
+                  <span className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Skin Concerns (Select all that apply)
+                  </span>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {skinConcernOptions.map(concern => (
+                      <label key={concern} className="inline-flex items-center">
                         <input
-                          type="text"
-                          name="name"
-                          id="name"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
+                          type="checkbox"
+                          checked={formData.skinConcerns?.includes(concern) || false}
+                          onChange={() => handleConcernChange(concern)}
+                          className="h-4 w-4 text-teal-500 focus:ring-teal-500 border-gray-300 dark:border-gray-600 rounded"
                         />
-                      </div>
+                        <span className="ml-2 text-gray-700 dark:text-gray-300">{concern}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
 
-                      <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                          {t('Email Address')}
-                        </label>
-                        <input
-                          type="email"
-                          name="email"
-                          id="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
-                        />
-                      </div>
+                <div>
+                  <label htmlFor="skincareExperience" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Skincare Experience
+                  </label>
+                  <select
+                    id="skincareExperience"
+                    name="skincareExperience"
+                    value={formData.skincareExperience || ''}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
+                  >
+                    <option value="">Select Experience Level</option>
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                  </select>
+                </div>
 
-                      <div>
-                        <label htmlFor="skinType" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                          {t('Skin Type')}
-                        </label>
-                        <select
-                          id="skinType"
-                          name="skinType"
-                          value={formData.skinType}
-                          onChange={handleInputChange}
-                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
-                        >
-                          {skinTypes.map(type => (
-                            <option key={type} value={type}>{type}</option>
-                          ))}
-                        </select>
-                      </div>
+                <div>
+                  <label htmlFor="budget" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Budget Range
+                  </label>
+                  <select
+                    id="budget"
+                    name="budget"
+                    value={formData.budget || ''}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
+                  >
+                    <option value="">Select Budget Range</option>
+                    <option value="budget">Budget-Friendly (Under $50/month)</option>
+                    <option value="moderate">Moderate ($50-150/month)</option>
+                    <option value="premium">Premium ($150-300/month)</option>
+                    <option value="luxury">Luxury ($300+/month)</option>
+                  </select>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Full Name</h3>
+                  <p className="mt-1 text-gray-900 dark:text-gray-100">{user?.name || 'Not specified'}</p>
+                </div>
 
-                      <div>
-                        <span className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          {t('Skin Concerns Profile')} (Select all that apply)
-                        </span>
-                        <div className="grid grid-cols-2 gap-2">
-                          {skinConcernOptions.map(concern => (
-                            <label key={concern} className="inline-flex items-center">
-                              <input
-                                type="checkbox"
-                                checked={formData.skinConcerns.includes(concern)}
-                                onChange={() => handleConcernChange(concern)}
-                                className="h-4 w-4 text-teal-500 focus:ring-teal-500 border-gray-300 dark:border-gray-600 rounded"
-                              />
-                              <span className="ml-2 text-gray-700 dark:text-gray-300">{concern}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </div>
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Email Address</h3>
+                  <p className="mt-1 text-gray-900 dark:text-gray-100">{user?.email || 'Not specified'}</p>
+                </div>
 
-                      <div>
-                        <label htmlFor="ageRange" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                          Age Range
-                        </label>
-                        <select
-                          id="ageRange"
-                          name="ageRange"
-                          value={formData.ageRange}
-                          onChange={handleInputChange}
-                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
-                        >
-                          <option value="">Select Age Range</option>
-                          <option value="Under 18">Under 18</option>
-                          <option value="18-24">18-24</option>
-                          <option value="25-34">25-34</option>
-                          <option value="35-44">35-44</option>
-                          <option value="45-54">45-54</option>
-                          <option value="55+">55+</option>
-                        </select>
-                      </div>
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Skin Type</h3>
+                  <p className="mt-1 text-gray-900 dark:text-gray-100">{user?.skinType || 'Not specified'}</p>
+                </div>
 
-                      <div>
-                        <label htmlFor="skincareExperience" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                          Skincare Experience
-                        </label>
-                        <select
-                          id="skincareExperience"
-                          name="skincareExperience"
-                          value={formData.skincareExperience}
-                          onChange={handleInputChange}
-                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
-                        >
-                          <option value="">Select Experience Level</option>
-                          <option value="beginner">Beginner</option>
-                          <option value="intermediate">Intermediate</option>
-                          <option value="advanced">Advanced</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label htmlFor="budget" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                          Budget Range
-                        </label>
-                        <select
-                          id="budget"
-                          name="budget"
-                          value={formData.budget}
-                          onChange={handleInputChange}
-                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
-                        >
-                          <option value="">Select Budget Range</option>
-                          <option value="budget">Budget-Friendly (Under $50/month)</option>
-                          <option value="moderate">Moderate ($50-150/month)</option>
-                          <option value="premium">Premium ($150-300/month)</option>
-                          <option value="luxury">Luxury ($300+/month)</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label htmlFor="lifestyle" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                          Lifestyle
-                        </label>
-                        <select
-                          id="lifestyle"
-                          name="lifestyle"
-                          value={formData.lifestyle}
-                          onChange={handleInputChange}
-                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
-                        >
-                          <option value="">Select Lifestyle</option>
-                          <option value="minimal">Minimal Routine (5 minutes or less)</option>
-                          <option value="normal">Standard Routine (10-15 minutes)</option>
-                          <option value="extensive">Extensive Routine (20+ minutes)</option>
-                          <option value="travel">Always Traveling (Need portable solutions)</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label htmlFor="goals" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                          Skincare Goals
-                        </label>
-                        <textarea
-                          id="goals"
-                          name="goals"
-                          value={formData.goals}
-                          onChange={handleInputChange}
-                          rows="3"
-                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
-                          placeholder="What do you hope to achieve with your skincare routine?"
-                        />
-                      </div>
-
-                      <div>
-                        <label htmlFor="allergies" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                          Allergies & Sensitivities
-                        </label>
-                        <textarea
-                          id="allergies"
-                          name="allergies"
-                          value={formData.allergies}
-                          onChange={handleInputChange}
-                          rows="2"
-                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
-                          placeholder="e.g., fragrance, retinol, sulfates..."
-                        />
-                      </div>
-
-                      <div>
-                        <label htmlFor="currentRoutine" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                          Current Skincare Routine
-                        </label>
-                        <textarea
-                          id="currentRoutine"
-                          name="currentRoutine"
-                          value={formData.currentRoutine}
-                          onChange={handleInputChange}
-                          rows="3"
-                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:bg-gray-700 dark:text-white"
-                          placeholder="Describe your current products and routine..."
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Full Name')}</h3>
-                          <p className="mt-1 text-gray-900 dark:text-gray-100">{user.name}</p>
-                        </div>
-
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Email Address')}</h3>
-                          <p className="mt-1 text-gray-900 dark:text-gray-100">{user.email}</p>
-                        </div>
-
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Skin Type')}</h3>
-                          <p className="mt-1 text-gray-900 dark:text-gray-100">{user.skinType}</p>
-                        </div>
-
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Skin Concerns Profile')}</h3>
-                          <div className="mt-1">
-                            {renderSkinConcerns()}
-                          </div>
-                        </div>
-
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Age Range</h3>
-                          <p className="mt-1 text-gray-900 dark:text-gray-100">{user.ageRange || 'Not specified'}</p>
-                        </div>
-
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Experience Level</h3>
-                          <p className="mt-1 text-gray-900 dark:text-gray-100 capitalize">{user.skincareExperience || 'Not specified'}</p>
-                        </div>
-
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Budget Range</h3>
-                          <p className="mt-1 text-gray-900 dark:text-gray-100 capitalize">{user.budget || 'Not specified'}</p>
-                        </div>
-
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Lifestyle</h3>
-                          <p className="mt-1 text-gray-900 dark:text-gray-100 capitalize">{user.lifestyle || 'Not specified'}</p>
-                        </div>
-
-                        {user.goals && (
-                          <div className="col-span-2">
-                            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Skincare Goals</h3>
-                            <p className="mt-1 text-gray-900 dark:text-gray-100">{user.goals}</p>
-                          </div>
-                        )}
-
-                        {user.allergies && (
-                          <div className="col-span-2">
-                            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Allergies & Sensitivities</h3>
-                            <p className="mt-1 text-gray-900 dark:text-gray-100">{user.allergies}</p>
-                          </div>
-                        )}
-
-                        {user.currentRoutine && (
-                          <div className="col-span-2">
-                            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Current Routine</h3>
-                            <p className="mt-1 text-gray-900 dark:text-gray-100">{user.currentRoutine}</p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Saved Routines */}
-                  <div className="mt-8">
-                    <h2 className="text-xl font-medium text-gray-900 dark:text-white mb-4">
-                      {t('Saved Routines')}
-                    </h2>
-                    
-                    {savedRoutines.length > 0 ? (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {savedRoutines.map(routineId => (
-                          <Link
-                            href={`/routines/${routineId}`}
-                            key={routineId}
-                            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-all p-4 flex items-center"
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Skin Concerns</h3>
+                  <div className="mt-1">
+                    {user?.skinConcerns && user.skinConcerns.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {user.skinConcerns.map((concern, index) => (
+                          <span 
+                            key={index} 
+                            className="text-xs bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 px-2 py-1 rounded-full"
                           >
-                            <div className="h-12 w-12 bg-gray-200 dark:bg-gray-700 rounded-md mr-4 flex items-center justify-center">
-                              <svg className="h-6 w-6 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 002 2h10a2 2 002-2V7a2 2 002-2h-2M9 5a2 2 002 2h2a2 2 002-2M9 5a2 2 0 012-2h2a2 2 012 2" />
-                              </svg>
-                            </div>
-                            <div>
-                              <h3 className="font-medium text-gray-900 dark:text-white capitalize">
-                                {getRoutineName(routineId)}
-                              </h3>
-                              <p className="text-sm text-gray-500 dark:text-gray-400">
-                                {t('View Routine')} &rarr;
-                              </p>
-                            </div>
-                          </Link>
+                            {concern}
+                          </span>
                         ))}
-
-                        <Link
-                          href="/routines"
-                          className="bg-gray-50 dark:bg-gray-700 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-all p-4 flex items-center justify-center text-center"
-                        >
-                          <div>
-                            <div className="mx-auto h-12 w-12 bg-gray-100 dark:bg-gray-600 rounded-full flex items-center justify-center mb-2">
-                              <svg className="h-6 w-6 text-gray-400 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                              </svg>
-                            </div>
-                            <h3 className="font-medium text-gray-700 dark:text-gray-300">
-                              {t('Browse More Routines')}
-                            </h3>
-                          </div>
-                        </Link>
                       </div>
                     ) : (
-                      <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 text-center">
-                        <div className="mb-4">
-                          <svg className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 012 2v6a2 2 01-2 2H5a2 2 01-2-2v-6a2 2 012-2m14 0V9a2 2 00-2-2M5 11V9a2 2 012-2m0 0V5a2 2 012-2h6a2 2 012 2v2M7 7h10" />
-                          </svg>
-                        </div>
-                        <p className="mb-4 text-gray-600 dark:text-gray-400">{t('noSavedRoutines')}</p>
-                        <Link href="/routines" className="inline-block px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600 transition-colors">
-                          {t('Browse Routines')}
-                        </Link>
-                      </div>
+                      <p className="text-gray-600 dark:text-gray-400">None specified</p>
                     )}
                   </div>
                 </div>
 
-                {/* Right Column - Recently Viewed */}
                 <div>
-                  <h2 className="text-xl font-medium text-gray-900 dark:text-white mb-4">
-                    {t('Recently Viewed')}
-                  </h2>
-                  
-                  {recentlyViewed.length > 0 ? (
-                    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-6">
-                      <div className="space-y-4">
-                        {recentlyViewed.map((item, index) => (
-                          <Link
-                            key={index}
-                            href={`/${item.type}s/${item.id}`}
-                            className="block group"
-                          >
-                            <div className="flex items-center">
-                              <div className="h-10 w-10 bg-gray-200 dark:bg-gray-600 rounded-md flex-shrink-0"></div>
-                              <div className="ml-3 flex-1">
-                                <h4 className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-teal-500 transition-colors">
-                                  {item.name}
-                                </h4>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">
-                                  {item.type}
-                                </p>
-                              </div>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 text-center">
-                      <div className="mb-4">
-                        <svg className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                      </div>
-                      <p className="mb-4 text-gray-600 dark:text-gray-400">{t('noRecentlyViewed')}</p>
-                      <Link href="/products" className="inline-block px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600 transition-colors">
-                        {t('Browse Products')}
-                      </Link>
-                    </div>
-                  )}
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Age Range</h3>
+                  <p className="mt-1 text-gray-900 dark:text-gray-100">{user?.ageRange || 'Not specified'}</p>
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Experience Level</h3>
+                  <p className="mt-1 text-gray-900 dark:text-gray-100 capitalize">{user?.skincareExperience || 'Not specified'}</p>
                 </div>
               </div>
+            )}
+          </div>
+        )}
+
+        {/* Recommendations Tab */}
+        {activeTab === 'recommendations' && (
+          <div className="space-y-8">
+            {/* Personalized Product Recommendations */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                Recommended Products
+              </h2>
+              
+              {recommendations.products.length > 0 ? (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {recommendations.products.map((product, index) => (
+                    <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-md transition-shadow">
+                      <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                        {product.brand} {product.name}
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        {product.description?.substring(0, 100)}...
+                      </p>
+                      <div className="flex justify-between items-center">
+                        <span className="text-lg font-bold text-teal-600 dark:text-teal-400">
+                          ${product.price}
+                        </span>
+                        <Link 
+                          href={`/products/${product.category}/${product.id}`}
+                          className="px-3 py-1 bg-teal-500 text-white rounded-md hover:bg-teal-600 transition-colors text-sm"
+                        >
+                          View Product
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="text-6xl mb-4">🧴</div>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                    Complete your skin profile to get personalized product recommendations
+                  </p>
+                  <button
+                    onClick={() => setActiveTab('profile')}
+                    className="px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600 transition-colors"
+                  >
+                    Complete Profile
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Ingredient Recommendations */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                Recommended Ingredients
+              </h2>
+              
+              {recommendations.ingredients.length > 0 ? (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {recommendations.ingredients.map((ingredient, index) => (
+                    <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-md transition-shadow">
+                      <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                        {ingredient.name}
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        {ingredient.description?.substring(0, 100)}...
+                      </p>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-teal-600 dark:text-teal-400">
+                          Safety: {ingredient.safetyRating}/5
+                        </span>
+                        <Link 
+                          href={`/ingredients?search=${ingredient.name}`}
+                          className="px-3 py-1 bg-purple-500 text-white rounded-md hover:bg-purple-600 transition-colors text-sm"
+                        >
+                          Learn More
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="text-6xl mb-4">🧪</div>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    No ingredient recommendations available yet
+                  </p>
+                </div>
+              )}
             </div>
           </div>
-        </div>
-      </main>
-    </>
+        )}
+
+        {/* History Tab */}
+        {activeTab === 'history' && (
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              Analysis History
+            </h2>
+            
+            {analysisHistory.length > 0 ? (
+              <div className="space-y-4">
+                {analysisHistory.map((analysis, index) => (
+                  <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-medium text-gray-900 dark:text-white">
+                          Skin Analysis #{analysis.id?.substring(0, 8) || index + 1}
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          Skin Type: {analysis.skinType}
+                        </p>
+                        {analysis.skinConditions && analysis.skinConditions.length > 0 && (
+                          <div className="mt-2">
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Detected Conditions:</p>
+                            <div className="flex flex-wrap gap-1">
+                              {analysis.skinConditions.map((condition, idx) => (
+                                <span key={idx} className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full">
+                                  {condition}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                        {new Date(analysis.date).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+                
+                <div className="text-center pt-4">
+                  <Link 
+                    href="/skin-analysis"
+                    className="px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600 transition-colors"
+                  >
+                    New Analysis
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">📊</div>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                  No Analysis History
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  Start your skincare journey by analyzing your skin
+                </p>
+                <Link 
+                  href="/skin-analysis"
+                  className="px-6 py-3 bg-teal-500 text-white rounded-md hover:bg-teal-600 transition-colors"
+                >
+                  Analyze Your Skin
+                </Link>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Saved Items Tab */}
+        {activeTab === 'saved' && (
+          <div className="space-y-8">
+            {/* Saved Routines */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                Saved Routines
+              </h2>
+              
+              {savedRoutines.length > 0 ? (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {savedRoutines.map(routineId => (
+                    <Link
+                      href={`/routines/${routineId}`}
+                      key={routineId}
+                      className="border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-all p-4 flex items-center"
+                    >
+                      <div className="h-12 w-12 bg-gray-200 dark:bg-gray-700 rounded-md mr-4 flex items-center justify-center">
+                        <svg className="h-6 w-6 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 002 2h10a2 2 002-2V7a2 2 002-2h-2M9 5a2 2 002 2h2a2 2 002-2M9 5a2 2 0 012-2h2a2 2 012 2" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-gray-900 dark:text-white capitalize">
+                          {getRoutineName(routineId)}
+                        </h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          View Routine →
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="text-6xl mb-4">📋</div>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">No saved routines yet</p>
+                  <Link href="/routines" className="px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600 transition-colors">
+                    Browse Routines
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Saved Products */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                Saved Products
+              </h2>
+              
+              {savedProducts.length > 0 ? (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {savedProducts.map((product, index) => (
+                    <Link
+                      key={index}
+                      href={`/products/${product.category}/${product.id}`}
+                      className="border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-all p-4"
+                    >
+                      <div className="flex items-center">
+                        <div className="h-12 w-12 bg-gray-200 dark:bg-gray-700 rounded-md mr-4 flex-shrink-0">
+                          {product.imageUrl ? (
+                            <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover rounded-md" />
+                          ) : (
+                            <div className="h-full w-full flex items-center justify-center">
+                              <svg className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-medium text-gray-900 dark:text-white">
+                            {product.brand} {product.name}
+                          </h3>
+                          <p className="text-sm text-gray-500 dark:text-gray-400 capitalize">
+                            {product.category}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="text-6xl mb-4">❤️</div>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">No saved products yet</p>
+                  <Link href="/products" className="px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600 transition-colors">
+                    Browse Products
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Recently Viewed */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                Recently Viewed
+              </h2>
+              
+              {recentlyViewed.length > 0 ? (
+                <div className="space-y-4">
+                  {recentlyViewed.map((item, index) => (
+                    <Link
+                      key={index}
+                      href={`/${item.type}s/${item.id}`}
+                      className="flex items-center p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      <div className="h-10 w-10 bg-gray-200 dark:bg-gray-600 rounded-md mr-3 flex-shrink-0"></div>
+                      <div className="flex-1">
+                        <h4 className="font-medium text-gray-900 dark:text-white">
+                          {item.name}
+                        </h4>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 capitalize">
+                          {item.type}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="text-6xl mb-4">👁️</div>
+                  <p className="text-gray-600 dark:text-gray-400">No recently viewed items</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

@@ -406,5 +406,32 @@
     ],
     "userId": "t@g.x",
     "hasAnnotatedImage": true
+  },
+  {
+    "date": "2025-07-27T07:24:11.644Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "t@g.x",
+    "hasAnnotatedImage": true
+  },
+  {
+    "date": "2025-07-27T07:24:24.663Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "t@g.x",
+    "hasAnnotatedImage": true
+  },
+  {
+    "date": "2025-07-27T07:24:28.561Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "t@g.x",
+    "hasAnnotatedImage": true
   }
 ]

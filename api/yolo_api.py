@@ -81,6 +81,15 @@ load_model()
 def read_root():
     return {"status": "YOLOv8 Skin Analysis API is running", "model_loaded": model is not None}
 
+@app.get("/health")
+def health_check():
+    """Health check endpoint for Docker"""
+    return {
+        "status": "healthy", 
+        "service": "YOLOv8 Skin Analysis API",
+        "model_loaded": model is not None
+    }
+
 @app.get("/model-status")
 def model_status():
     """Endpoint to check if the model is loaded and its status"""
@@ -148,10 +157,10 @@ async def analyze_image(file: UploadFile = File(...)):
             
             raise HTTPException(status_code=400, detail=f"Invalid image file: {str(e)}")
         
-        # Run YOLOv8 inference on the image
+        # Run YOLOv8 inference on the image (force CPU to avoid CUDA issues)
         try:
-            results = model(temp_path)
-            logger.info("Successfully ran YOLO model on image")
+            results = model(temp_path, device='cpu')
+            logger.info("Successfully ran YOLO model on image using CPU")
         except Exception as e:
             logger.error(f"Error during model inference: {str(e)}")
             logger.error(traceback.format_exc())

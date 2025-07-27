@@ -1,0 +1,26 @@
+# Docker Compose file for YOLO API development
+version: '3.8'
+
+services:
+  yolo-api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: dermify-yolo-api-dev
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./api:/app
+      - ./api/uploads:/app/uploads
+      - ./api/best.pt:/app/best.pt
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+      - FASTAPI_ENV=development
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s

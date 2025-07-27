@@ -1,0 +1,19 @@
+# API Framework
+fastapi>=0.95.0
+uvicorn[standard]>=0.20.0
+python-multipart>=0.0.5
+pydantic>=1.9.0
+
+# Computer Vision and ML
+ultralytics>=8.0.0
+opencv-python-headless>=4.5.0
+Pillow>=9.0.0
+numpy>=1.22.0
+
+# Utilities
+requests>=2.27.0
+python-dotenv>=0.20.0
+
+# Additional dependencies for Docker environment
+torch>=2.0.0
+torchvision>=0.15.0

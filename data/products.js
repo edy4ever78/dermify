@@ -489,6 +489,60 @@ const products = [
       "combination": false,
       "oily": true
     }
+  },
+  {
+    "id": "fresh-sugar-face-polish-exfoliator",
+    "brand": "fresh",
+    "name": "Sugar Face Polish Exfoliator",
+    "price": 67,
+    "rank": 4.5,
+    "description": "A two-in-one face scrub and mask that buffs and hydrates with real brown sugar and strawberries.",
+    "imageUrl": "https://www.sephora.com/productimages/sku/s2820900-main-zoom.jpg?imwidth=1224",
+    "category": "exfoliants",
+    "purchaseUrl": "https://www.sephora.com/product/sugar-face-polish-P12295?skuId=2820900&icid2=products%20grid:p12295:product",
+    "skinTypes": {
+      "normal": true,
+      "dry": true,
+      "sensitive": false,
+      "combination": true,
+      "oily": true
+    }
+  },
+  {
+    "id": "dr-jart-every-sun-day-invisible-korean-sunscreen-stick-spf-40",
+    "brand": "Dr. Jart+",
+    "name": "Every Sun Day™ Invisible Korean Sunscreen Stick SPF 40",
+    "price": 30,
+    "rank": 4.7,
+    "description": "A portable sunscreen stick with SPF 40 that hydrates, blurs pores, and delivers a matte invisible finish—perfect for on-the-go, under and over makeup.",
+    "imageUrl": "https://www.sephora.com/productimages/sku/s2866044-main-zoom.jpg?imwidth=1224",
+    "category": "sunscreens",
+    "purchaseUrl": "https://www.sephora.com/product/b-pricing-every-sun-day-priming-sunscreen-stick-P515743?skuId=2866044&icid2=products%20grid:p515743:product",
+    "skinTypes": {
+      "normal": true,
+      "dry": false,
+      "sensitive": false,
+      "combination": true,
+      "oily": true
+    }
+  },
+  {
+    "id": "the-ordinary-hyaluronic-acid-2-b5-hydrating-serum-with-ceramides",
+    "brand": "The Ordinary",
+    "name": "Hyaluronic Acid 2% + B5 Hydrating Serum with Ceramides",
+    "price": 9.9,
+    "rank": 4.1,
+    "description": "A lightweight hydration serum with Ceramides that instantly hydrates and plumps, while smoothing texture and wrinkles. ",
+    "imageUrl": "https://www.sephora.com/productimages/sku/s2735132-main-zoom.jpg?imwidth=1224",
+    "category": "serums",
+    "purchaseUrl": "https://www.sephora.com/product/the-ordinary-hyaluronic-acid-2-b5-hydrating-serum-P427419?skuId=2735132&icid2=products%20grid:p427419:product",
+    "skinTypes": {
+      "normal": true,
+      "dry": true,
+      "sensitive": false,
+      "combination": true,
+      "oily": true
+    }
   }
 ];
 
