@@ -6,8 +6,10 @@ import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import ProductManager from '@/components/dev/ProductManager';
 import IngredientManager from '@/components/dev/IngredientManager';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function DevPage() {
+  const { t } = useTranslation();
   const { user, isLoading } = useAuth();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('products');

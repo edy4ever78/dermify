@@ -5,7 +5,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 const languages = [
   { code: 'en', label: 'English', flag: '🇬🇧' },
-  { code: 'fr', label: 'Français', flag: '🇫🇷' }
+  { code: 'ro', label: 'Română', flag: '🇷🇴' }
 ];
 
 export default function LanguageSwitcher() {

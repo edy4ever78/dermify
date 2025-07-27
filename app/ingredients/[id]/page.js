@@ -5,8 +5,10 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import { getIngredientById, getAllIngredients } from '@/data/ingredients';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function IngredientDetail() {
+  const { t } = useTranslation();
   const params = useParams();
   const router = useRouter();
   const { id } = params;

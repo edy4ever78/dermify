@@ -66,10 +66,10 @@ function SignInContent() {
         <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg rounded-2xl shadow-2xl p-8 transform transition-all duration-500 hover:scale-[1.01]">
           <div className="flex flex-col items-center space-y-4 mb-8">
             <h2 className="text-3xl font-bold bg-gradient-to-r from-teal-500 to-blue-600 bg-clip-text text-transparent">
-              Welcome Back
+              {t('welcomeBack')}
             </h2>
             <p className="text-gray-600 dark:text-gray-400 text-center">
-              Sign in to continue your journey
+              {t('signIn')} to continue your journey
             </p>
           </div>
 
@@ -77,7 +77,7 @@ function SignInContent() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Email address
+                  {t('email')}
                 </label>
                 <input
                   type="email"
@@ -90,7 +90,7 @@ function SignInContent() {
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Password
+                  {t('password')}
                 </label>
                 <input
                   type="password"

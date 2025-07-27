@@ -2,6 +2,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { LoadingProvider } from "@/context/loading-context";
 import { AuthProvider } from "@/context/auth-context";
+import { LocaleProvider } from "@/context/LocaleContext";
+import { TranslationProvider } from "@/context/TranslationContext";
 import LoadingScreen from "@/components/LoadingScreen";
 import "./globals.css";
 
@@ -27,8 +29,12 @@ export default function RootLayout({ children }) {
         <ThemeProvider>
           <LoadingProvider>
             <AuthProvider>
-              <LoadingScreen />
-              {children}
+              <LocaleProvider>
+                <TranslationProvider>
+                  <LoadingScreen />
+                  {children}
+                </TranslationProvider>
+              </LocaleProvider>
             </AuthProvider>
           </LoadingProvider>
         </ThemeProvider>

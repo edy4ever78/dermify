@@ -7,14 +7,16 @@ import { addToRecentlyViewed } from '@/lib/userUtils';
 import Footer from '@/components/Footer';
 import { handleSearch, getSearchQuery } from '@/utils/search';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslation } from '@/hooks/useTranslation';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
 function ProductsContent() {
+  const { t, getTranslatedProduct } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedSkinType, setSelectedSkinType] = useState('all');
+  const [selectedSkinType, setSelectedSkinType] = useState('All');
   const [products, setProducts] = useState([]);
   const [productCategories, setProductCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,6 +25,7 @@ function ProductsContent() {
   const productsPerPage = 10;
 
   const skinTypes = ['All', 'Normal', 'Dry', 'Oily', 'Combination', 'Sensitive'];
+  const skinTypeLabels = [t('all'), t('normal'), t('dry'), t('oily'), t('combination'), t('sensitive')];
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -83,13 +86,14 @@ function ProductsContent() {
     : productCategories.filter(category => category.id === selectedCategory);
 
   const filteredProducts = products.filter(product => {
+    const translatedProduct = getTranslatedProduct(product);
     const matchesSearch =
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      translatedProduct.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.brand.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
 
-    const matchesSkinType = selectedSkinType === 'all' ||
+    const matchesSkinType = selectedSkinType === 'All' ||
       (product.skinTypes && product.skinTypes[selectedSkinType.toLowerCase()]);
 
     return matchesSearch && matchesCategory && matchesSkinType;
@@ -119,7 +123,7 @@ function ProductsContent() {
         <main className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-8 pb-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-12">
             <div className="w-12 h-12 rounded-full border-4 border-t-teal-500 border-gray-200 dark:border-gray-700 animate-spin mx-auto"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading products...</p>
+            <p className="mt-4 text-gray-600 dark:text-gray-400">{t('loadingProducts')}</p>
           </div>
         </main>
         <Footer />
@@ -138,7 +142,7 @@ function ProductsContent() {
               onClick={() => window.location.reload()}
               className="mt-4 px-4 py-2 bg-teal-500 text-white rounded-md"
             >
-              Try Again
+              {t('tryAgain')}
             </button>
           </div>
         </main>
@@ -155,10 +159,10 @@ function ProductsContent() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h1 className="text-4xl font-extrabold bg-gradient-to-r from-teal-500 to-blue-500 bg-clip-text text-transparent">
-              Skincare Products
+              {t('skincareProducts')}
             </h1>
             <p className="mt-3 text-lg text-gray-600 dark:text-gray-400">
-              Explore our curated selection of effective skincare products
+              {t('exploreProducts')}
             </p>
           </div>
 
@@ -166,7 +170,7 @@ function ProductsContent() {
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1">
                 <label htmlFor="search" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Search Products
+                  {t('searchProducts')}
                 </label>
                 <div className="relative">
                   <input
@@ -174,7 +178,7 @@ function ProductsContent() {
                     id="search"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search by name or brand..."
+                    placeholder={t('searchPlaceholder')}
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white transition-colors"
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -187,7 +191,7 @@ function ProductsContent() {
 
               <div className="sm:w-64">
                 <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Category
+                  {t('category')}
                 </label>
                 <select
                   id="category"
@@ -195,7 +199,7 @@ function ProductsContent() {
                   onChange={(e) => setSelectedCategory(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white transition-colors"
                 >
-                  <option value="all">All Categories</option>
+                  <option value="all">{t('allCategories')}</option>
                   {productCategories.map(category => (
                     <option key={category.id} value={category.id}>{category.name}</option>
                   ))}
@@ -204,7 +208,7 @@ function ProductsContent() {
 
               <div className="sm:w-64">
                 <label htmlFor="skinType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Skin Type
+                  {t('skinType')}
                 </label>
                 <select
                   id="skinType"
@@ -212,8 +216,8 @@ function ProductsContent() {
                   onChange={(e) => setSelectedSkinType(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white transition-colors"
                 >
-                  {skinTypes.map(type => (
-                    <option key={type} value={type}>{type}</option>
+                  {skinTypes.map((type, index) => (
+                    <option key={type} value={type}>{skinTypeLabels[index]}</option>
                   ))}
                 </select>
               </div>
@@ -221,19 +225,19 @@ function ProductsContent() {
 
             <div className="mt-4 flex justify-between items-center">
               <span className="text-sm text-gray-500 dark:text-gray-400">
-                {filteredProducts.length} of {totalProducts} products
-                {totalPages > 1 && ` (Page ${currentPage} of ${totalPages})`}
+                {filteredProducts.length} {t('of')} {totalProducts} {t('productsCount')}
+                {totalPages > 1 && ` (${t('page')} ${currentPage} ${t('of')} ${totalPages})`}
               </span>
 
               <button
                 onClick={() => {
                   setSearchTerm('');
                   setSelectedCategory('all');
-                  setSelectedSkinType('all');
+                  setSelectedSkinType('All');
                 }}
                 className="text-sm text-teal-500 hover:text-teal-600 transition-colors"
               >
-                Reset Filters
+                {t('resetFilters')}
               </button>
             </div>
           </div>
@@ -242,11 +246,12 @@ function ProductsContent() {
             <div className="space-y-12">
               {filteredCategories.map(category => {
                 const matchingProducts = category.products.filter(product => {
+                  const translatedProduct = getTranslatedProduct(product);
                   const matchesSearch =
-                    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    translatedProduct.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     product.brand.toLowerCase().includes(searchTerm.toLowerCase());
 
-                  const matchesSkinType = selectedSkinType === 'all' ||
+                  const matchesSkinType = selectedSkinType === 'All' ||
                     (product.skinTypes && product.skinTypes[selectedSkinType.toLowerCase()]);
 
                   return matchesSearch && matchesSkinType;
@@ -272,7 +277,9 @@ function ProductsContent() {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {categoryCurrentProducts.map(product => (
+                      {categoryCurrentProducts.map(product => {
+                        const translatedProduct = getTranslatedProduct(product);
+                        return (
                         <Link
                           href={`/products/${category.id}/${product.id}`}
                           key={product.id}
@@ -280,7 +287,7 @@ function ProductsContent() {
                             addToRecentlyViewed({
                               type: 'product',
                               id: product.id,
-                              name: product.name
+                              name: translatedProduct.name
                             });
                           }}
                         >
@@ -289,7 +296,7 @@ function ProductsContent() {
                               {product.imageUrl ? (
                                 <img
                                   src={product.imageUrl}
-                                  alt={product.name}
+                                  alt={translatedProduct.name}
                                   className="w-full h-full object-cover transition-opacity duration-300"
                                   onError={(e) => {
                                     e.target.onerror = null;
@@ -312,7 +319,7 @@ function ProductsContent() {
                             <div className="p-4">
                               <div className="flex justify-between items-start">
                                 <div>
-                                  <h3 className="text-lg font-medium text-gray-900 dark:text-white">{product.name}</h3>
+                                  <h3 className="text-lg font-medium text-gray-900 dark:text-white">{translatedProduct.name}</h3>
                                   <p className="text-sm text-gray-500 dark:text-gray-400">{product.brand}</p>
                                 </div>
                                 <p className="font-medium text-gray-900 dark:text-gray-200">${product.price.toFixed(2)}</p>
@@ -334,13 +341,14 @@ function ProductsContent() {
                                 </div>
 
                                 <button className="ml-auto text-teal-500 hover:text-teal-600 transition-colors">
-                                  View Details
+                                  {t('viewDetails')}
                                 </button>
                               </div>
                             </div>
                           </div>
                         </Link>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 );
@@ -351,17 +359,17 @@ function ProductsContent() {
               <svg className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">No products found</h3>
-              <p className="mt-2 text-gray-500 dark:text-gray-400">Try adjusting your search or filter to find what you're looking for.</p>
+              <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">{t('noProductsFound')}</h3>
+              <p className="mt-2 text-gray-500 dark:text-gray-400">{t('adjustSearchFilter')}</p>
               <button
                 onClick={() => {
                   setSearchTerm('');
                   setSelectedCategory('all');
-                  setSelectedSkinType('all');
+                  setSelectedSkinType('All');
                 }}
                 className="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-teal-500 hover:bg-teal-600 focus:outline-none transition-colors"
               >
-                Reset Filters
+                {t('resetFilters')}
               </button>
             </div>
           )}
@@ -378,7 +386,7 @@ function ProductsContent() {
                       : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
-                  <span className="sr-only">Previous</span>
+                  <span className="sr-only">{t('previous')}</span>
                   <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
@@ -430,7 +438,7 @@ function ProductsContent() {
                       : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
-                  <span className="sr-only">Next</span>
+                  <span className="sr-only">{t('next')}</span>
                   <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                   </svg>

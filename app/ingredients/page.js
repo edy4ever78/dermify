@@ -12,7 +12,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 export const dynamic = 'force-dynamic';
 
 function IngredientsContent() {
-  const { t } = useTranslation();
+  const { t, getTranslatedIngredient } = useTranslation();
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('category') || '';
   const initialSkinType = searchParams.get('skinType') || '';
@@ -65,10 +65,12 @@ function IngredientsContent() {
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
-        item => 
-          item.name.toLowerCase().includes(query) || 
+        item => {
+          const translatedItem = getTranslatedIngredient(item);
+          return translatedItem.name.toLowerCase().includes(query) || 
           item.aliases.some(alias => alias.toLowerCase().includes(query)) ||
-          item.description.toLowerCase().includes(query)
+          translatedItem.description.toLowerCase().includes(query);
+        }
       );
     }
     
@@ -115,7 +117,7 @@ function IngredientsContent() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">
-              {t('Ingredients')}
+              {t('ingredients')}
             </h1>
           </div>
           
@@ -133,7 +135,7 @@ function IngredientsContent() {
                     name="search"
                     id="search"
                     className="block w-full pr-10 border-gray-300 dark:border-gray-600 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white rounded-md"
-                    placeholder={t('Search Ingredients')}
+                    placeholder={t('searchIngredients')}
                     value={searchQuery}
                     onChange={handleSearchChange}
                   />
@@ -148,7 +150,7 @@ function IngredientsContent() {
               {/* Category Filter */}
               <div>
                 <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {t('Category')}
+                  {t('category')}
                 </label>
                 <select
                   id="category"
@@ -157,7 +159,7 @@ function IngredientsContent() {
                   value={selectedCategory}
                   onChange={handleCategoryChange}
                 >
-                  <option value="">{t('All Categories')}</option>
+                  <option value="">{t('allCategories')}</option>
                   {categories.filter(cat => cat !== '').map((category) => (
                     <option key={category} value={category}>{category}</option>
                   ))}
@@ -167,7 +169,7 @@ function IngredientsContent() {
               {/* Skin Type Filter */}
               <div>
                 <label htmlFor="skinType" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {t('Skin Type')}
+                  {t('skinType')}
                 </label>
                 <select
                   id="skinType"
@@ -176,7 +178,7 @@ function IngredientsContent() {
                   value={selectedSkinType}
                   onChange={handleSkinTypeChange}
                 >
-                  <option value="">{t('All Skin Types')}</option>
+                  <option value="">{t('allSkinTypes')}</option>
                   {skinTypes.filter(type => type !== '').map((type, index) => (
                     <option key={`${type}-${index}`} value={type}>{type}</option>
                   ))}
@@ -206,7 +208,7 @@ function IngredientsContent() {
               <p>{t('loading')}</p>
             ) : (
               <p>
-                {t('Showing')} <span className="font-medium">{filteredIngredients.length}</span> {' '}
+                {t('showing')} <span className="font-medium">{filteredIngredients.length}</span> {' '}
                 {filteredIngredients.length === 1 ? t('ingredient') : t('ingredients')}
               </p>
             )}
@@ -220,7 +222,7 @@ function IngredientsContent() {
           ) : filteredIngredients.length > 0 ? (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filteredIngredients.map((ingredient) => (
-                <IngredientCard key={ingredient.id} ingredient={ingredient} />
+                <IngredientCard key={ingredient.id} ingredient={getTranslatedIngredient(ingredient)} />
               ))}
             </div>
           ) : (

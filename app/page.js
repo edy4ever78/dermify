@@ -4,10 +4,12 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import ChatbotIcon from '@/components/ChatbotIcon';
+import TranslatedFooter from '@/components/TranslatedFooter';
 import { useLoading } from '@/context/loading-context';
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { handleSearch } from '@/utils/search';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -15,6 +17,7 @@ export default function Home() {
   const { setIsLoading } = useLoading();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const router = useRouter();
+  const { t } = useTranslation();
   
   // Check if user wants to bypass redirects (for debugging or accessing landing page)
   const [bypassRedirect, setBypassRedirect] = useState(false);
@@ -118,10 +121,10 @@ export default function Home() {
           <div className="relative z-20 py-16 sm:py-20 md:py-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
               <h1 className="text-3xl font-extrabold text-white sm:text-4xl md:text-5xl lg:text-6xl drop-shadow-md leading-tight">
-                Know What's in Your Skincare
+                {t('heroTitle')}
               </h1>
               <p className="mt-4 max-w-md mx-auto text-sm text-white sm:text-base md:text-lg lg:text-xl md:mt-6 md:max-w-2xl lg:max-w-3xl leading-relaxed">
-                Check safety ratings, analyze ingredients, and find safer products for your skin
+                {t('heroSubtitle')}
               </p>
               <div className="mt-8 sm:mt-10 max-w-xs sm:max-w-md mx-auto">
                 <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch sm:items-center shadow-lg rounded-lg overflow-hidden">
@@ -129,7 +132,7 @@ export default function Home() {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search products or ingredients..."
+                    placeholder={t('searchPlaceholder')}
                     className="w-full px-4 py-3 sm:px-5 sm:py-4 text-sm sm:text-base focus:outline-none dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400 transition-colors"
                     aria-label="Search"
                   />
@@ -140,7 +143,7 @@ export default function Home() {
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 sm:mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                    <span className="hidden sm:inline ml-1">Search</span>
+                    <span className="hidden sm:inline ml-1">{t('searchButton')}</span>
                   </button>
                 </form>
               </div>
@@ -153,10 +156,10 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12 sm:mb-16">
               <h2 className="text-2xl sm:text-3xl font-extrabold dark:text-white mb-4">
-                How Dermify Works
+                {t('howItWorks')}
               </h2>
               <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto px-4">
-                Our advanced AI-powered platform combines scientific research, ingredient analysis, and personalized recommendations to revolutionize your skincare journey
+                {t('howItWorksSubtitle')}
               </p>
             </div>
             
@@ -164,22 +167,22 @@ export default function Home() {
               {[
                 {
                   step: '01',
-                  title: 'Analyze',
-                  description: 'Upload a photo for AI-powered skin analysis or search our comprehensive database of products and ingredients',
+                  title: t('steps.analyze.title'),
+                  description: t('steps.analyze.description'),
                   icon: '🔍',
                   color: 'from-blue-500 to-purple-500'
                 },
                 {
                   step: '02',
-                  title: 'Discover',
-                  description: 'Get detailed safety ratings, ingredient breakdowns, and personalized recommendations based on your skin type',
+                  title: t('steps.discover.title'),
+                  description: t('steps.discover.description'),
                   icon: '💡',
                   color: 'from-purple-500 to-pink-500'
                 },
                 {
                   step: '03',
-                  title: 'Transform',
-                  description: 'Build your perfect skincare routine with science-backed products tailored to your unique skin needs',
+                  title: t('steps.transform.title'),
+                  description: t('steps.transform.description'),
                   icon: '✨',
                   color: 'from-pink-500 to-red-500'
                 }
@@ -217,19 +220,19 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-10 sm:mb-12">
               <h2 className="text-2xl sm:text-3xl font-extrabold dark:text-white mb-4">
-                Understanding Safety Scores
+                {t('safetyScores')}
               </h2>
               <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4">
-                Our evidence-based rating system helps you make informed decisions about your skincare products
+                {t('safetyScoresSubtitle')}
               </p>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6">
               {[
-                { score: 1, color: 'bg-green-500', label: 'Excellent', description: 'Minimal to no safety concerns' },
-                { score: 3, color: 'bg-lime-500', label: 'Good', description: 'Limited safety concerns' },
-                { score: 5, color: 'bg-yellow-500', label: 'Moderate', description: 'Some safety considerations' },
-                { score: 7, color: 'bg-orange-500', label: 'Caution', description: 'Notable safety concerns' },
-                { score: 9, color: 'bg-red-500', label: 'High Risk', description: 'Significant safety concerns' },
+                { score: 1, color: 'bg-green-500', label: t('safetyLabels.excellent'), description: t('safetyDescriptions.excellent') },
+                { score: 3, color: 'bg-lime-500', label: t('safetyLabels.good'), description: t('safetyDescriptions.good') },
+                { score: 5, color: 'bg-yellow-500', label: t('safetyLabels.moderate'), description: t('safetyDescriptions.moderate') },
+                { score: 7, color: 'bg-orange-500', label: t('safetyLabels.caution'), description: t('safetyDescriptions.caution') },
+                { score: 9, color: 'bg-red-500', label: t('safetyLabels.highRisk'), description: t('safetyDescriptions.highRisk') },
               ].map((item) => (
                 <div key={item.score} className="text-center group hover:transform hover:scale-105 transition-all duration-300">
                   <div className={`${item.color} w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center text-white text-xl sm:text-2xl font-bold mx-auto mb-3 sm:mb-4 shadow-lg group-hover:shadow-xl`}>
@@ -242,8 +245,7 @@ export default function Home() {
             </div>
             <div className="mt-10 sm:mt-12 text-center">
               <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 max-w-4xl mx-auto px-4">
-                Our safety ratings are based on peer-reviewed scientific research, regulatory databases, and expert dermatologist reviews. 
-                We continuously update our assessments as new research becomes available.
+                {t('safetyDisclaimer')}
               </p>
             </div>
           </div>
@@ -254,10 +256,10 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12 sm:mb-16">
               <h2 className="text-2xl sm:text-3xl font-extrabold dark:text-white mb-4">
-                What Dermify Offers
+                {t('whatDermifyOffers')}
               </h2>
               <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto px-4">
-                Comprehensive skincare analysis powered by artificial intelligence and backed by scientific research
+                {t('whatDermifyOffersSubtitle')}
               </p>
             </div>
             
@@ -272,35 +274,35 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                       </svg>
                     </div>
-                    <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 dark:text-white">Product Analysis</h3>
+                    <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 dark:text-white">{t('productAnalysis')}</h3>
                     <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-4 sm:mb-6 leading-relaxed">
-                      Analyze your skincare products to understand their ingredients, safety ratings, and benefits for your specific skin type.
+                      {t('productAnalysisDesc')}
                     </p>
                     <div className="mb-4 sm:mb-6 space-y-2">
                       <div className="flex items-center text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                         <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
-                        Comprehensive ingredient breakdown
+                        {t('productFeatures.comprehensiveBreakdown')}
                       </div>
                       <div className="flex items-center text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                         <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
-                        Safety scoring system
+                        {t('productFeatures.safetyScoring')}
                       </div>
                       <div className="flex items-center text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                         <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
-                        Personalized recommendations
+                        {t('productFeatures.personalizedRecommendations')}
                       </div>
                     </div>
                     <button 
                       onClick={() => navigateTo('/products')}
                       className="w-full bg-gradient-to-r from-teal-500 to-teal-600 text-white font-medium py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg hover:from-teal-600 hover:to-teal-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 text-sm sm:text-base"
                     >
-                      Analyze Products
+                      {t('analyzeProducts')}
                     </button>
                   </div>
                 </div>
@@ -316,35 +318,35 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                       </svg>
                     </div>
-                    <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 dark:text-white">Ingredient Database</h3>
+                    <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 dark:text-white">{t('ingredientDatabase')}</h3>
                     <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-4 sm:mb-6 leading-relaxed">
-                      Explore our comprehensive database of skincare ingredients with detailed information about their effects and compatibility.
+                      {t('ingredientDatabaseDesc')}
                     </p>
                     <div className="mb-4 sm:mb-6 space-y-2">
                       <div className="flex items-center text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                         <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
-                        800+ ingredients studied
+                        {t('productFeatures.studiedIngredients')}
                       </div>
                       <div className="flex items-center text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                         <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
-                        Scientific evidence ratings
+                        {t('productFeatures.evidenceRatings')}
                       </div>
                       <div className="flex items-center text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                         <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
-                        Skin type compatibility
+                        {t('productFeatures.skinCompatibility')}
                       </div>
                     </div>
                     <button 
                       onClick={() => navigateTo('/ingredients')}
                       className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 text-sm sm:text-base"
                     >
-                      Explore Ingredients
+                      {t('exploreIngredients')}
                     </button>
                   </div>
                 </div>
@@ -361,35 +363,35 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                       </svg>
                     </div>
-                    <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 dark:text-white">AI Skin Analysis</h3>
+                    <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 dark:text-white">{t('faceAnalysis')}</h3>
                     <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-4 sm:mb-6 leading-relaxed">
-                      Get personalized skin recommendations based on advanced AI analysis of your facial features and skin concerns.
+                      {t('faceAnalysisDesc')}
                     </p>
                     <div className="mb-4 sm:mb-6 space-y-2">
                       <div className="flex items-center text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                         <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
-                        AI-powered skin detection
+                        {t('productFeatures.aiPoweredDetection')}
                       </div>
                       <div className="flex items-center text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                         <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
-                        Condition identification
+                        {t('productFeatures.conditionIdentification')}
                       </div>
                       <div className="flex items-center text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                         <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
-                        Personalized routines
+                        {t('productFeatures.personalizedRoutines')}
                       </div>
                     </div>
                     <button 
                       onClick={() => navigateTo('/skin-analysis')}
                       className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white font-medium py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 text-sm sm:text-base"
                     >
-                      Analyze Your Skin
+                      {t('analyzeYourSkin')}
                     </button>
                   </div>
                 </div>
@@ -403,10 +405,10 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-10 sm:mb-12">
               <h2 className="text-2xl sm:text-3xl font-extrabold dark:text-white mb-4">
-                Recently Analyzed Products
+                {t('recentlyAnalyzed')}
               </h2>
               <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 px-4">
-                Discover what products our community has been analyzing and their safety scores
+                {t('recentlyAnalyzedSubtitle')}
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -442,7 +444,7 @@ export default function Home() {
                           onClick={() => navigateTo(`/products/${product.category}`)}
                           className="text-xs text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 font-medium transition-colors duration-300"
                         >
-                          View Details →
+                          {t('viewDetails')} →
                         </button>
                       </div>
                     </div>
@@ -460,7 +462,7 @@ export default function Home() {
                 <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                Analyze More Products
+                {t('analyzeMoreProducts')}
               </button>
             </div>
           </div>
@@ -471,10 +473,10 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-10 sm:mb-12">
               <h2 className="text-2xl sm:text-3xl font-extrabold dark:text-white mb-4">
-                Trending Ingredients
+                {t('trendingIngredients')}
               </h2>
               <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 px-4">
-                Discover the most searched and effective skincare ingredients backed by science
+                {t('trendingIngredientsSubtitle')}
               </p>
             </div>
             
@@ -543,7 +545,7 @@ export default function Home() {
                       onClick={() => navigateTo(`/ingredients/${ingredient.name.toLowerCase().replace(' ', '-')}`)}
                       className="w-full text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium text-xs sm:text-sm transition-colors duration-300 flex items-center justify-center group"
                     >
-                      Learn More
+                      {t('learnMore')}
                       <svg className="w-3 h-3 sm:w-4 sm:h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                       </svg>
@@ -561,7 +563,7 @@ export default function Home() {
                 <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                 </svg>
-                Explore All Ingredients
+                {t('exploreAllIngredients')}
               </button>
             </div>
           </div>
@@ -572,21 +574,21 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-10 sm:mb-12">
               <h2 className="text-2xl sm:text-3xl font-extrabold dark:text-white mb-4">
-                Common Skin Concerns
+                {t('commonSkinConcerns')}
               </h2>
               <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 px-4">
-                Get expert guidance and personalized solutions for your specific skin challenges
+                {t('commonSkinConcernsSubtitle')}
               </p>
             </div>
             
             <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
               {[
-                { name: "Acne", icon: '😞', users: '12k+', description: 'Breakouts & blemishes' },
-                { name: "Aging", icon: '⏳', users: '8k+', description: 'Fine lines & wrinkles' },
-                { name: "Dryness", icon: '🏜️', users: '15k+', description: 'Dehydrated skin' },
-                { name: "Redness", icon: '🔴', users: '6k+', description: 'Irritation & sensitivity' },
-                { name: "Hyperpigmentation", icon: '🎭', users: '9k+', description: 'Dark spots & uneven tone' },
-                { name: "Sensitivity", icon: '⚡', users: '11k+', description: 'Reactive & delicate skin' }
+                { name: t('skinConcernTypes.acne'), icon: '😞', users: '12k+', description: t('skinConcernDescriptions.acne') },
+                { name: t('skinConcernTypes.aging'), icon: '⏳', users: '8k+', description: t('skinConcernDescriptions.aging') },
+                { name: t('skinConcernTypes.dryness'), icon: '🏜️', users: '15k+', description: t('skinConcernDescriptions.dryness') },
+                { name: t('skinConcernTypes.redness'), icon: '🔴', users: '6k+', description: t('skinConcernDescriptions.redness') },
+                { name: t('skinConcernTypes.hyperpigmentation'), icon: '🎭', users: '9k+', description: t('skinConcernDescriptions.hyperpigmentation') },
+                { name: t('skinConcernTypes.sensitivity'), icon: '⚡', users: '11k+', description: t('skinConcernDescriptions.sensitivity') }
               ].map((concern) => (
                 <div 
                   key={concern.name}
@@ -601,7 +603,7 @@ export default function Home() {
                       {concern.name}
                     </h3>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 sm:mb-2">
-                      {concern.users} users helped
+                      {concern.users} {t('usersHelped')}
                     </p>
                     <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
                       {concern.description}
@@ -619,7 +621,7 @@ export default function Home() {
                 <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                View All Concerns
+                {t('viewAllConcerns')}
               </button>
             </div>
           </div>
@@ -633,20 +635,18 @@ export default function Home() {
               <div className="space-y-6 sm:space-y-8 order-2 lg:order-1">
                 <div>
                   <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 sm:mb-6">
-                    Revolutionize Your Skincare with AI
+                    {t('revolutionizeTitle')}
                   </h2>
                   <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-6 sm:mb-8">
-                    Get personalized skincare recommendations powered by advanced artificial intelligence. 
-                    Our YOLO-based skin analysis technology can detect multiple skin conditions and provide 
-                    tailored product suggestions in seconds.
+                    {t('revolutionizeSubtitle')}
                   </p>
                 </div>
                 
                 <div className="space-y-3 sm:space-y-4">
                   {[
-                    { icon: '📸', title: 'Upload Your Photo', description: 'Take a clear selfie or upload an existing photo' },
-                    { icon: '🤖', title: 'AI Analysis', description: 'Our advanced AI detects skin conditions and determines your skin type' },
-                    { icon: '📋', title: 'Get Recommendations', description: 'Receive personalized product suggestions and skincare routine' }
+                    { icon: '📸', title: t('aiSteps.upload.title'), description: t('aiSteps.upload.description') },
+                    { icon: '🤖', title: t('aiSteps.analysis.title'), description: t('aiSteps.analysis.description') },
+                    { icon: '📋', title: t('aiSteps.recommendations.title'), description: t('aiSteps.recommendations.description') }
                   ].map((step, index) => (
                     <div key={index} className="flex items-start space-x-3 sm:space-x-4 group">
                       <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-teal-500 to-blue-500 rounded-lg flex items-center justify-center text-white text-lg sm:text-xl group-hover:scale-110 transition-transform duration-300">
@@ -665,13 +665,13 @@ export default function Home() {
                     onClick={() => navigateTo('/skin-analysis')}
                     className="flex-1 bg-gradient-to-r from-teal-500 to-blue-500 text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-xl hover:from-teal-600 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base"
                   >
-                    Start Free Analysis
+                    {t('startFreeAnalysis')}
                   </button>
                   <button 
                     onClick={() => navigateTo('/about')}
                     className="flex-1 bg-white dark:bg-gray-800 text-teal-600 dark:text-teal-400 font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-xl border-2 border-teal-500 hover:bg-teal-50 dark:hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
                   >
-                    Learn More
+                    {t('learnMore')}
                   </button>
                 </div>
               </div>
@@ -702,53 +702,7 @@ export default function Home() {
         </div>
 
         {/* Footer */}
-        <footer className="bg-gray-100 dark:bg-gray-900 border-t dark:border-gray-800">
-          <div className="max-w-7xl mx-auto py-10 sm:py-12 px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
-              <div>
-                <h3 className="text-xs sm:text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Products</h3>
-                <ul className="mt-3 sm:mt-4 space-y-1 sm:space-y-2">
-                  <li><Link href="/products/cleansers" className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-teal-500">Cleansers</Link></li>
-                  <li><Link href="/products/moisturizers" className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-teal-500">Moisturizers</Link></li>
-                  <li><Link href="/products/serums" className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-teal-500">Serums</Link></li>
-                  <li><Link href="/products/sunscreens" className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-teal-500">Sunscreens</Link></li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-xs sm:text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Ingredients</h3>
-                <ul className="mt-3 sm:mt-4 space-y-1 sm:space-y-2">
-                  <li><Link href="/ingredients/retinoids" className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-teal-500">Retinoids</Link></li>
-                  <li><Link href="/ingredients/aha-bha" className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-teal-500">AHA/BHA</Link></li>
-                  <li><Link href="/ingredients/vitamin-c" className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-teal-500">Vitamin C</Link></li>
-                  <li><Link href="/ingredients/niacinamide" className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-teal-500">Niacinamide</Link></li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-xs sm:text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Resources</h3>
-                <ul className="mt-3 sm:mt-4 space-y-1 sm:space-y-2">
-                  <li><Link href="/ingredients" className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-teal-500">Ingredients</Link></li>
-                  <li><Link href="/products" className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-teal-500">Products</Link></li>
-                  <li><Link href="/skin-analysis" className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-teal-500">Skin Analysis</Link></li>
-                  <li><Link href="/concerns" className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-teal-500">Skin Concerns</Link></li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-xs sm:text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Company</h3>
-                <ul className="mt-3 sm:mt-4 space-y-1 sm:space-y-2">
-                  <li><Link href="/about" className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-teal-500">About Us</Link></li>
-                  <li><Link href="/contact" className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-teal-500">Contact Us</Link></li>
-                  <li><Link href="/privacy" className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-teal-500">Privacy</Link></li>
-                  <li><Link href="/terms" className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-teal-500">Terms</Link></li>
-                </ul>
-              </div>
-            </div>
-            <div className="mt-8 sm:mt-12 border-t border-gray-200 dark:border-gray-700 pt-6 sm:pt-8">
-              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 text-center">
-                © {new Date().getFullYear()} Dermify. All rights reserved.
-              </p>
-            </div>
-          </div>
-        </footer>
+        <TranslatedFooter />
 
         {/* Add ChatbotIcon component */}
         <ChatbotIcon />

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Header from '@/components/Header';
 import Link from 'next/link';
+import { useTranslation } from '@/hooks/useTranslation';
 
 // Sample routines data
 const routinesData = [
@@ -87,19 +88,48 @@ const routinesData = [
 ];
 
 export default function Routines() {
+  const { t, getTranslatedRoutine } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSkinType, setSelectedSkinType] = useState('All');
   const [selectedDifficulty, setSelectedDifficulty] = useState('All');
   
   // Available filter options
   const skinTypes = ['All', 'Normal', 'Dry', 'Oily', 'Combination', 'Sensitive', 'Mature', 'Acne-Prone'];
+  const skinTypeLabels = [t('all'), t('normal'), t('dry'), t('oily'), t('combination'), t('sensitive'), t('mature'), t('acneProne')];
   const difficultyLevels = ['All', 'Beginner', 'Intermediate', 'Advanced'];
+  const difficultyLabels = [t('all'), t('beginner'), t('intermediate'), t('advanced')];
+  
+  // Helper function to translate skin type
+  const translateSkinType = (skinType) => {
+    const typeMap = {
+      'All Skin Types': t('allSkinTypes'),
+      'Normal': t('normal'),
+      'Dry': t('dry'),
+      'Oily': t('oily'),
+      'Combination': t('combination'),
+      'Sensitive': t('sensitive'),
+      'Mature': t('mature'),
+      'Acne-Prone': t('acneProne')
+    };
+    return typeMap[skinType] || skinType;
+  };
+  
+  // Helper function to translate difficulty
+  const translateDifficulty = (difficulty) => {
+    const difficultyMap = {
+      'Beginner': t('beginner'),
+      'Intermediate': t('intermediate'),
+      'Advanced': t('advanced')
+    };
+    return difficultyMap[difficulty] || difficulty;
+  };
   
   // Filter routines based on search term and filters
   const filteredRoutines = routinesData.filter(routine => {
+    const translatedRoutine = getTranslatedRoutine(routine);
     const matchesSearch = 
-      routine.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      routine.steps.some(step => step.name.toLowerCase().includes(searchTerm.toLowerCase()));
+      translatedRoutine.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      translatedRoutine.steps.some(step => step.name.toLowerCase().includes(searchTerm.toLowerCase()));
     
     const matchesSkinType = 
       selectedSkinType === 'All' || 
@@ -108,11 +138,9 @@ export default function Routines() {
     const matchesDifficulty = 
       selectedDifficulty === 'All' || 
       routine.difficulty === selectedDifficulty;
-    
-    return matchesSearch && matchesSkinType && matchesDifficulty;
-  });
 
-  return (
+    return matchesSearch && matchesSkinType && matchesDifficulty;
+  });  return (
     <>
       <Header />
       
@@ -120,10 +148,10 @@ export default function Routines() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h1 className="text-4xl font-extrabold bg-gradient-to-r from-teal-500 to-blue-500 bg-clip-text text-transparent">
-              Skincare Routines
+              {t('skincareRoutines')}
             </h1>
             <p className="mt-3 text-lg text-gray-600 dark:text-gray-400">
-              Discover curated skincare routines for different skin types and concerns
+              {t('discoverCuratedRoutines')}
             </p>
           </div>
           
@@ -132,7 +160,7 @@ export default function Routines() {
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
                 <label htmlFor="search" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Search Routines
+                  {t('searchRoutines')}
                 </label>
                 <div className="relative">
                   <input
@@ -140,7 +168,7 @@ export default function Routines() {
                     id="search"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search routines or steps..."
+                    placeholder={t('searchRoutinesPlaceholder')}
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -153,7 +181,7 @@ export default function Routines() {
               
               <div className="md:w-48">
                 <label htmlFor="skinType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Skin Type
+                  {t('skinType')}
                 </label>
                 <select
                   id="skinType"
@@ -161,15 +189,15 @@ export default function Routines() {
                   onChange={(e) => setSelectedSkinType(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
                 >
-                  {skinTypes.map((type) => (
-                    <option key={type} value={type}>{type}</option>
+                  {skinTypes.map((type, index) => (
+                    <option key={type} value={type}>{skinTypeLabels[index]}</option>
                   ))}
                 </select>
               </div>
               
               <div className="md:w-48">
                 <label htmlFor="difficulty" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Difficulty
+                  {t('difficulty')}
                 </label>
                 <select
                   id="difficulty"
@@ -177,8 +205,8 @@ export default function Routines() {
                   onChange={(e) => setSelectedDifficulty(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
                 >
-                  {difficultyLevels.map((level) => (
-                    <option key={level} value={level}>{level}</option>
+                  {difficultyLevels.map((level, index) => (
+                    <option key={level} value={level}>{difficultyLabels[index]}</option>
                   ))}
                 </select>
               </div>
@@ -186,7 +214,7 @@ export default function Routines() {
             
             <div className="mt-4 flex justify-between items-center">
               <span className="text-sm text-gray-500 dark:text-gray-400">
-                {filteredRoutines.length} routines found
+                {filteredRoutines.length} {t('routinesFound')}
               </span>
               
               <button
@@ -197,7 +225,7 @@ export default function Routines() {
                 }}
                 className="text-sm text-teal-500 hover:text-teal-600"
               >
-                Reset Filters
+                {t('resetFilters')}
               </button>
             </div>
           </div>
@@ -205,14 +233,16 @@ export default function Routines() {
           {/* Routines Grid */}
           {filteredRoutines.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {filteredRoutines.map((routine) => (
+              {filteredRoutines.map((routine) => {
+                const translatedRoutine = getTranslatedRoutine(routine);
+                return (
                 <Link href={`/routines/${routine.id}`} key={routine.id}>
                   <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden h-full flex flex-col">
                     <div className="h-48 bg-gray-200 dark:bg-gray-700 relative">
                       {routine.imageUrl ? (
                         <img
                           src={routine.imageUrl}
-                          alt={routine.title}
+                          alt={translatedRoutine.title}
                           className="w-full h-full object-cover"
                         />
                       ) : (
@@ -225,7 +255,7 @@ export default function Routines() {
                     </div>
                     
                     <div className="p-5 flex-grow flex flex-col">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{routine.title}</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{translatedRoutine.title}</h3>
                       
                       <div className="text-sm text-gray-500 dark:text-gray-400 mb-4 flex-grow">
                         <div className="flex items-center mb-1">
@@ -238,13 +268,13 @@ export default function Routines() {
                           <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                           </svg>
-                          {routine.steps.length} steps
+                          {routine.steps.length} {t('stepsCount')}
                         </div>
                         <div className="flex items-center">
                           <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                           </svg>
-                          {routine.difficulty}
+                          {translateDifficulty(routine.difficulty)}
                         </div>
                       </div>
                       
@@ -254,22 +284,23 @@ export default function Routines() {
                             key={type}
                             className="text-xs bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 px-2 py-1 rounded-full"
                           >
-                            {type}
+                            {translateSkinType(type)}
                           </span>
                         ))}
                       </div>
                     </div>
                   </div>
                 </Link>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-10 text-center">
               <svg className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">No routines found</h3>
-              <p className="mt-2 text-gray-500 dark:text-gray-400">Try adjusting your search or filters to find what you're looking for.</p>
+              <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">{t('noRoutinesFound')}</h3>
+              <p className="mt-2 text-gray-500 dark:text-gray-400">{t('adjustSearchFilters')}</p>
               <button
                 onClick={() => {
                   setSearchTerm('');
@@ -278,7 +309,7 @@ export default function Routines() {
                 }}
                 className="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-teal-500 hover:bg-teal-600"
               >
-                Reset Filters
+                {t('resetFilters')}
               </button>
             </div>
           )}

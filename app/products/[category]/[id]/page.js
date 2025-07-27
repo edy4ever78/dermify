@@ -6,8 +6,10 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import { addToRecentlyViewed } from '@/lib/userUtils';
 import Footer from '@/components/Footer';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function ProductDetail() {
+  const { t } = useTranslation();
   const params = useParams();
   const { category, id } = params;
   

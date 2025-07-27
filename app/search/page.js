@@ -3,11 +3,13 @@
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useTranslation } from '@/hooks/useTranslation';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
 function SearchResultsContent() {
+  const { t } = useTranslation();
   const searchParams = useSearchParams();
   const query = searchParams.get('q');
   const searchType = searchParams.get('searchType') || 'products';

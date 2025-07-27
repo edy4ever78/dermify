@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
+import { useTranslation } from '@/hooks/useTranslation';
 
 // Sample routines data (same as in routines/page.js)
 const routinesData = [

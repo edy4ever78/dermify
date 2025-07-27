@@ -11,23 +11,23 @@ export function LocaleProvider({ children }) {
   const [locale, setLocale] = useState('en');
 
   useEffect(() => {
-    // Get locale from localStorage or navigator language
-    const savedLocale = localStorage.getItem('locale');
-    if (savedLocale) {
-      setLocale(savedLocale);
+    // Get language from localStorage or navigator language
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage) {
+      setLocale(savedLanguage);
     } else {
       // Get browser language
       const browserLang = navigator.language.split('-')[0];
       // Check if we support this language
-      const supportedLocale = ['en', 'ro'].includes(browserLang) ? browserLang : 'en';
-      setLocale(supportedLocale);
-      localStorage.setItem('locale', supportedLocale);
+      const supportedLanguage = ['en', 'ro'].includes(browserLang) ? browserLang : 'en';
+      setLocale(supportedLanguage);
+      localStorage.setItem('language', supportedLanguage);
     }
   }, []);
 
   const changeLocale = (newLocale) => {
     setLocale(newLocale);
-    localStorage.setItem('locale', newLocale);
+    localStorage.setItem('language', newLocale);
   };
 
   return (
