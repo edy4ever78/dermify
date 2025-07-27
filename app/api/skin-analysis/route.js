@@ -15,7 +15,6 @@ const getApiPort = () => {
     const portFilePath = join(process.cwd(), 'api', 'yolo_api_port.txt')
     if (fs.existsSync(portFilePath)) {
       const port = fs.readFileSync(portFilePath, 'utf8').trim()
-      console.log(`Found YOLOv8 API port in file: ${port}`)
       return parseInt(port, 10)
     }
   } catch (error) {
@@ -32,7 +31,6 @@ async function ensureTempDir() {
   try {
     // Check if directory exists, if not create it
     await fs.promises.mkdir(tempDir, { recursive: true })
-    console.log(`Temporary directory created/verified: ${tempDir}`)
     return tempDir
   } catch (error) {
     console.error(`Error creating temporary directory: ${error}`)
@@ -63,7 +61,6 @@ export async function uploadImageForAnalysis(formData) {
 
     // Write the file to disk
     await writeFile(filepath, buffer)
-    console.log(`File saved to ${filepath}`)
 
     // Get the API port
     const port = getApiPort()
@@ -75,7 +72,6 @@ export async function uploadImageForAnalysis(formData) {
     apiFormData.append('file', fileStream)
 
     // Make the API request
-    console.log(`Sending request to ${FLASK_URL}/analyze`)
     const response = await axios.post(`${FLASK_URL}/analyze`, apiFormData, {
       headers: apiFormData.getHeaders(),
       maxContentLength: Infinity,
@@ -85,7 +81,6 @@ export async function uploadImageForAnalysis(formData) {
     // Delete the temporary file
     try {
       fs.unlinkSync(filepath)
-      console.log(`Deleted temporary file: ${filepath}`)
     } catch (error) {
       console.error(`Error deleting temporary file: ${error.message}`)
     }

@@ -433,5 +433,14 @@
     ],
     "userId": "t@g.x",
     "hasAnnotatedImage": true
+  },
+  {
+    "date": "2025-07-27T08:11:28.529Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "t@g.x",
+    "hasAnnotatedImage": true
   }
 ]

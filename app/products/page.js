@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Header from '@/components/Header';
 import Link from 'next/link';
 import { addToRecentlyViewed } from '@/lib/userUtils';
@@ -8,7 +8,10 @@ import Footer from '@/components/Footer';
 import { handleSearch, getSearchQuery } from '@/utils/search';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function Products() {
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+function ProductsContent() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedSkinType, setSelectedSkinType] = useState('all');
@@ -439,5 +442,13 @@ export default function Products() {
       </main>
       <Footer />
     </>
+  );
+}
+
+export default function Products() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProductsContent />
+    </Suspense>
   );
 }

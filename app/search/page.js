@@ -1,10 +1,13 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 
-export default function SearchResults() {
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+function SearchResultsContent() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q');
   const searchType = searchParams.get('searchType') || 'products';
@@ -122,5 +125,13 @@ export default function SearchResults() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function SearchResults() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchResultsContent />
+    </Suspense>
   );
 }

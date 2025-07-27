@@ -1,13 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
 import { useTranslation } from '@/hooks/useTranslation';
 import Header from '@/components/Header';
 import Link from 'next/link';
 
-export default function DashboardPage() {
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+function DashboardPageContent() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const { t } = useTranslation();
   const router = useRouter();
@@ -355,5 +358,13 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DashboardPageContent />
+    </Suspense>
   );
 }

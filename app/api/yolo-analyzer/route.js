@@ -15,7 +15,6 @@ const getApiPort = () => {
     const portFilePath = path.join(process.cwd(), 'api', 'yolo_api_port.txt');
     if (fs.existsSync(portFilePath)) {
       const port = fs.readFileSync(portFilePath, 'utf8').trim();
-      console.log(`Found YOLOv8 API port in file: ${port}`);
       return parseInt(port, 10);
     }
   } catch (error) {
@@ -32,7 +31,6 @@ async function ensureTempDir() {
   try {
     // Check if directory exists, if not create it
     await fsPromises.mkdir(tempDir, { recursive: true });
-    console.log(`Temporary directory created/verified: ${tempDir}`);
     return tempDir;
   } catch (error) {
     console.error(`Error creating temporary directory: ${error}`);
@@ -52,7 +50,6 @@ async function processImageWithYolo(imageBuffer) {
     formData.append('file', new Blob([imageBuffer]), 'image.jpg');
     
     // Send request to local YOLO API
-    console.log(`Sending request to local YOLO API: ${YOLO_URL}/analyze`);
     const response = await axios.post(`${YOLO_URL}/analyze`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -122,14 +119,11 @@ export async function POST(request) {
     
     // Get file buffer
     const buffer = Buffer.from(await file.arrayBuffer());
-    console.log(`Image buffer size: ${buffer.length} bytes`);
     
     // Write the file to disk
     await fsPromises.writeFile(filepath, buffer);
-    console.log(`File saved to ${filepath}`);
     
     // Process the image with YOLOv8
-    console.log('Using local YOLO API for analysis');
     const results = await processImageWithYolo(buffer);
     results.api = 'local';
     results.yoloVersion = YOLO_VERSION;
@@ -137,7 +131,6 @@ export async function POST(request) {
     // Clean up temporary file
     try {
       await fsPromises.unlink(filepath);
-      console.log(`Temporary file removed: ${filepath}`);
     } catch (cleanupError) {
       console.error(`Error removing temporary file: ${cleanupError}`);
     }

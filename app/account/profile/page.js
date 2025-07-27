@@ -1,11 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import Link from 'next/link';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getProductRecommendations, getIngredientRecommendations } from '@/utils/recommendations';
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
 
 // Available skin types for dropdown
 const skinTypes = [
@@ -41,7 +44,7 @@ const formatSkinConcerns = (concerns) => {
   return concerns.join(', ');
 };
 
-export default function ProfilePage() {
+function ProfilePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useTranslation();
@@ -1275,5 +1278,13 @@ export default function ProfilePage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function ProfilePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProfilePageContent />
+    </Suspense>
   );
 }

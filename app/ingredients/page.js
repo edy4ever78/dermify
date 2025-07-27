@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
@@ -8,7 +8,10 @@ import IngredientCard from '@/components/IngredientCard';
 import { getAllIngredients } from '@/data/ingredients';
 import { useTranslation } from '@/hooks/useTranslation';
 
-export default function Ingredients() {
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+function IngredientsContent() {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('category') || '';
@@ -240,5 +243,13 @@ export default function Ingredients() {
         </div>
       </main>
     </>
+  );
+}
+
+export default function Ingredients() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <IngredientsContent />
+    </Suspense>
   );
 }

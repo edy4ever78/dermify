@@ -13,11 +13,10 @@ const getApiPort = () => {
     const portFilePath = path.join(process.cwd(), 'api', 'yolo_api_port.txt');
     if (fs.existsSync(portFilePath)) {  // Using synchronous fs instead of promises
       const port = fs.readFileSync(portFilePath, 'utf8').trim();
-      console.log(`Found YOLOv8 API port in file: ${port}`);
       return parseInt(port, 10);
     }
   } catch (error) {
-    console.error('Error reading port file:', error);
+    // Error handled silently in production
   }
   return 5000; // Default port if file doesn't exist
 };
@@ -30,10 +29,8 @@ async function ensureTempDir() {
   try {
     // Check if directory exists, if not create it
     await fsPromises.mkdir(tempDir, { recursive: true });
-    console.log(`Temporary directory created/verified: ${tempDir}`);
     return tempDir;
   } catch (error) {
-    console.error(`Error creating temporary directory: ${error}`);
     throw error;
   }
 }
@@ -56,11 +53,9 @@ async function saveBase64ImageToFile(base64Data) {
     
     // Write file
     await fsPromises.writeFile(imagePath, buffer);
-    console.log(`Image saved to ${imagePath}`);
     
     return imagePath;
   } catch (error) {
-    console.error(`Error saving base64 image: ${error}`);
     throw error;
   }
 }
@@ -77,9 +72,6 @@ async function checkYoloApiStatus() {
       timeout: 2000
     });
     
-    // Log model status for debugging
-    console.log('YOLO model status:', response.data);
-    
     // Check if model path matches expected path
     const expectedPath = path.join(process.cwd(), 'api', 'best.pt');
     const actualPath = response.data.model_path;
@@ -95,7 +87,6 @@ async function checkYoloApiStatus() {
       modelPath: actualPath
     };
   } catch (error) {
-    console.error(`Error checking YOLO API status: ${error.message}`);
     return {
       isRunning: false,
       modelLoaded: false,
@@ -117,7 +108,6 @@ async function processImageWithYolo(imagePath) {
     formData.append('file', fileStream);
     
     // Call the YOLOv8 API
-    console.log(`Sending request to ${YOLO_URL}/analyze`);
     const response = await axios.post(`${YOLO_URL}/analyze`, formData, {
       headers: formData.getHeaders(),
       timeout: 30000,
@@ -127,7 +117,6 @@ async function processImageWithYolo(imagePath) {
     
     return response.data;
   } catch (error) {
-    console.error(`Error calling YOLOv8 API: ${error}`);
     throw error;
   }
 }
@@ -219,7 +208,7 @@ export async function POST(request) {
       try {
         await fsPromises.unlink(imagePath);
       } catch (cleanupError) {
-        console.error(`Error deleting temporary file: ${cleanupError}`);
+        // Cleanup error handled silently
       }
     }
     
@@ -233,9 +222,8 @@ export async function POST(request) {
     if (imagePath) {
       try {
         await fsPromises.unlink(imagePath);
-        console.log(`Deleted temporary file after error: ${imagePath}`);
       } catch (cleanupError) {
-        console.error(`Error deleting temporary file: ${cleanupError}`);
+        // Cleanup error handled silently
       }
     }
     

@@ -39,20 +39,9 @@ export default function Home() {
     if (isAuthenticated && user && typeof window !== 'undefined') {
       const currentPath = window.location.pathname;
       
-      console.log('Redirect check:', { 
-        authLoading, 
-        isAuthenticated, 
-        userExists: !!user,
-        onboardingCompleted: user?.onboardingCompleted,
-        hasRedirected,
-        bypassRedirect,
-        currentPath 
-      });
-      
       // Only redirect if user hasn't completed onboarding
       if (currentPath === '/' && user.onboardingCompleted === false) {
         setHasRedirected(true);
-        console.log('Redirecting to onboarding - user has not completed onboarding');
         window.location.href = '/onboarding';
       }
       // Do NOT redirect users who have completed onboarding - let them use the landing page
@@ -113,7 +102,6 @@ export default function Home() {
             preload="auto"
             className="absolute inset-0 w-full h-full object-cover z-0"
             style={{ minHeight: '480px' }}
-            onLoadedData={() => console.log("Video loaded successfully")}
             onError={(e) => console.error("Video error:", e.target.error)}
           >
             <source 
