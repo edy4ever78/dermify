@@ -82,10 +82,10 @@ export default function SignUp() {
         <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg rounded-2xl shadow-2xl p-8 transform transition-all duration-500 hover:scale-[1.01]">
           <div className="flex flex-col items-center space-y-4 mb-8">
             <h2 className="text-3xl font-bold bg-gradient-to-r from-teal-500 to-blue-600 bg-clip-text text-transparent">
-              {t('Create Your Account')}
+              {t('createYourAccount')}
             </h2>
             <p className="text-gray-600 dark:text-gray-400 text-center">
-              {t('Begin your journey with us')}
+              {t('beginYourJourney')}
             </p>
           </div>
 
@@ -93,7 +93,7 @@ export default function SignUp() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t('First Name')}
+                  {t('firstName')}
                 </label>
                 <input
                   name="firstName"
@@ -107,7 +107,7 @@ export default function SignUp() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t('Last Name')}
+                  {t('lastName')}
                 </label>
                 <input
                   name="lastName"
@@ -121,7 +121,7 @@ export default function SignUp() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t('Email')}
+                  {t('email')}
                 </label>
                 <input
                   name="email"
@@ -135,7 +135,7 @@ export default function SignUp() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t('Password')}
+                  {t('password')}
                 </label>
                 <input
                   name="password"
@@ -149,7 +149,7 @@ export default function SignUp() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t('Confirm Password')}
+                  {t('confirmPassword')}
                 </label>
                 <input
                   name="confirmPassword"
@@ -173,7 +173,7 @@ export default function SignUp() {
               disabled={isSubmitting}
               className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white font-medium shadow-lg shadow-teal-500/25 dark:shadow-teal-800/20 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5"
             >
-              {isSubmitting ? t('Creating Account...') : t('Sign Up')}
+              {isSubmitting ? t('creatingAccount') : t('signUp')}
             </button>
           </form>
 
@@ -182,7 +182,7 @@ export default function SignUp() {
               href="/signin" 
               className="text-sm text-gray-600 dark:text-gray-400 hover:text-teal-500 dark:hover:text-teal-400 transition-colors duration-200"
             >
-              {t('Already have an account?')} {t('Sign in')} &rarr;
+              {t('alreadyHaveAccount')} {t('signIn')} &rarr;
             </Link>
           </div>
         </div>

@@ -236,6 +236,35 @@ const translations = {
     welcomeBack: "Welcome back",
     createYourAccount: "Create your account",
     
+    // Additional sign-in/up translations
+    "Create Your Account": "Create Your Account",
+    "Begin your journey with us": "Begin your journey with us",
+    "First Name": "First Name",
+    "Last Name": "Last Name",
+    "Email": "Email",
+    "Password": "Password",
+    "Confirm Password": "Confirm Password",
+    "Creating Account...": "Creating Account...",
+    "Sign Up": "Sign Up",
+    "Already have an account?": "Already have an account?",
+    "Sign in": "Sign in",
+    "Signing in...": "Signing in...",
+    "to continue your journey": "to continue your journey",
+    
+    // New cleaner translation keys
+    beginYourJourney: "Begin your journey with us",
+    continueYourJourney: "to continue your journey",
+    signingIn: "Signing in...",
+    creatingAccount: "Creating account...",
+    
+    // Error messages for authentication
+    emailPasswordRequired: "Email and password are required",
+    loginFailed: "Login failed. Please try again.",
+    allFieldsRequired: "All fields are required",
+    passwordTooShort: "Password must be at least 8 characters long",
+    passwordsDoNotMatch: "Passwords do not match",
+    signupFailed: "Sign up failed. Please try again.",
+    
     // Forgot Password
     resetPassword: "Reset Password",
     resetPasswordDesc: "Enter your email address and we'll send you a link to reset your password.",
@@ -287,6 +316,7 @@ const translations = {
     getInTouch: "Get in Touch",
     contactDesc: "Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.",
     name: "Name",
+    email: "Email",
     message: "Message",
     sendMessage: "Send Message",
     
@@ -320,9 +350,166 @@ const translations = {
     // Onboarding
     welcomeToDermify: "Welcome to Dermify",
     letsGetStarted: "Let's get started",
+    letsGetToKnowYourSkin: "Let's Get to Know Your Skin",
+    answerQuestions: "Answer a few questions to get personalized skincare recommendations",
+    stepOf: "Step {current} of {total}",
+    complete: "Complete",
+    whatIsYourSkinType: "What's your skin type?",
+    thisHelpsUsRecommend: "This helps us recommend the right products for you",
+    skinTypeRequired: "Please select your skin type to continue",
+    whatAreYourMainConcerns: "What are your main skin concerns?",
+    selectAllThatApply: "Select all that apply (you can choose multiple)",
+    selectAtLeastOneConcern: "Please select at least one skin concern to continue",
+    tellUsAboutYourself: "Tell us about yourself",
+    thisHelpsPersonalize: "This helps us personalize your recommendations",
+    ageRange: "Age Range",
+    skincareExperience: "Skincare Experience",
+    budgetAndLifestyle: "Budget & Lifestyle",
+    helpUsRecommendProducts: "Help us recommend products within your preferences",
+    monthlySkincareBudget: "Monthly Skincare Budget",
+    lifestyle: "Lifestyle",
+    additionalInformation: "Additional Information",
+    optionalDetails: "Optional details to better personalize your experience",
+    knownAllergies: "Known Allergies or Sensitivities",
+    allergiesPlaceholder: "e.g., fragrance, retinol, sulfates... (optional)",
+    currentSkincareRoutine: "Current Skincare Routine",
+    routinePlaceholder: "Describe your current products and routine... (optional)",
+    skincareGoals: "Skincare Goals",
+    goalsPlaceholder: "What do you hope to achieve with your skincare routine? (optional)",
+    reviewYourProfile: "Review Your Profile",
+    makeSureEverythingCorrect: "Make sure everything looks correct before submitting",
+    notSelected: "Not selected",
+    noneSelected: "None selected",
+    experienceLevel: "Experience Level",
+    budget: "Budget",
+    skinConcernsLabel: "Skin Concerns",
+    completeAllFields: "Please complete all fields in this step",
+    selectBudgetAndLifestyle: "Please select your budget and lifestyle preferences",
+    skipForNow: "Skip for now",
+    
+    // Skin types with descriptions
+    skinTypeDescriptions: {
+      oily: "Shiny, enlarged pores, prone to blackheads",
+      dry: "Tight, flaky, rough texture",
+      combination: "Oily T-zone, dry cheeks",
+      normal: "Balanced, not too oily or dry",
+      sensitive: "Easily irritated, reacts to products",
+      mature: "Fine lines, loss of elasticity"
+    },
+    
+    // Skin concerns
+    skinConcerns: {
+      acne: "🔴 Acne & Breakouts",
+      aging: "⏳ Fine Lines & Wrinkles",
+      darkSpots: "🎭 Dark Spots",
+      dryness: "🏜️ Dryness",
+      oiliness: "💧 Excess Oil",
+      redness: "🌹 Redness & Irritation",
+      pores: "🔍 Large Pores",
+      dullness: "🌫️ Dull Skin",
+      sensitivity: "⚡ Sensitivity",
+      unevenTone: "🎨 Uneven Skin Tone",
+      blackheads: "⚫ Blackheads",
+      general: "✨ General Care"
+    },
+    
+    // Age ranges
+    ageRanges: {
+      under18: "Under 18",
+      "18-24": "18-24",
+      "25-34": "25-34", 
+      "35-44": "35-44",
+      "45-54": "45-54",
+      "55+": "55+"
+    },
+    
+    // Experience levels
+    experienceLevels: {
+      beginner: {
+        label: "Beginner",
+        desc: "New to skincare"
+      },
+      intermediate: {
+        label: "Intermediate", 
+        desc: "Some experience"
+      },
+      advanced: {
+        label: "Advanced",
+        desc: "Very knowledgeable"
+      }
+    },
+    
+    // Budget options
+    budgetOptions: {
+      budget: {
+        label: "Budget-Friendly",
+        desc: "Under $50/month"
+      },
+      moderate: {
+        label: "Moderate",
+        desc: "$50-150/month"
+      },
+      premium: {
+        label: "Premium", 
+        desc: "$150-300/month"
+      },
+      luxury: {
+        label: "Luxury",
+        desc: "$300+/month"
+      }
+    },
+    
+    // Lifestyle options
+    lifestyleOptions: {
+      minimal: {
+        label: "Minimal Routine",
+        desc: "5 minutes or less"
+      },
+      normal: {
+        label: "Standard Routine",
+        desc: "10-15 minutes"
+      },
+      extensive: {
+        label: "Extensive Routine", 
+        desc: "20+ minutes"
+      },
+      travel: {
+        label: "Always Traveling",
+        desc: "Need portable solutions"
+      }
+    },
+    
+    // Error messages
+    errors: {
+      selectSkinType: "Please select your skin type to continue",
+      selectSkinTypeLong: "❌ Please select your skin type",
+      selectConcerns: "Please select at least one skin concern to continue",
+      selectConcernsLong: "❌ Please select at least one skin concern",
+      completeFields: "Please complete all fields in this step",
+      completePersonalInfo: "❌ Please complete your personal information",
+      selectBudgetLifestyle: "Please select your budget and lifestyle preferences",
+      selectBudgetLifestyleLong: "❌ Please select your budget and lifestyle preferences",
+      loginRequired: "Please login first to complete onboarding."
+    },
+    
+    whatAreYourMainConcerns: "What are your main skin concerns?",
+    selectAllThatApply: "Select all that apply (you can choose multiple)",
+    tellUsAboutYourself: "Tell us about yourself",
+    thisHelpsPersonalize: "This helps us personalize your recommendations",
+    ageRange: "Age Range",
+    skincareExperience: "Skincare Experience",
+    budgetAndLifestyle: "Budget & Lifestyle",
+    helpUsRecommendProducts: "Help us recommend products within your preferences",
+    monthlySkincarebudget: "Monthly Skincare Budget",
+    lifestyle: "Lifestyle",
+    
+    // Placeholders
+    allergiesPlaceholder: "e.g., fragrance, retinol, sulfates... (optional)",
+    routinePlaceholder: "Describe your current products and routine... (optional)",
+    goalsPlaceholder: "What do you hope to achieve with your skincare routine? (optional)",
+    
     tellUsAboutYour: "Tell us about your",
     skinType: "Skin Type",
-    skinConcerns: "Skin Concerns",
     currentRoutine: "Current Routine",
     next: "Next",
     previous: "Previous",
@@ -769,6 +956,35 @@ const translations = {
     welcomeBack: "Bine ai revenit",
     createYourAccount: "Creează-ți contul",
     
+    // Additional sign-in/up translations
+    "Create Your Account": "Creează-ți Contul",
+    "Begin your journey with us": "Începe călătoria cu noi",
+    "First Name": "Prenume",
+    "Last Name": "Nume",
+    "Email": "Email",
+    "Password": "Parolă",
+    "Confirm Password": "Confirmă Parola",
+    "Creating Account...": "Se creează contul...",
+    "Sign Up": "Înregistrare",
+    "Already have an account?": "Ai deja un cont?",
+    "Sign in": "Autentifică-te",
+    "Signing in...": "Se autentifică...",
+    "to continue your journey": "pentru a-ți continua călătoria",
+    
+    // New cleaner translation keys
+    beginYourJourney: "Începe călătoria cu noi",
+    continueYourJourney: "pentru a-ți continua călătoria",
+    signingIn: "Se autentifică...",
+    creatingAccount: "Se creează contul...",
+    
+    // Error messages for authentication
+    emailPasswordRequired: "Email-ul și parola sunt obligatorii",
+    loginFailed: "Autentificarea a eșuat. Te rugăm să încerci din nou.",
+    allFieldsRequired: "Toate câmpurile sunt obligatorii",
+    passwordTooShort: "Parola trebuie să aibă cel puțin 8 caractere",
+    passwordsDoNotMatch: "Parolele nu se potrivesc",
+    signupFailed: "Înregistrarea a eșuat. Te rugăm să încerci din nou.",
+    
     // Forgot Password
     resetPassword: "Resetează Parola",
     resetPasswordDesc: "Introdu adresa ta de email și îți vom trimite un link pentru a-ți reseta parola.",
@@ -820,6 +1036,7 @@ const translations = {
     getInTouch: "Ia Legătura cu Noi",
     contactDesc: "Ai întrebări? Ne-ar plăcea să auzim de la tine. Trimite-ne un mesaj și vom răspunde cât mai curând posibil.",
     name: "Nume",
+    email: "Email",
     message: "Mesaj",
     sendMessage: "Trimite Mesaj",
     
@@ -1067,9 +1284,166 @@ const translations = {
     // Onboarding
     welcomeToDermify: "Bine ai venit la Dermify",
     letsGetStarted: "Să începem",
+    letsGetToKnowYourSkin: "Să-ți Cunoaștem Pielea",
+    answerQuestions: "Răspunde la câteva întrebări pentru a primi recomandări personalizate de îngrijire a pielii",
+    stepOf: "Pasul {current} din {total}",
+    complete: "Complet",
+    whatIsYourSkinType: "Care este tipul tău de piele?",
+    thisHelpsUsRecommend: "Acest lucru ne ajută să îți recomandăm produsele potrivite",
+    skinTypeRequired: "Te rugăm să îți selectezi tipul de piele pentru a continua",
+    whatAreYourMainConcerns: "Care sunt principalele tale probleme ale pielii?",
+    selectAllThatApply: "Selectează toate care se aplică (poți alege mai multe)",
+    selectAtLeastOneConcern: "Te rugăm să selectezi cel puțin o problemă a pielii pentru a continua",
+    tellUsAboutYourself: "Spune-ne despre tine",
+    thisHelpsPersonalize: "Acest lucru ne ajută să îți personalizăm recomandările",
+    ageRange: "Grupa de Vârstă",
+    skincareExperience: "Experiența în Îngrijirea Pielii",
+    budgetAndLifestyle: "Buget și Stil de Viață",
+    helpUsRecommendProducts: "Ajută-ne să îți recomandăm produse în cadrul preferințelor tale",
+    monthlySkincareBudget: "Bugetul Lunar pentru Îngrijirea Pielii",
+    lifestyle: "Stilul de Viață",
+    additionalInformation: "Informații Suplimentare",
+    optionalDetails: "Detalii opționale pentru a-ți personaliza mai bine experiența",
+    knownAllergies: "Alergii sau Sensibilități Cunoscute",
+    allergiesPlaceholder: "de ex., parfum, retinol, sulfați... (opțional)",
+    currentSkincareRoutine: "Rutina Actuală de Îngrijire a Pielii",
+    routinePlaceholder: "Descrie produsele și rutina ta actuală... (opțional)",
+    skincareGoals: "Obiectivele Îngrijirii Pielii",
+    goalsPlaceholder: "Ce sperezi să realizezi cu rutina ta de îngrijire a pielii? (opțional)",
+    reviewYourProfile: "Revizuiește-ți Profilul",
+    makeSureEverythingCorrect: "Asigură-te că totul arată corect înainte de a trimite",
+    notSelected: "Nu este selectat",
+    noneSelected: "Nimic selectat",
+    experienceLevel: "Nivelul de Experiență",
+    budget: "Buget",
+    skinConcernsLabel: "Problemele Pielii",
+    completeAllFields: "Te rugăm să completezi toate câmpurile în acest pas",
+    selectBudgetAndLifestyle: "Te rugăm să îți selectezi preferințele de buget și stil de viață",
+    skipForNow: "Sări peste deocamdată",
+    
+    // Skin types with descriptions
+    skinTypeDescriptions: {
+      oily: "Lucioasă, pori măriți, predispusă la puncte negre",
+      dry: "Strânsă, cu scame, textură aspră",
+      combination: "Zona T grasă, obrajii uscați",
+      normal: "Echilibrată, nici prea grasă, nici prea uscată",
+      sensitive: "Ușor iritată, reactionează la produse",
+      mature: "Riduri fine, pierderea elasticității"
+    },
+    
+    // Skin concerns
+    skinConcerns: {
+      acne: "🔴 Acnee și Erupții",
+      aging: "⏳ Riduri Fine și Îmbătrânire",
+      darkSpots: "🎭 Pete Întunecate",
+      dryness: "🏜️ Uscăciune",
+      oiliness: "💧 Excesul de Sebum",
+      redness: "🌹 Roșeața și Iritația",
+      pores: "🔍 Pori Mari",
+      dullness: "🌫️ Pielea Mată",
+      sensitivity: "⚡ Sensibilitate",
+      unevenTone: "🎨 Tonul Neuniform al Pielii",
+      blackheads: "⚫ Puncte Negre",
+      general: "✨ Îngrijire Generală"
+    },
+    
+    // Age ranges
+    ageRanges: {
+      under18: "Sub 18 ani",
+      "18-24": "18-24",
+      "25-34": "25-34",
+      "35-44": "35-44", 
+      "45-54": "45-54",
+      "55+": "55+"
+    },
+    
+    // Experience levels
+    experienceLevels: {
+      beginner: {
+        label: "Începător",
+        desc: "Nou în îngrijirea pielii"
+      },
+      intermediate: {
+        label: "Intermediar",
+        desc: "Ceva experiență"
+      },
+      advanced: {
+        label: "Avansat", 
+        desc: "Foarte cunoscător"
+      }
+    },
+    
+    // Budget options
+    budgetOptions: {
+      budget: {
+        label: "Prietenos cu Bugetul",
+        desc: "Sub $50/lună"
+      },
+      moderate: {
+        label: "Moderat",
+        desc: "$50-150/lună"
+      },
+      premium: {
+        label: "Premium",
+        desc: "$150-300/lună"
+      },
+      luxury: {
+        label: "Lux",
+        desc: "$300+/lună"
+      }
+    },
+    
+    // Lifestyle options
+    lifestyleOptions: {
+      minimal: {
+        label: "Rutină Minimală",
+        desc: "5 minute sau mai puțin"
+      },
+      normal: {
+        label: "Rutină Standard", 
+        desc: "10-15 minute"
+      },
+      extensive: {
+        label: "Rutină Extinsă",
+        desc: "20+ minute"
+      },
+      travel: {
+        label: "Mereu în Călătorie",
+        desc: "Am nevoie de soluții portabile"
+      }
+    },
+    
+    // Error messages
+    errors: {
+      selectSkinType: "Te rugăm să îți selectezi tipul de piele pentru a continua",
+      selectSkinTypeLong: "❌ Te rugăm să îți selectezi tipul de piele",
+      selectConcerns: "Te rugăm să selectezi cel puțin o problemă de piele pentru a continua",
+      selectConcernsLong: "❌ Te rugăm să selectezi cel puțin o problemă de piele",
+      completeFields: "Te rugăm să completezi toate câmpurile din această etapă",
+      completePersonalInfo: "❌ Te rugăm să îți completezi informațiile personale",
+      selectBudgetLifestyle: "Te rugăm să îți selectezi preferințele de buget și stil de viață",
+      selectBudgetLifestyleLong: "❌ Te rugăm să îți selectezi preferințele de buget și stil de viață",
+      loginRequired: "Te rugăm să te autentifici mai întâi pentru a completa onboarding-ul."
+    },
+    
+    whatAreYourMainConcerns: "Care sunt principalele tale probleme de piele?",
+    selectAllThatApply: "Selectează toate care se aplică (poți alege mai multe)",
+    tellUsAboutYourself: "Spune-ne despre tine",
+    thisHelpsPersonalize: "Aceasta ne ajută să îți personalizăm recomandările",
+    ageRange: "Grupa de Vârstă",
+    skincareExperience: "Experiența în Îngrijirea Pielii",
+    budgetAndLifestyle: "Buget și Stil de Viață",
+    helpUsRecommendProducts: "Ajută-ne să îți recomandăm produse în concordanță cu preferințele tale",
+    monthlySkincarebudget: "Bugetul Lunar pentru Îngrijirea Pielii",
+    lifestyle: "Stilul de Viață",
+    
+    // Placeholders
+    allergiesPlaceholder: "ex: parfum, retinol, sulfați... (opțional)",
+    routinePlaceholder: "Descrie produsele și rutina ta actuală... (opțional)",
+    goalsPlaceholder: "Ce speri să obții cu rutina ta de îngrijire a pielii? (opțional)",
+    
     tellUsAboutYour: "Spune-ne despre",
     skinType: "Tipul de Piele",
-    skinConcerns: "Problemele Pielii",
     currentRoutine: "Rutina Actuală",
     next: "Următorul",
     previous: "Anterior",

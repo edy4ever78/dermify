@@ -413,12 +413,12 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {[
-                { name: "Hydrating Cleanser", brand: "CeraVe", score: 2, users: 1240, category: "cleansers" },
-                { name: "2% BHA Liquid Exfoliant", brand: "Paula's Choice", score: 3, users: 980, category: "exfoliants" },
-                { name: "Daily Moisturizer", brand: "Cetaphil", score: 2, users: 756, category: "moisturizers" },
-                { name: "Anthelios SPF 50+", brand: "La Roche-Posay", score: 1, users: 1120, category: "sunscreens" }
+                { id: "cerave-hydrating-cleanser", name: "Hydrating Cleanser", brand: "CeraVe", score: 2, users: 1240, category: "cleansers" },
+                { id: "paula-choice-bha-liquid-exfoliant", name: "2% BHA Liquid Exfoliant", brand: "Paula's Choice", score: 3, users: 980, category: "exfoliants" },
+                { id: "dr-jart-ceramidin-cream", name: "Ceramidin Cream", brand: "Dr. Jart+", score: 2, users: 756, category: "moisturizers" },
+                { id: "la-roche-posay-anthelios-ultra-fluid-spf-50-facial-sunscreen", name: "Anthelios SPF 50+", brand: "La Roche-Posay", score: 1, users: 1120, category: "sunscreens" }
               ].map((product, index) => (
-                <div key={product.name} className="group">
+                <div key={product.id} className="group">
                   <div className="bg-white dark:bg-gray-700 rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-200 dark:border-gray-600">
                     {/* Score Badge */}
                     <div className="flex justify-between items-start mb-3 sm:mb-4">
@@ -441,7 +441,7 @@ export default function Home() {
                           {product.category.replace('-', ' ')}
                         </span>
                         <button 
-                          onClick={() => navigateTo(`/products/${product.category}`)}
+                          onClick={() => navigateTo(`/products/${product.category}/${product.id}`)}
                           className="text-xs text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 font-medium transition-colors duration-300"
                         >
                           {t('viewDetails')} →

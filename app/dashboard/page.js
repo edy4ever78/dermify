@@ -28,11 +28,20 @@ function DashboardPageContent() {
   // Redirect to onboarding if not completed - but be very conservative
   useEffect(() => {
     // Only redirect if user explicitly has onboardingCompleted set to false
+    // AND we're not coming from the onboarding page itself
     // This prevents redirect loops
     if (user && user.onboardingCompleted === false && typeof window !== 'undefined') {
-      console.log('Dashboard: User onboarding status:', user.onboardingCompleted);
-      console.log('Dashboard: Redirecting to onboarding - user has not completed onboarding');
-      window.location.href = '/onboarding';
+      const currentUrl = window.location.href;
+      const cameFromOnboarding = document.referrer.includes('/onboarding') || currentUrl.includes('welcome=true');
+      
+      // Don't redirect if we just came from onboarding (indicates completion)
+      if (!cameFromOnboarding) {
+        console.log('Dashboard: User onboarding status:', user.onboardingCompleted);
+        console.log('Dashboard: Redirecting to onboarding - user has not completed onboarding');
+        window.location.href = '/onboarding';
+      } else {
+        console.log('Dashboard: Not redirecting - user came from onboarding or has welcome flag');
+      }
     }
   }, [user]);
 

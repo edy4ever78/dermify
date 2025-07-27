@@ -145,10 +145,18 @@ export function AuthProvider({ children }) {
         setUser(data.user);
         localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('userEmail', data.user.email);
+        return data.user;
       }
     } catch (error) {
       console.error('Failed to refresh user data:', error);
     }
+  };
+
+  // Method to update user locally (for immediate UI updates)
+  const updateUserLocal = (updatedUserData) => {
+    const updatedUser = { ...user, ...updatedUserData };
+    setUser(updatedUser);
+    localStorage.setItem('user', JSON.stringify(updatedUser));
   };
 
   const logout = async () => {
@@ -180,6 +188,7 @@ export function AuthProvider({ children }) {
       signup,
       logout,
       refreshUser,
+      updateUserLocal,
       error,
     }}>
       {children}

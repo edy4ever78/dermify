@@ -43,12 +43,9 @@ function SignInContent() {
     try {
       const user = await login(email, password);
       
-      // Check if user has completed onboarding
-      if (!user.onboardingCompleted) {
-        router.push('/onboarding');
-      } else {
-        router.push(redirect);
-      }
+      // Always redirect to the specified redirect parameter or home page
+      // Let the destination page handle onboarding redirect if needed
+      router.push(redirect);
     } catch (error) {
       setError(error.message || t('loginFailed'));
     } finally {
@@ -69,7 +66,7 @@ function SignInContent() {
               {t('welcomeBack')}
             </h2>
             <p className="text-gray-600 dark:text-gray-400 text-center">
-              {t('signIn')} to continue your journey
+              {t('signIn')} {t('continueYourJourney')}
             </p>
           </div>
 
@@ -113,7 +110,7 @@ function SignInContent() {
               disabled={isSubmitting}
               className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white font-medium shadow-lg shadow-teal-500/25 dark:shadow-teal-800/20 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5"
             >
-              {isSubmitting ? 'Signing in...' : 'Sign in'}
+              {isSubmitting ? t('signingIn') : t('signIn')}
             </button>
           </form>
 
@@ -122,7 +119,7 @@ function SignInContent() {
               href="/signup" 
               className="text-sm text-gray-600 dark:text-gray-400 hover:text-teal-500 dark:hover:text-teal-400 transition-colors duration-200"
             >
-              Don't have an account? Create one →
+              {t('dontHaveAccount')} {t('createAccount')} →
             </Link>
           </div>
         </div>

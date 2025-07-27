@@ -108,7 +108,42 @@ export default function RoutineDetail() {
   
   // Get routine data and product links
   useEffect(() => {
-    const foundRoutine = routinesData.find(r => r.id === id);
+    let foundRoutine = null;
+    
+    // Check if this is a user-created routine (starts with "user-")
+    if (id.startsWith('user-')) {
+      // Load from localStorage
+      const completedRoutines = JSON.parse(localStorage.getItem('completed-routines') || '[]');
+      const userRoutineId = id.replace('user-', '');
+      const userRoutine = completedRoutines.find(r => r.id.toString() === userRoutineId);
+      
+      if (userRoutine) {
+        // Convert user routine to display format
+        foundRoutine = {
+          id: id,
+          title: userRoutine.name,
+          description: userRoutine.description || `A personalized ${userRoutine.type} routine for ${userRoutine.skinType} skin`,
+          steps: userRoutine.steps.map((step, index) => ({
+            id: index + 1,
+            name: step.name,
+            description: step.description,
+            time: step.time || '1 minute',
+            products: step.product ? [step.product] : []
+          })),
+          skinTypes: userRoutine.skinType ? [userRoutine.skinType.charAt(0).toUpperCase() + userRoutine.skinType.slice(1)] : ['All Skin Types'],
+          timeRequired: `${userRoutine.estimatedTime || 5}-${(userRoutine.estimatedTime || 5) + 5} minutes`,
+          difficulty: userRoutine.difficulty ? userRoutine.difficulty.charAt(0).toUpperCase() + userRoutine.difficulty.slice(1) : 'Beginner',
+          imageUrl: null,
+          isUserCreated: true,
+          createdAt: userRoutine.createdAt,
+          notes: `This is your custom routine created on ${new Date(userRoutine.createdAt).toLocaleDateString()}. You can edit it by going to your account routines page.`
+        };
+      }
+    } else {
+      // Load from template routines
+      foundRoutine = routinesData.find(r => r.id === id);
+    }
+    
     if (foundRoutine) {
       setRoutine(foundRoutine);
       
@@ -240,6 +275,11 @@ export default function RoutineDetail() {
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{routine.title}</h1>
                   <div className="flex flex-wrap gap-2 mt-2">
+                    {routine.isUserCreated && (
+                      <span className="text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 px-2 py-1 rounded-full font-medium">
+                        ✨ Custom Routine
+                      </span>
+                    )}
                     {routine.skinTypes.map((type) => (
                       <span key={type} className="text-xs bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 px-2 py-1 rounded-full">
                         {type}
@@ -260,7 +300,7 @@ export default function RoutineDetail() {
                     isSaved 
                       ? 'bg-teal-100 dark:bg-teal-900/30 text-teal-500 dark:text-teal-400' 
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
-                  } hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-colors`}
+                  } hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-colors mr-2`}
                 >
                   {isSaved ? (
                     <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
@@ -272,6 +312,38 @@ export default function RoutineDetail() {
                     </svg>
                   )}
                 </button>
+                
+                {/* Show edit/delete buttons for user-created routines */}
+                {routine.isUserCreated && (
+                  <>
+                    <Link href="/account/routines">
+                      <button className="p-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-500 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors mr-2">
+                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      </button>
+                    </Link>
+                    <button
+                      onClick={() => {
+                        if (confirm('Are you sure you want to delete this routine? This action cannot be undone.')) {
+                          // Delete routine from localStorage
+                          const completedRoutines = JSON.parse(localStorage.getItem('completed-routines') || '[]');
+                          const userRoutineId = id.replace('user-', '');
+                          const updatedRoutines = completedRoutines.filter(r => r.id.toString() !== userRoutineId);
+                          localStorage.setItem('completed-routines', JSON.stringify(updatedRoutines));
+                          
+                          // Redirect to routines page
+                          window.location.href = '/routines';
+                        }
+                      }}
+                      className="p-2 rounded-full bg-red-100 dark:bg-red-900/30 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                    >
+                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </>
+                )}
               </div>
               
               <p className="mt-4 text-gray-600 dark:text-gray-400">

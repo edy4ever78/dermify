@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 // Protected routes that require authentication
 const protectedRoutes = [
   '/account',
-  '/account/profile',
+  '/account/profile', 
   '/skin-analysis',
   '/onboarding',
   '/dashboard',

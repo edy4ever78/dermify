@@ -1,6 +1,6 @@
 const concerns = {
   'acne': {
-    id: 'Acne',
+    id: 'acne',
     image: '/images/concerns/acne.jpg',
     overview: `Acne is a common skin condition that occurs when hair follicles become clogged with oil and dead skin cells. It often causes whiteheads, blackheads or pimples, and usually appears on the face, forehead, chest, upper back and shoulders. Acne is most common among teenagers, though it affects people of all ages. 
     
@@ -62,7 +62,7 @@ Acne is not just a cosmetic issue—it can have a significant impact on self-est
     relatedConcerns: ['hyperpigmentation', 'redness', 'sensitivity']
   },
   'aging': {
-    id: 'Aging',
+    id: 'aging',
     image: '/images/concerns/aging.jpg',
     overview: `Aging skin is a natural process characterized by fine lines, wrinkles, loss of elasticity, and changes in texture. While aging is inevitable, several factors can accelerate it, including sun exposure, pollution, lifestyle habits, and genetics. Many skincare approaches can help minimize visible signs of aging and maintain healthier, more youthful-looking skin.
 
@@ -125,7 +125,7 @@ The aging process is influenced by both intrinsic (genetic) and extrinsic (envir
     relatedConcerns: ['dryness', 'hyperpigmentation', 'sensitivity']
   },
   'dryness': {
-    id: 'Dryness',
+    id: 'dryness',
     image: '/images/concerns/dryness.jpg',
     overview: `Dry skin occurs when your skin doesn't have enough moisture and natural oils. It can feel tight, rough, and may show visible flaking. Dry skin can be a temporary condition or a lifelong concern, affecting any part of the body but commonly appearing on the hands, arms, and legs. With proper care and hydrating products, dry skin can be managed effectively.
 
@@ -252,7 +252,7 @@ Redness can also be a symptom of underlying vascular conditions, allergies, or r
     relatedConcerns: ['sensitivity', 'acne', 'dryness']
   },
   'hyperpigmentation': {
-    id: 'Hyperpigmentation',
+    id: 'hyperpigmentation',
     image: '/images/concerns/hyperpigmentation.jpg',
     overview: `Hyperpigmentation refers to patches of skin that become darker than the surrounding areas due to excess melanin production. It can appear as sun spots, melasma, post-inflammatory hyperpigmentation from acne, or other forms of discoloration. While not harmful, many people seek treatments to achieve a more even skin tone.
 
@@ -313,7 +313,7 @@ There are several types of hyperpigmentation, including melasma (often hormone-r
     relatedConcerns: ['acne', 'aging', 'sensitivity']
   },
   'sensitivity': {
-    id: 'Sensitivity',
+    id: 'sensitivity',
     image: '/images/concerns/sensitivity.jpg',
     overview: `Sensitive skin is characterized by reactions such as redness, itching, burning, and stinging in response to skincare products, environmental factors, or other triggers. People with sensitive skin require gentle, soothing products and a minimalist approach to skincare. Understanding your specific triggers is key to managing sensitive skin effectively.
 

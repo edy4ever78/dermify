@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from '@/hooks/useTranslation';
+import Header from '@/components/Header';
 
 export default function OnboardingPage() {
   const { t } = useTranslation();
@@ -14,26 +15,26 @@ export default function OnboardingPage() {
   const [isCompleted, setIsCompleted] = useState(false);
   const [countdown, setCountdown] = useState(3);
 
-  // Auto-redirect after completion
-  useEffect(() => {
-    if (isCompleted) {
-      let timeLeft = 3;
-      setCountdown(timeLeft);
+  // Auto-redirect after completion - disabled to use setTimeout instead
+  // useEffect(() => {
+  //   if (isCompleted) {
+  //     let timeLeft = 3;
+  //     setCountdown(timeLeft);
       
-      const timer = setInterval(() => {
-        timeLeft -= 1;
+  //     const timer = setInterval(() => {
+  //       timeLeft -= 1;
         
-        if (timeLeft <= 0) {
-          clearInterval(timer);
-          router.push('/dashboard');
-        } else {
-          setCountdown(timeLeft);
-        }
-      }, 1000);
+  //       if (timeLeft <= 0) {
+  //         clearInterval(timer);
+  //         router.push('/dashboard');
+  //       } else {
+  //         setCountdown(timeLeft);
+  //       }
+  //     }, 1000);
 
-      return () => clearInterval(timer);
-    }
-  }, [isCompleted, router]);
+  //     return () => clearInterval(timer);
+  //   }
+  // }, [isCompleted, router]);
 
   // Form data state
   const [formData, setFormData] = useState({
@@ -72,25 +73,25 @@ export default function OnboardingPage() {
     switch (currentStep) {
       case 1:
         if (!formData.skinType) {
-          setError('Please select your skin type to continue');
+          setError(t('errors.selectSkinType'));
           return false;
         }
         break;
       case 2:
         if (formData.skinConcerns.length === 0) {
-          setError('Please select at least one skin concern to continue');
+          setError(t('errors.selectConcerns'));
           return false;
         }
         break;
       case 3:
         if (!formData.ageRange || !formData.skincareExperience) {
-          setError('Please complete all fields in this step');
+          setError(t('errors.completeFields'));
           return false;
         }
         break;
       case 4:
         if (!formData.budget || !formData.lifestyle) {
-          setError('Please select your budget and lifestyle preferences');
+          setError(t('errors.selectBudgetLifestyle'));
           return false;
         }
         break;
@@ -115,25 +116,25 @@ export default function OnboardingPage() {
   const handleSubmit = async () => {
     // Validate all required fields before submission
     if (!formData.skinType) {
-      setError('❌ Please select your skin type');
+      setError(t('errors.selectSkinTypeLong'));
       setCurrentStep(1);
       return;
     }
     
     if (formData.skinConcerns.length === 0) {
-      setError('❌ Please select at least one skin concern');
+      setError(t('errors.selectConcernsLong'));
       setCurrentStep(2);
       return;
     }
     
     if (!formData.ageRange || !formData.skincareExperience) {
-      setError('❌ Please complete your personal information');
+      setError(t('errors.completePersonalInfo'));
       setCurrentStep(3);
       return;
     }
     
     if (!formData.budget || !formData.lifestyle) {
-      setError('❌ Please select your budget and lifestyle preferences');
+      setError(t('errors.selectBudgetLifestyleLong'));
       setCurrentStep(4);
       return;
     }
@@ -146,7 +147,7 @@ export default function OnboardingPage() {
       const authToken = localStorage.getItem('authToken');
       
       if (!authToken) {
-        setError('Please login first to complete onboarding.');
+        setError(t('errors.loginRequired'));
         setIsSubmitting(false);
         return;
       }
@@ -190,8 +191,14 @@ export default function OnboardingPage() {
         }
       }
 
+      // Force a page reload to ensure all components get the updated user data
       setSuccess('✅ Onboarding completed successfully!');
       setIsCompleted(true);
+      
+      // Give a brief moment for the success message to show, then redirect
+      setTimeout(() => {
+        window.location.href = '/dashboard?welcome=true';
+      }, 2000);
 
     } catch (error) {
       console.error('Onboarding error:', error);
@@ -223,7 +230,7 @@ export default function OnboardingPage() {
       const authToken = localStorage.getItem('authToken');
       
       if (!authToken) {
-        setError('Please login first to complete onboarding.');
+        setError(t('errors.loginRequired'));
         setIsSubmitting(false);
         return;
       }
@@ -259,8 +266,14 @@ export default function OnboardingPage() {
         }
       }
 
+      // Force a page reload to ensure all components get the updated user data
       setSuccess('✅ Onboarding completed successfully!');
       setIsCompleted(true);
+      
+      // Give a brief moment for the success message to show, then redirect
+      setTimeout(() => {
+        window.location.href = '/dashboard?welcome=true';
+      }, 2000);
 
     } catch (error) {
       console.error('Onboarding error:', error);
@@ -277,19 +290,19 @@ export default function OnboardingPage() {
           <div className="space-y-6">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                What's your skin type? <span className="text-red-500">*</span>
+                {t('whatIsYourSkinType')} <span className="text-red-500">*</span>
               </h2>
-              <p className="text-gray-600">This helps us recommend the right products for you</p>
+              <p className="text-gray-600">{t('thisHelpsUsRecommend')}</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { value: 'oily', label: 'Oily', desc: 'Shiny, enlarged pores, prone to blackheads' },
-                { value: 'dry', label: 'Dry', desc: 'Tight, flaky, rough texture' },
-                { value: 'combination', label: 'Combination', desc: 'Oily T-zone, dry cheeks' },
-                { value: 'normal', label: 'Normal', desc: 'Balanced, not too oily or dry' },
-                { value: 'sensitive', label: 'Sensitive', desc: 'Easily irritated, reacts to products' },
-                { value: 'mature', label: 'Mature', desc: 'Fine lines, loss of elasticity' }
+                { value: 'oily', label: t('skinTypes.oily'), desc: t('skinTypeDescriptions.oily') },
+                { value: 'dry', label: t('skinTypes.dry'), desc: t('skinTypeDescriptions.dry') },
+                { value: 'combination', label: t('skinTypes.combination'), desc: t('skinTypeDescriptions.combination') },
+                { value: 'normal', label: t('skinTypes.normal'), desc: t('skinTypeDescriptions.normal') },
+                { value: 'sensitive', label: t('skinTypes.sensitive'), desc: t('skinTypeDescriptions.sensitive') },
+                { value: 'mature', label: t('mature'), desc: t('skinTypeDescriptions.mature') }
               ].map((type) => (
                 <button
                   key={type.value}
@@ -313,9 +326,9 @@ export default function OnboardingPage() {
           <div className="space-y-6">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                What are your main skin concerns? <span className="text-red-500">*</span>
+                {t('whatAreYourMainConcerns')} <span className="text-red-500">*</span>
               </h2>
-              <p className="text-gray-600">Select all that apply (you can choose multiple)</p>
+              <p className="text-gray-600">{t('selectAllThatApply')}</p>
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -354,56 +367,97 @@ export default function OnboardingPage() {
           <div className="space-y-6">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Tell us about yourself <span className="text-red-500">*</span>
+                {t('tellUsAboutYourself')} <span className="text-red-500">*</span>
               </h2>
-              <p className="text-gray-600">This helps us personalize your recommendations</p>
+              <p className="text-gray-600">{t('thisHelpsPersonalize')}</p>
             </div>
             
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Age Range <span className="text-red-500">*</span>
+                  {t('ageRange')} <span className="text-red-500">*</span>
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {['Under 18', '18-24', '25-34', '35-44', '45-54', '55+'].map((age) => (
-                    <button
-                      key={age}
-                      onClick={() => handleInputChange('ageRange', age)}
-                      className={`p-3 rounded-lg border-2 transition-all ${
-                        formData.ageRange === age
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-blue-300'
-                      }`}
-                    >
-                      {age}
-                    </button>
-                  ))}
+                  {(() => {
+                    const ageRanges = t('ageRanges');
+                    if (typeof ageRanges === 'object') {
+                      return Object.entries(ageRanges).map(([key, label]) => (
+                        <button
+                          key={key}
+                          onClick={() => handleInputChange('ageRange', key)}
+                          className={`p-3 rounded-lg border-2 transition-all ${
+                            formData.ageRange === key
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-200 hover:border-blue-300'
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      ));
+                    } else {
+                      // Fallback to hardcoded age ranges if translation fails
+                      return ['under18', '18-24', '25-34', '35-44', '45-54', '55+'].map((age) => (
+                        <button
+                          key={age}
+                          onClick={() => handleInputChange('ageRange', age)}
+                          className={`p-3 rounded-lg border-2 transition-all ${
+                            formData.ageRange === age
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-200 hover:border-blue-300'
+                          }`}
+                        >
+                          {t(`ageRanges.${age}`) || age}
+                        </button>
+                      ));
+                    }
+                  })()}
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Skincare Experience <span className="text-red-500">*</span>
+                  {t('skincareExperience')} <span className="text-red-500">*</span>
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  {[
-                    { value: 'beginner', label: 'Beginner', desc: 'New to skincare' },
-                    { value: 'intermediate', label: 'Intermediate', desc: 'Some experience' },
-                    { value: 'advanced', label: 'Advanced', desc: 'Very knowledgeable' }
-                  ].map((level) => (
-                    <button
-                      key={level.value}
-                      onClick={() => handleInputChange('skincareExperience', level.value)}
-                      className={`p-4 rounded-lg border-2 text-left transition-all ${
-                        formData.skincareExperience === level.value
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-blue-300'
-                      }`}
-                    >
-                      <h3 className="font-semibold">{level.label}</h3>
-                      <p className="text-sm text-gray-600">{level.desc}</p>
-                    </button>
-                  ))}
+                  {(() => {
+                    const experienceLevels = t('experienceLevels');
+                    if (typeof experienceLevels === 'object') {
+                      return Object.entries(experienceLevels).map(([key, data]) => (
+                        <button
+                          key={key}
+                          onClick={() => handleInputChange('skincareExperience', key)}
+                          className={`p-4 rounded-lg border-2 text-left transition-all ${
+                            formData.skincareExperience === key
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-200 hover:border-blue-300'
+                          }`}
+                        >
+                          <h3 className="font-semibold">{data.label}</h3>
+                          <p className="text-sm text-gray-600">{data.desc}</p>
+                        </button>
+                      ));
+                    } else {
+                      // Fallback to hardcoded experience levels if translation fails
+                      return [
+                        { key: 'beginner', label: 'Beginner', desc: 'New to skincare' },
+                        { key: 'intermediate', label: 'Intermediate', desc: 'Some experience' },
+                        { key: 'advanced', label: 'Advanced', desc: 'Very knowledgeable' }
+                      ].map((level) => (
+                        <button
+                          key={level.key}
+                          onClick={() => handleInputChange('skincareExperience', level.key)}
+                          className={`p-4 rounded-lg border-2 text-left transition-all ${
+                            formData.skincareExperience === level.key
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-200 hover:border-blue-300'
+                          }`}
+                        >
+                          <h3 className="font-semibold">{t(`experienceLevels.${level.key}.label`) || level.label}</h3>
+                          <p className="text-sm text-gray-600">{t(`experienceLevels.${level.key}.desc`) || level.desc}</p>
+                        </button>
+                      ));
+                    }
+                  })()}
                 </div>
               </div>
             </div>
@@ -415,63 +469,105 @@ export default function OnboardingPage() {
           <div className="space-y-6">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Budget & Lifestyle <span className="text-red-500">*</span>
+                {t('budgetAndLifestyle')} <span className="text-red-500">*</span>
               </h2>
-              <p className="text-gray-600">Help us recommend products within your preferences</p>
+              <p className="text-gray-600">{t('helpUsRecommendProducts')}</p>
             </div>
             
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Monthly Skincare Budget <span className="text-red-500">*</span>
+                  {t('monthlySkincarebudget')} <span className="text-red-500">*</span>
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {[
-                    { value: 'budget', label: 'Budget-Friendly', desc: 'Under $50/month' },
-                    { value: 'moderate', label: 'Moderate', desc: '$50-150/month' },
-                    { value: 'premium', label: 'Premium', desc: '$150-300/month' },
-                    { value: 'luxury', label: 'Luxury', desc: '$300+/month' }
-                  ].map((budget) => (
-                    <button
-                      key={budget.value}
-                      onClick={() => handleInputChange('budget', budget.value)}
-                      className={`p-4 rounded-lg border-2 text-left transition-all ${
-                        formData.budget === budget.value
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-blue-300'
-                      }`}
-                    >
-                      <h3 className="font-semibold">{budget.label}</h3>
-                      <p className="text-sm text-gray-600">{budget.desc}</p>
-                    </button>
-                  ))}
+                  {(() => {
+                    const budgetOptions = t('budgetOptions');
+                    if (typeof budgetOptions === 'object') {
+                      return Object.entries(budgetOptions).map(([key, data]) => (
+                        <button
+                          key={key}
+                          onClick={() => handleInputChange('budget', key)}
+                          className={`p-4 rounded-lg border-2 text-left transition-all ${
+                            formData.budget === key
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-200 hover:border-blue-300'
+                          }`}
+                        >
+                          <h3 className="font-semibold">{data.label}</h3>
+                          <p className="text-sm text-gray-600">{data.desc}</p>
+                        </button>
+                      ));
+                    } else {
+                      // Fallback to hardcoded budget options if translation fails
+                      return [
+                        { key: 'budget', label: 'Budget-Friendly', desc: 'Under $50/month' },
+                        { key: 'moderate', label: 'Moderate', desc: '$50-150/month' },
+                        { key: 'premium', label: 'Premium', desc: '$150-300/month' },
+                        { key: 'luxury', label: 'Luxury', desc: '$300+/month' }
+                      ].map((budget) => (
+                        <button
+                          key={budget.key}
+                          onClick={() => handleInputChange('budget', budget.key)}
+                          className={`p-4 rounded-lg border-2 text-left transition-all ${
+                            formData.budget === budget.key
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-200 hover:border-blue-300'
+                          }`}
+                        >
+                          <h3 className="font-semibold">{t(`budgetOptions.${budget.key}.label`) || budget.label}</h3>
+                          <p className="text-sm text-gray-600">{t(`budgetOptions.${budget.key}.desc`) || budget.desc}</p>
+                        </button>
+                      ));
+                    }
+                  })()}
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Lifestyle <span className="text-red-500">*</span>
+                  {t('lifestyle')} <span className="text-red-500">*</span>
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {[
-                    { value: 'minimal', label: 'Minimal Routine', desc: '5 minutes or less' },
-                    { value: 'normal', label: 'Standard Routine', desc: '10-15 minutes' },
-                    { value: 'extensive', label: 'Extensive Routine', desc: '20+ minutes' },
-                    { value: 'travel', label: 'Always Traveling', desc: 'Need portable solutions' }
-                  ].map((lifestyle) => (
-                    <button
-                      key={lifestyle.value}
-                      onClick={() => handleInputChange('lifestyle', lifestyle.value)}
-                      className={`p-4 rounded-lg border-2 text-left transition-all ${
-                        formData.lifestyle === lifestyle.value
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-blue-300'
-                      }`}
-                    >
-                      <h3 className="font-semibold">{lifestyle.label}</h3>
-                      <p className="text-sm text-gray-600">{lifestyle.desc}</p>
-                    </button>
-                  ))}
+                  {(() => {
+                    const lifestyleOptions = t('lifestyleOptions');
+                    if (typeof lifestyleOptions === 'object') {
+                      return Object.entries(lifestyleOptions).map(([key, data]) => (
+                        <button
+                          key={key}
+                          onClick={() => handleInputChange('lifestyle', key)}
+                          className={`p-4 rounded-lg border-2 text-left transition-all ${
+                            formData.lifestyle === key
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-200 hover:border-blue-300'
+                          }`}
+                        >
+                          <h3 className="font-semibold">{data.label}</h3>
+                          <p className="text-sm text-gray-600">{data.desc}</p>
+                        </button>
+                      ));
+                    } else {
+                      // Fallback to hardcoded lifestyle options if translation fails
+                      return [
+                        { key: 'minimal', label: 'Minimal Routine', desc: '5 minutes or less' },
+                        { key: 'normal', label: 'Standard Routine', desc: '10-15 minutes' },
+                        { key: 'extensive', label: 'Extensive Routine', desc: '20+ minutes' },
+                        { key: 'travel', label: 'Always Traveling', desc: 'Need portable solutions' }
+                      ].map((lifestyle) => (
+                        <button
+                          key={lifestyle.key}
+                          onClick={() => handleInputChange('lifestyle', lifestyle.key)}
+                          className={`p-4 rounded-lg border-2 text-left transition-all ${
+                            formData.lifestyle === lifestyle.key
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-200 hover:border-blue-300'
+                          }`}
+                        >
+                          <h3 className="font-semibold">{t(`lifestyleOptions.${lifestyle.key}.label`) || lifestyle.label}</h3>
+                          <p className="text-sm text-gray-600">{t(`lifestyleOptions.${lifestyle.key}.desc`) || lifestyle.desc}</p>
+                        </button>
+                      ));
+                    }
+                  })()}
                 </div>
               </div>
             </div>
@@ -494,7 +590,7 @@ export default function OnboardingPage() {
                 <textarea
                   value={formData.allergies}
                   onChange={(e) => handleInputChange('allergies', e.target.value)}
-                  placeholder="e.g., fragrance, retinol, sulfates... (optional)"
+                  placeholder={t('allergiesPlaceholder')}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   rows="3"
                 />
@@ -507,7 +603,7 @@ export default function OnboardingPage() {
                 <textarea
                   value={formData.currentRoutine}
                   onChange={(e) => handleInputChange('currentRoutine', e.target.value)}
-                  placeholder="Describe your current products and routine... (optional)"
+                  placeholder={t('routinePlaceholder')}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   rows="4"
                 />
@@ -520,7 +616,7 @@ export default function OnboardingPage() {
                 <textarea
                   value={formData.goals}
                   onChange={(e) => handleInputChange('goals', e.target.value)}
-                  placeholder="What do you hope to achieve with your skincare routine? (optional)"
+                  placeholder={t('goalsPlaceholder')}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   rows="3"
                 />
@@ -540,29 +636,32 @@ export default function OnboardingPage() {
             <div className="bg-gray-50 rounded-lg p-6 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <h3 className="font-semibold text-gray-900">Skin Type</h3>
-                  <p className="text-gray-600 capitalize">{formData.skinType || 'Not selected'}</p>
+                  <h3 className="font-semibold text-gray-900">{t('skinType')}</h3>
+                  <p className="text-gray-600 capitalize">{formData.skinType || t('notSelected')}</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Age Range</h3>
-                  <p className="text-gray-600">{formData.ageRange || 'Not selected'}</p>
+                  <h3 className="font-semibold text-gray-900">{t('ageRange')}</h3>
+                  <p className="text-gray-600">{formData.ageRange ? t(`ageRanges.${formData.ageRange}`) : t('notSelected')}</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Experience Level</h3>
-                  <p className="text-gray-600 capitalize">{formData.skincareExperience || 'Not selected'}</p>
+                  <h3 className="font-semibold text-gray-900">{t('experienceLevel')}</h3>
+                  <p className="text-gray-600 capitalize">{formData.skincareExperience ? t(`experienceLevels.${formData.skincareExperience}.label`) : t('notSelected')}</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Budget</h3>
-                  <p className="text-gray-600 capitalize">{formData.budget || 'Not selected'}</p>
+                  <h3 className="font-semibold text-gray-900">{t('budget')}</h3>
+                  <p className="text-gray-600 capitalize">{formData.budget ? t(`budgetOptions.${formData.budget}.label`) : t('notSelected')}</p>
                 </div>
               </div>
               
               <div>
-                <h3 className="font-semibold text-gray-900">Skin Concerns</h3>
+                <h3 className="font-semibold text-gray-900">{t('skinConcernsLabel')}</h3>
                 <p className="text-gray-600">
                   {formData.skinConcerns.length > 0 
-                    ? formData.skinConcerns.join(', ') 
-                    : 'None selected'
+                    ? formData.skinConcerns.map(concern => {
+                        const translation = t(`skinConcerns.${concern}`);
+                        return typeof translation === 'string' ? translation : concern;
+                      }).join(', ')
+                    : t('noneSelected')
                   }
                 </p>
               </div>
@@ -605,7 +704,7 @@ export default function OnboardingPage() {
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to Dermify!</h2>
             <p className="text-gray-600 mb-4">Your skincare profile has been created successfully.</p>
             <p className="text-sm text-gray-500">
-              Redirecting to dashboard in {countdown} second{countdown !== 1 ? 's' : ''}...
+              You'll be redirected to your dashboard shortly...
             </p>
           </div>
           
@@ -629,28 +728,30 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Let's Get to Know Your Skin</h1>
-            <p className="text-gray-600">Answer a few questions to get personalized skincare recommendations</p>
-          </div>
+    <>
+      <Header />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-4xl mx-auto">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('letsGetToKnowYourSkin')}</h1>
+              <p className="text-gray-600">{t('answerQuestions')}</p>
+            </div>
 
-          {/* Progress Bar */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700">Step {currentStep} of {totalSteps}</span>
-              <span className="text-sm text-gray-500">{Math.round((currentStep / totalSteps) * 100)}% Complete</span>
+            {/* Progress Bar */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-gray-700">{t('stepOf').replace('{current}', currentStep).replace('{total}', totalSteps)}</span>
+                <span className="text-sm text-gray-500">{Math.round((currentStep / totalSteps) * 100)}% {t('complete')}</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                  style={{ width: `${(currentStep / totalSteps) * 100}%` }}
+                ></div>
+              </div>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
-                style={{ width: `${(currentStep / totalSteps) * 100}%` }}
-              ></div>
-            </div>
-          </div>
 
           {/* Error/Success Messages */}
           {error && (
@@ -726,5 +827,6 @@ export default function OnboardingPage() {
         </div>
       </div>
     </div>
-  )
+    </>
+  );
 }

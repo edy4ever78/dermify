@@ -51,22 +51,36 @@ export function TranslationProvider({ children }) {
                 fallbackValue = fallbackValue[fallbackKey];
               } else {
                 // Key not found in English either, return original key
+                console.warn(`Translation key not found: ${key}`);
                 return key;
               }
             }
-            return fallbackValue;
+            return typeof fallbackValue === 'string' ? fallbackValue : fallbackValue;
           }
         }
         
-        return typeof value === 'string' ? value : key;
+        return typeof value === 'string' ? value : value;
       }
       
-      // Simple key lookup
+      // Simple key lookup - handle both strings and objects
       const translation = translations[currentLanguage]?.[key] || 
-                         translations['en'][key] || 
-                         key;
+                         translations['en'][key];
       
-      return translation;
+      if (translation === undefined) {
+        console.warn(`Translation key not found: ${key}`);
+        return key;
+      }
+      
+      // For objects (like ageRanges, experienceLevels), return them as-is
+      // For strings, ensure they are strings
+      if (typeof translation === 'object') {
+        return translation;
+      } else if (typeof translation === 'string') {
+        return translation;
+      } else {
+        console.warn(`Translation for key "${key}" is not a string or object:`, translation);
+        return key;
+      }
     } catch (error) {
       console.warn(`Translation error for key "${key}":`, error);
       return key;
