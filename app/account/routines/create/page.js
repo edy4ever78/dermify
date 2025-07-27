@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
@@ -52,7 +52,7 @@ export default function CreateRoutinePage() {
     }
     
     // Auto-initialize with default values for testing/demo
-    console.log('🚀 AUTO-INITIALIZING: Setting default skin type and concerns...');
+    console.log('ðŸš€ AUTO-INITIALIZING: Setting default skin type and concerns...');
     setRoutineData(prev => {
       const autoData = {
         ...prev,
@@ -61,7 +61,7 @@ export default function CreateRoutinePage() {
         concerns: prev.concerns.length > 0 ? prev.concerns : ['acne', 'oiliness'], // Default concerns
         type: prev.type || 'morning' // Default to morning routine
       };
-      console.log('✅ Auto-initialized data:', autoData);
+      console.log('âœ… Auto-initialized data:', autoData);
       return autoData;
     });
     
@@ -84,42 +84,42 @@ export default function CreateRoutinePage() {
     { 
       id: 'normal', 
       label: 'Normal', 
-      emoji: '😊',
+      emoji: 'ðŸ˜Š',
       description: 'Balanced skin that\'s not too oily or dry',
       characteristics: ['Balanced oil production', 'Small pores', 'Few imperfections']
     },
     { 
       id: 'dry', 
       label: 'Dry', 
-      emoji: '🏜️',
+      emoji: 'ðŸœï¸',
       description: 'Skin that feels tight and may have flaky patches',
       characteristics: ['Feels tight after cleansing', 'May have flaky areas', 'Fine lines more visible']
     },
     { 
       id: 'oily', 
       label: 'Oily', 
-      emoji: '💧',
+      emoji: 'ðŸ’§',
       description: 'Skin with excess oil production and shine',
       characteristics: ['Shiny appearance', 'Enlarged pores', 'Prone to blackheads']
     },
     { 
       id: 'combination', 
       label: 'Combination', 
-      emoji: '⚖️',
+      emoji: 'âš–ï¸',
       description: 'Oily T-zone with normal to dry cheeks',
       characteristics: ['Oily forehead, nose, chin', 'Normal to dry cheeks', 'Mixed concerns']
     },
     { 
       id: 'sensitive', 
       label: 'Sensitive', 
-      emoji: '⚡',
+      emoji: 'âš¡',
       description: 'Easily irritated skin that reacts to products',
       characteristics: ['Easily irritated', 'Redness-prone', 'Reacts to harsh ingredients']
     },
     { 
       id: 'acneProne', 
       label: 'Acne-Prone', 
-      emoji: '🔴',
+      emoji: 'ðŸ”´',
       description: 'Skin prone to breakouts and blemishes',
       characteristics: ['Frequent breakouts', 'Clogged pores', 'Post-acne marks']
     }
@@ -130,7 +130,7 @@ export default function CreateRoutinePage() {
     { 
       id: 'acne', 
       label: 'Acne & Breakouts', 
-      emoji: '🔴',
+      emoji: 'ðŸ”´',
       priority: 'high',
       description: 'Active breakouts, blackheads, and clogged pores',
       solutions: ['Salicylic acid', 'Benzoyl peroxide', 'Niacinamide']
@@ -138,7 +138,7 @@ export default function CreateRoutinePage() {
     { 
       id: 'aging', 
       label: 'Anti-Aging', 
-      emoji: '⏳',
+      emoji: 'â³',
       priority: 'high',
       description: 'Fine lines, wrinkles, and loss of firmness',
       solutions: ['Retinol', 'Vitamin C', 'Peptides', 'Hyaluronic acid']
@@ -146,7 +146,7 @@ export default function CreateRoutinePage() {
     { 
       id: 'dryness', 
       label: 'Dryness', 
-      emoji: '🏜️',
+      emoji: 'ðŸœï¸',
       priority: 'medium',
       description: 'Tight, flaky, or dehydrated skin',
       solutions: ['Hyaluronic acid', 'Ceramides', 'Natural oils']
@@ -154,7 +154,7 @@ export default function CreateRoutinePage() {
     { 
       id: 'oiliness', 
       label: 'Excess Oil', 
-      emoji: '💧',
+      emoji: 'ðŸ’§',
       priority: 'medium',
       description: 'Shiny skin and enlarged pores',
       solutions: ['Niacinamide', 'Clay masks', 'BHA exfoliation']
@@ -162,7 +162,7 @@ export default function CreateRoutinePage() {
     { 
       id: 'sensitivity', 
       label: 'Sensitivity', 
-      emoji: '⚡',
+      emoji: 'âš¡',
       priority: 'high',
       description: 'Easily irritated or reactive skin',
       solutions: ['Gentle formulas', 'Centella asiatica', 'Minimal ingredients']
@@ -170,7 +170,7 @@ export default function CreateRoutinePage() {
     { 
       id: 'darkSpots', 
       label: 'Dark Spots', 
-      emoji: '🎭',
+      emoji: 'ðŸŽ­',
       priority: 'medium',
       description: 'Hyperpigmentation and uneven skin tone',
       solutions: ['Vitamin C', 'Alpha arbutin', 'Kojic acid']
@@ -178,7 +178,7 @@ export default function CreateRoutinePage() {
     { 
       id: 'redness', 
       label: 'Redness', 
-      emoji: '🌹',
+      emoji: 'ðŸŒ¹',
       priority: 'medium',
       description: 'Persistent redness and inflammation',
       solutions: ['Azelaic acid', 'Green tea', 'Centella asiatica']
@@ -186,7 +186,7 @@ export default function CreateRoutinePage() {
     { 
       id: 'pores', 
       label: 'Large Pores', 
-      emoji: '🔍',
+      emoji: 'ðŸ”',
       priority: 'low',
       description: 'Visible pores and uneven texture',
       solutions: ['Niacinamide', 'BHA', 'Retinol']
@@ -194,7 +194,7 @@ export default function CreateRoutinePage() {
     { 
       id: 'dullness', 
       label: 'Dullness', 
-      emoji: '✨',
+      emoji: 'âœ¨',
       priority: 'low',
       description: 'Lack of radiance and uneven texture',
       solutions: ['AHA exfoliation', 'Vitamin C', 'Brightening serums']
@@ -207,7 +207,7 @@ export default function CreateRoutinePage() {
       id: 'beginner', 
       label: 'Beginner', 
       desc: '3-5 steps, simple routine', 
-      emoji: '🌱',
+      emoji: 'ðŸŒ±',
       timeEstimate: '5-10 minutes',
       characteristics: ['Few products', 'Simple application', 'Low maintenance']
     },
@@ -215,7 +215,7 @@ export default function CreateRoutinePage() {
       id: 'intermediate', 
       label: 'Intermediate', 
       desc: '5-7 steps, moderate complexity', 
-      emoji: '🌿',
+      emoji: 'ðŸŒ¿',
       timeEstimate: '10-15 minutes',
       characteristics: ['Multiple products', 'Some wait times', 'Regular commitment']
     },
@@ -223,7 +223,7 @@ export default function CreateRoutinePage() {
       id: 'advanced', 
       label: 'Advanced', 
       desc: '7+ steps, comprehensive routine', 
-      emoji: '🌳',
+      emoji: 'ðŸŒ³',
       timeEstimate: '15-25 minutes',
       characteristics: ['Many products', 'Complex layering', 'High commitment']
     }
@@ -231,12 +231,12 @@ export default function CreateRoutinePage() {
 
   // Routine categories for better organization
   const stepCategories = [
-    { id: 'cleanse', label: 'Cleansing', emoji: '🧼', order: 1 },
-    { id: 'exfoliate', label: 'Exfoliation', emoji: '✨', order: 2 },
-    { id: 'tone', label: 'Toning', emoji: '💧', order: 3 },
-    { id: 'treat', label: 'Treatment', emoji: '🎯', order: 4 },
-    { id: 'moisturize', label: 'Moisturizing', emoji: '💦', order: 5 },
-    { id: 'protect', label: 'Protection', emoji: '☀️', order: 6 }
+    { id: 'cleanse', label: 'Cleansing', emoji: 'ðŸ§¼', order: 1 },
+    { id: 'exfoliate', label: 'Exfoliation', emoji: 'âœ¨', order: 2 },
+    { id: 'tone', label: 'Toning', emoji: 'ðŸ’§', order: 3 },
+    { id: 'treat', label: 'Treatment', emoji: 'ðŸŽ¯', order: 4 },
+    { id: 'moisturize', label: 'Moisturizing', emoji: 'ðŸ’¦', order: 5 },
+    { id: 'protect', label: 'Protection', emoji: 'â˜€ï¸', order: 6 }
   ];
 
   // Predefined routine templates
@@ -296,40 +296,40 @@ export default function CreateRoutinePage() {
       console.log('Checking routine name:', `"${routineData.name}"`);
       if (!routineData.name.trim()) {
         stepErrors.name = 'Please give your routine a name';
-        console.log('❌ Name validation failed: empty');
+        console.log('âŒ Name validation failed: empty');
       } else if (routineData.name.length < 3) {
         stepErrors.name = 'Routine name should be at least 3 characters';
-        console.log('❌ Name validation failed: too short');
+        console.log('âŒ Name validation failed: too short');
       } else {
-        console.log('✅ Name validation passed');
+        console.log('âœ… Name validation passed');
       }
       
       console.log('Checking skin type:', routineData.skinType);
       if (!routineData.skinType) {
         stepErrors.skinType = 'Please select your skin type to get personalized recommendations';
-        console.log('❌ Skin type validation failed: not selected');
+        console.log('âŒ Skin type validation failed: not selected');
       } else {
-        console.log('✅ Skin type validation passed');
+        console.log('âœ… Skin type validation passed');
       }
       
       console.log('Checking concerns:', routineData.concerns);
       if (routineData.concerns.length === 0) {
         stepErrors.concerns = 'Select at least one skin concern to address';
-        console.log('❌ Concerns validation failed: none selected');
+        console.log('âŒ Concerns validation failed: none selected');
       } else {
-        console.log('✅ Concerns validation passed');
+        console.log('âœ… Concerns validation passed');
       }
     }
     
     if (currentStep === 3 && routineData.steps.length === 0) {
       stepErrors.steps = 'Add at least one step to create your routine';
-      console.log('❌ Steps validation failed: no steps added');
+      console.log('âŒ Steps validation failed: no steps added');
     }
 
     console.log('All validation errors:', stepErrors);
     setErrors(stepErrors);
     const isValid = Object.keys(stepErrors).length === 0;
-    console.log('Final validation result:', isValid ? '✅ VALID' : '❌ INVALID');
+    console.log('Final validation result:', isValid ? 'âœ… VALID' : 'âŒ INVALID');
     console.log('=== VALIDATION END ===');
     return isValid;
   }, [currentStep, routineData]);
@@ -413,7 +413,7 @@ export default function CreateRoutinePage() {
   }, []);
 
   const handleConcernToggle = useCallback((concernId) => {
-    console.log('🔥 CONCERN TOGGLE FUNCTION CALLED:', concernId);
+    console.log('ðŸ”¥ CONCERN TOGGLE FUNCTION CALLED:', concernId);
     console.log('Current concerns:', routineData.concerns);
     
     try {
@@ -428,9 +428,9 @@ export default function CreateRoutinePage() {
         console.log('Complete updated routine data:', newData);
         return newData;
       });
-      console.log('✅ Concern toggle completed successfully');
+      console.log('âœ… Concern toggle completed successfully');
     } catch (error) {
-      console.error('❌ Error toggling concern:', error);
+      console.error('âŒ Error toggling concern:', error);
     }
   }, [routineData.concerns]);
 
@@ -515,7 +515,7 @@ export default function CreateRoutinePage() {
       // Simulate API call with progress
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      console.log('✅ Routine successfully saved to localStorage');
+      console.log('âœ… Routine successfully saved to localStorage');
       
       // Redirect with success state to main routines page
       router.push('/routines?created=success&name=' + encodeURIComponent(routineData.name));
@@ -530,10 +530,10 @@ export default function CreateRoutinePage() {
   // Enhanced step icons with animations
   const getStepIcon = useCallback((stepNum) => {
     const icons = [
-      { emoji: '📝', label: 'Basic Info', color: 'from-blue-500 to-purple-500' },
-      { emoji: '🎯', label: 'Skin Profile', color: 'from-green-500 to-teal-500' },
-      { emoji: '📋', label: 'Build Routine', color: 'from-orange-500 to-red-500' },
-      { emoji: '✨', label: 'Review & Create', color: 'from-pink-500 to-rose-500' }
+      { emoji: 'ðŸ“', label: 'Basic Info', color: 'from-blue-500 to-purple-500' },
+      { emoji: 'ðŸŽ¯', label: 'Skin Profile', color: 'from-green-500 to-teal-500' },
+      { emoji: 'ðŸ“‹', label: 'Build Routine', color: 'from-orange-500 to-red-500' },
+      { emoji: 'âœ¨', label: 'Review & Create', color: 'from-pink-500 to-rose-500' }
     ];
     return icons[stepNum - 1] || icons[0];
   }, []);
@@ -557,148 +557,6 @@ export default function CreateRoutinePage() {
       </div>
     </div>
   );
-
-  // Debug info component - remove in production
-  const renderDebugInfo = () => {
-    if (process.env.NODE_ENV !== 'development') return null;
-    
-    return (
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-        <h3 className="text-sm font-medium text-yellow-800 mb-2">🐛 Live Debug Info:</h3>
-        <pre className="text-xs text-yellow-700 whitespace-pre-wrap">
-          Current Step: {currentStep}{'\n'}
-          Routine Name: "{routineData.name}" (length: {routineData.name.length}){'\n'}
-          Skin Type: {routineData.skinType || 'None selected'}{'\n'}
-          Concerns: {routineData.concerns.length > 0 ? routineData.concerns.join(', ') : 'None selected'} (count: {routineData.concerns.length}){'\n'}
-          Errors: {JSON.stringify(errors, null, 2)}{'\n'}
-          {'\n'}
-          � AUTO-INITIALIZATION: Page should auto-set:{'\n'}
-          - Name: "My Daily Routine"{'\n'}
-          - Skin Type: "combination"{'\n'}
-          - Concerns: ["acne", "oiliness"]{'\n'}
-          - Type: "morning"{'\n'}
-          {'\n'}
-          📝 Next Step should work automatically now!
-        </pre>
-        <div className="mt-2 p-2 bg-yellow-100 rounded">
-          <div className="text-xs font-medium text-yellow-800">Quick Test:</div>
-          <button 
-            onClick={() => {
-              console.log('TEST: Current state:', { currentStep, routineData, errors });
-              alert(`Step: ${currentStep}, Name: "${routineData.name}", Skin: ${routineData.skinType}, Concerns: ${routineData.concerns.length}`);
-            }}
-            className="text-xs bg-yellow-600 text-white px-2 py-1 rounded mt-1 mr-2"
-          >
-            Log Current State
-          </button>
-          <button 
-            onClick={() => {
-              console.log('🧪 MANUAL TEST: Setting skin type to oily');
-              setRoutineData(prev => {
-                const newData = { ...prev, skinType: 'oily' };
-                console.log('🧪 Updated data:', newData);
-                return newData;
-              });
-            }}
-            className="text-xs bg-blue-600 text-white px-2 py-1 rounded mt-1 mr-2"
-          >
-            Test Set Oily Skin
-          </button>
-          <button 
-            onClick={() => {
-              console.log('🧪 MANUAL TEST: Adding acne concern');
-              setRoutineData(prev => {
-                const newData = { ...prev, concerns: ['acne'] };
-                console.log('🧪 Updated data:', newData);
-                return newData;
-              });
-            }}
-            className="text-xs bg-green-600 text-white px-2 py-1 rounded mt-1"
-          >
-            Test Add Acne Concern
-          </button>
-          <button 
-            onClick={() => {
-              console.log('🔬 TESTING: Checking if onClick works on skin type buttons...');
-              const buttons = document.querySelectorAll('[data-skin-type]');
-              console.log('Found skin type buttons:', buttons.length);
-              
-              buttons.forEach((btn, index) => {
-                console.log(`Button ${index}:`, {
-                  element: btn,
-                  skinType: btn.getAttribute('data-skin-type'),
-                  visible: btn.offsetParent !== null,
-                  style: window.getComputedStyle(btn),
-                  pointerEvents: window.getComputedStyle(btn).pointerEvents,
-                  zIndex: window.getComputedStyle(btn).zIndex
-                });
-              });
-              
-              if (buttons.length > 0) {
-                console.log('Simulating click on first skin type button...');
-                buttons[0].click();
-              } else {
-                console.log('❌ No skin type buttons found with data-skin-type attribute');
-              }
-            }}
-            className="text-xs bg-purple-600 text-white px-2 py-1 rounded mt-1 ml-2"
-          >
-            Test Click Skin Button
-          </button>
-          <button 
-            onClick={() => {
-              console.log('🔬 TESTING: Checking if onClick works on concern buttons...');
-              const buttons = document.querySelectorAll('[data-concern]');
-              console.log('Found concern buttons:', buttons.length);
-              
-              buttons.forEach((btn, index) => {
-                console.log(`Button ${index}:`, {
-                  element: btn,
-                  concern: btn.getAttribute('data-concern'),
-                  visible: btn.offsetParent !== null,
-                  style: window.getComputedStyle(btn),
-                  pointerEvents: window.getComputedStyle(btn).pointerEvents,
-                  zIndex: window.getComputedStyle(btn).zIndex
-                });
-              });
-              
-              if (buttons.length > 0) {
-                console.log('Simulating click on first concern button...');
-                buttons[0].click();
-              } else {
-                console.log('❌ No concern buttons found with data-concern attribute');
-              }
-            }}
-            className="text-xs bg-red-600 text-white px-2 py-1 rounded mt-1 ml-2"
-          >
-            Test Click Concern Button
-          </button>
-          <button 
-            onClick={() => {
-              console.log('🧪 ADVANCED TEST: Checking for JavaScript errors...');
-              console.log('React state:', { routineData, currentStep, errors });
-              console.log('Available functions:', { handleConcernToggle: typeof handleConcernToggle, setRoutineData: typeof setRoutineData });
-              
-              // Test direct state update
-              console.log('Testing direct state update...');
-              try {
-                setRoutineData(prev => {
-                  const testData = { ...prev, skinType: 'oily', concerns: ['acne', 'oiliness'] };
-                  console.log('Direct update successful:', testData);
-                  return testData;
-                });
-              } catch (error) {
-                console.error('Direct state update failed:', error);
-              }
-            }}
-            className="text-xs bg-orange-600 text-white px-2 py-1 rounded mt-1 ml-2"
-          >
-            Test Direct Update
-          </button>
-        </div>
-      </div>
-    );
-  };
 
   // Enhanced step content with better UX
   const renderStepContent = () => {
@@ -756,7 +614,7 @@ export default function CreateRoutinePage() {
                       {template.name}
                     </div>
                     <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                      {template.steps.length} steps • {template.difficulty}
+                      {template.steps.length} steps â€¢ {template.difficulty}
                     </div>
                   </button>
                 ))}
@@ -766,7 +624,7 @@ export default function CreateRoutinePage() {
             {/* Basic Information Form */}
             <div>
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                <span className="text-4xl mr-4">📝</span>
+                <span className="text-4xl mr-4">ðŸ“</span>
                 <div>
                   <div>Let's Start Building</div>
                   <div className="text-lg text-gray-600 dark:text-gray-300 font-normal">Tell us about your routine</div>
@@ -820,14 +678,14 @@ export default function CreateRoutinePage() {
                       { 
                         id: 'morning', 
                         label: 'Morning Routine', 
-                        emoji: '🌅', 
+                        emoji: 'ðŸŒ…', 
                         desc: 'Start your day fresh and protected',
                         benefits: ['Energy boost', 'UV protection', 'Antioxidant defense']
                       },
                       { 
                         id: 'evening', 
                         label: 'Evening Routine', 
-                        emoji: '🌙', 
+                        emoji: 'ðŸŒ™', 
                         desc: 'Wind down and repair overnight',
                         benefits: ['Deep cleansing', 'Overnight repair', 'Relaxation']
                       }
@@ -869,7 +727,7 @@ export default function CreateRoutinePage() {
           <div className={`space-y-8 ${fadeInClass}`}>
             <div>
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                <span className="text-4xl mr-4">🎯</span>
+                <span className="text-4xl mr-4">ðŸŽ¯</span>
                 <div>
                   <div>Your Skin Profile</div>
                   <div className="text-lg text-gray-600 dark:text-gray-300 font-normal">Help us personalize your routine</div>
@@ -889,7 +747,7 @@ export default function CreateRoutinePage() {
                         key={type.id}
                         data-skin-type={type.id}
                         onClick={(e) => {
-                          console.log('🔥 SKIN TYPE CLICK EVENT FIRED!', type.id);
+                          console.log('ðŸ”¥ SKIN TYPE CLICK EVENT FIRED!', type.id);
                           console.log('Event details:', e);
                           console.log('Target element:', e.target);
                           console.log('Current target:', e.currentTarget);
@@ -901,9 +759,9 @@ export default function CreateRoutinePage() {
                               console.log('Updated routine data:', newData);
                               return newData;
                             });
-                            console.log('✅ State update completed successfully');
+                            console.log('âœ… State update completed successfully');
                           } catch (error) {
-                            console.error('❌ Error updating state:', error);
+                            console.error('âŒ Error updating state:', error);
                           }
                         }}
                         className={`p-6 rounded-xl border-2 transition-all duration-200 text-left group hover:scale-105 ${
@@ -948,16 +806,16 @@ export default function CreateRoutinePage() {
                         key={concern.id}
                         data-concern={concern.id}
                         onClick={(e) => {
-                          console.log('🔥 CONCERN CLICK EVENT FIRED!', concern.id);
+                          console.log('ðŸ”¥ CONCERN CLICK EVENT FIRED!', concern.id);
                           console.log('Event details:', e);
                           console.log('Target element:', e.target);
                           console.log('Current target:', e.currentTarget);
                           
                           try {
                             handleConcernToggle(concern.id);
-                            console.log('✅ handleConcernToggle called successfully');
+                            console.log('âœ… handleConcernToggle called successfully');
                           } catch (error) {
-                            console.error('❌ Error calling handleConcernToggle:', error);
+                            console.error('âŒ Error calling handleConcernToggle:', error);
                           }
                         }}
                         className={`p-4 rounded-xl border-2 transition-all duration-200 text-left group hover:scale-105 ${
@@ -1068,11 +926,11 @@ export default function CreateRoutinePage() {
           <div className={`space-y-8 ${fadeInClass}`}>
             <div>
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                <span className="text-4xl mr-4">📋</span>
+                <span className="text-4xl mr-4">ðŸ“‹</span>
                 <div>
                   <div>Build Your Routine</div>
                   <div className="text-lg text-gray-600 dark:text-gray-300 font-normal">
-                    Add steps to create your perfect routine • {routineData.steps.length} steps • ~{estimatedTotalTime} min
+                    Add steps to create your perfect routine â€¢ {routineData.steps.length} steps â€¢ ~{estimatedTotalTime} min
                   </div>
                 </div>
               </h2>
@@ -1286,7 +1144,7 @@ export default function CreateRoutinePage() {
           <div className={`space-y-8 ${fadeInClass}`}>
             <div>
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                <span className="text-4xl mr-4">✨</span>
+                <span className="text-4xl mr-4">âœ¨</span>
                 <div>
                   <div>Review & Create</div>
                   <div className="text-lg text-gray-600 dark:text-gray-300 font-normal">Your personalized routine is ready!</div>
@@ -1326,7 +1184,7 @@ export default function CreateRoutinePage() {
                         <div>
                           <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Type</span>
                           <div className="text-gray-900 dark:text-white">
-                            {routineData.type === 'morning' ? '🌅 Morning' : '🌙 Evening'}
+                            {routineData.type === 'morning' ? 'ðŸŒ… Morning' : 'ðŸŒ™ Evening'}
                           </div>
                         </div>
                         <div>
@@ -1538,7 +1396,6 @@ export default function CreateRoutinePage() {
 
           {/* Enhanced Step Content Container */}
           <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 p-8 lg:p-12 mb-8">
-            {renderDebugInfo()}
             {renderStepContent()}
           </div>
 
@@ -1659,7 +1516,7 @@ export default function CreateRoutinePage() {
           <div className="mt-12 text-center">
             <div className="bg-gradient-to-r from-teal-50 to-blue-50 dark:from-teal-900/20 dark:to-blue-900/20 rounded-2xl p-8 border border-teal-200 dark:border-teal-800">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                🎉 You're building something amazing!
+                ðŸŽ‰ You're building something amazing!
               </h3>
               <p className="text-gray-600 dark:text-gray-300">
                 A consistent skincare routine is the foundation of healthy, glowing skin. 
@@ -1672,3 +1529,5 @@ export default function CreateRoutinePage() {
     </>
   );
 }
+
+
