@@ -5,11 +5,11 @@ import { getAllIngredients } from '@/data/ingredients';
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   
-  // Parse query parameters
+  // Parse query parameters - handle both 'q' and 'search' for backwards compatibility
   const category = searchParams.get('category');
   const skinType = searchParams.get('skinType');
   const brand = searchParams.get('brand');
-  const search = searchParams.get('search');
+  const search = searchParams.get('q') || searchParams.get('search'); // Handle both parameter names
   const searchType = searchParams.get('searchType') || 'products'; // Default to products
 
   let results = {
@@ -55,13 +55,6 @@ export async function GET(request) {
       ...product,
       imageUrl: getValidImageUrl(product.imageUrl, product.category, index)
     }));
-    
-    // Return products array directly if not searching for all
-    if (searchType === 'products') {
-      return new Response(JSON.stringify(productsWithValidImages), {
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
     
     results.products = productsWithValidImages;
   }

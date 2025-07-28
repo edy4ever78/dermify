@@ -48,8 +48,11 @@ function ProductsContent() {
 
         const data = await response.json();
 
+        // Handle the new API response structure
+        const productsData = data.products || data; // Handle both old and new format
+
         const categories = {};
-        data.forEach(product => {
+        productsData.forEach(product => {
           const category = product.category || 'other';
 
           if (!categories[category]) {
@@ -65,7 +68,7 @@ function ProductsContent() {
         });
 
         setProductCategories(Object.values(categories));
-        setProducts(data);
+        setProducts(productsData);
       } catch (err) {
         console.error('Error fetching products:', err);
         setError('Failed to load products. Please try again later.');

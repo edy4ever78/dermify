@@ -2,12 +2,18 @@
  * Handles search submission by updating the URL
  * @param {string} searchTerm - The search term to use
  * @param {object} router - Next.js router object
+ * @param {function} setIsLoading - Optional loading state setter
  */
-export function handleSearch(searchTerm, router) {
+export function handleSearch(searchTerm, router, setIsLoading) {
   if (!searchTerm.trim()) return;
   
-  // Create a query string with the search term
-  const queryString = `?search=${encodeURIComponent(searchTerm.trim())}`;
+  // Set loading state if provided
+  if (setIsLoading) {
+    setIsLoading(true);
+  }
+  
+  // Create a query string with the search term using 'q' parameter to match search page
+  const queryString = `?q=${encodeURIComponent(searchTerm.trim())}`;
   
   // Navigate to the search results page with the search query
   router.push(`/search${queryString}`);
@@ -19,7 +25,7 @@ export function handleSearch(searchTerm, router) {
  * @returns {string} The search query or empty string
  */
 export function getSearchQuery(searchParams) {
-  return searchParams ? searchParams.get('search') || '' : '';
+  return searchParams ? (searchParams.get('q') || searchParams.get('search') || '') : '';
 }
 
 /**
