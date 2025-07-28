@@ -442,5 +442,23 @@
     ],
     "userId": "t@g.x",
     "hasAnnotatedImage": true
+  },
+  {
+    "date": "2025-07-27T15:45:09.838Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "admin@dermify.com",
+    "hasAnnotatedImage": true
+  },
+  {
+    "date": "2025-07-28T11:45:24.596Z",
+    "skinType": "Normal",
+    "skinConditions": [
+      "Acne"
+    ],
+    "userId": "tomberon@pulamea.com",
+    "hasAnnotatedImage": true
   }
 ]

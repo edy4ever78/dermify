@@ -289,10 +289,10 @@ export default function OnboardingPage() {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                 {t('whatIsYourSkinType')} <span className="text-red-500">*</span>
               </h2>
-              <p className="text-gray-600">{t('thisHelpsUsRecommend')}</p>
+              <p className="text-gray-600 dark:text-gray-400">{t('thisHelpsUsRecommend')}</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -307,14 +307,14 @@ export default function OnboardingPage() {
                 <button
                   key={type.value}
                   onClick={() => handleInputChange('skinType', type.value)}
-                  className={`p-4 rounded-lg border-2 text-left transition-all ${
+                  className={`p-4 rounded-lg border-2 text-left transition-all duration-200 ${
                     formData.skinType === type.value
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:border-blue-300'
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10 dark:border-blue-400'
+                      : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-500/5'
                   }`}
                 >
-                  <h3 className="font-semibold text-gray-900">{type.label}</h3>
-                  <p className="text-sm text-gray-600">{type.desc}</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-1">{type.label}</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{type.desc}</p>
                 </button>
               ))}
             </div>
@@ -325,10 +325,10 @@ export default function OnboardingPage() {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                 {t('whatAreYourMainConcerns')} <span className="text-red-500">*</span>
               </h2>
-              <p className="text-gray-600">{t('selectAllThatApply')}</p>
+              <p className="text-gray-600 dark:text-gray-400">{t('selectAllThatApply')}</p>
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -349,10 +349,10 @@ export default function OnboardingPage() {
                 <button
                   key={concern.value}
                   onClick={() => handleConcernToggle(concern.value)}
-                  className={`p-3 rounded-lg border-2 text-sm transition-all ${
+                  className={`p-3 rounded-lg border-2 text-sm font-medium transition-all duration-200 ${
                     formData.skinConcerns.includes(concern.value)
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:border-blue-300'
+                      ? 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:border-blue-400 dark:text-blue-300'
+                      : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-500/5'
                   }`}
                 >
                   {concern.label}
@@ -366,15 +366,15 @@ export default function OnboardingPage() {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                 {t('tellUsAboutYourself')} <span className="text-red-500">*</span>
               </h2>
-              <p className="text-gray-600">{t('thisHelpsPersonalize')}</p>
+              <p className="text-gray-600 dark:text-gray-400">{t('thisHelpsPersonalize')}</p>
             </div>
             
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                   {t('ageRange')} <span className="text-red-500">*</span>
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -385,10 +385,10 @@ export default function OnboardingPage() {
                         <button
                           key={key}
                           onClick={() => handleInputChange('ageRange', key)}
-                          className={`p-3 rounded-lg border-2 transition-all ${
+                          className={`p-3 rounded-lg border-2 font-medium transition-all duration-200 ${
                             formData.ageRange === key
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-gray-200 hover:border-blue-300'
+                              ? 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:border-blue-400 dark:text-blue-300'
+                              : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-500/5'
                           }`}
                         >
                           {label}
@@ -400,10 +400,10 @@ export default function OnboardingPage() {
                         <button
                           key={age}
                           onClick={() => handleInputChange('ageRange', age)}
-                          className={`p-3 rounded-lg border-2 transition-all ${
+                          className={`p-3 rounded-lg border-2 font-medium transition-all duration-200 ${
                             formData.ageRange === age
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-gray-200 hover:border-blue-300'
+                              ? 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:border-blue-400 dark:text-blue-300'
+                              : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-500/5'
                           }`}
                         >
                           {t(`ageRanges.${age}`) || age}
@@ -415,7 +415,7 @@ export default function OnboardingPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                   {t('skincareExperience')} <span className="text-red-500">*</span>
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -426,14 +426,14 @@ export default function OnboardingPage() {
                         <button
                           key={key}
                           onClick={() => handleInputChange('skincareExperience', key)}
-                          className={`p-4 rounded-lg border-2 text-left transition-all ${
+                          className={`p-4 rounded-lg border-2 text-left transition-all duration-200 ${
                             formData.skincareExperience === key
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-gray-200 hover:border-blue-300'
+                              ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10 dark:border-blue-400'
+                              : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-500/5'
                           }`}
                         >
-                          <h3 className="font-semibold">{data.label}</h3>
-                          <p className="text-sm text-gray-600">{data.desc}</p>
+                          <h3 className="font-semibold text-gray-900 dark:text-white mb-1">{data.label}</h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-300">{data.desc}</p>
                         </button>
                       ));
                     } else {
@@ -446,14 +446,14 @@ export default function OnboardingPage() {
                         <button
                           key={level.key}
                           onClick={() => handleInputChange('skincareExperience', level.key)}
-                          className={`p-4 rounded-lg border-2 text-left transition-all ${
+                          className={`p-4 rounded-lg border-2 text-left transition-all duration-200 ${
                             formData.skincareExperience === level.key
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-gray-200 hover:border-blue-300'
+                              ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10 dark:border-blue-400'
+                              : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-500/5'
                           }`}
                         >
-                          <h3 className="font-semibold">{t(`experienceLevels.${level.key}.label`) || level.label}</h3>
-                          <p className="text-sm text-gray-600">{t(`experienceLevels.${level.key}.desc`) || level.desc}</p>
+                          <h3 className="font-semibold text-gray-900 dark:text-white mb-1">{t(`experienceLevels.${level.key}.label`) || level.label}</h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-300">{t(`experienceLevels.${level.key}.desc`) || level.desc}</p>
                         </button>
                       ));
                     }
@@ -468,15 +468,15 @@ export default function OnboardingPage() {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 {t('budgetAndLifestyle')} <span className="text-red-500">*</span>
               </h2>
-              <p className="text-gray-600">{t('helpUsRecommendProducts')}</p>
+              <p className="text-gray-600 dark:text-gray-300">{t('helpUsRecommendProducts')}</p>
             </div>
             
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                   {t('monthlySkincarebudget')} <span className="text-red-500">*</span>
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -489,12 +489,12 @@ export default function OnboardingPage() {
                           onClick={() => handleInputChange('budget', key)}
                           className={`p-4 rounded-lg border-2 text-left transition-all ${
                             formData.budget === key
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-gray-200 hover:border-blue-300'
+                              ? 'border-blue-500 bg-blue-50 text-blue-900 dark:bg-blue-900/20 dark:border-blue-400 dark:text-blue-300'
+                              : 'border-gray-300 bg-white text-gray-900 hover:border-blue-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:border-blue-400 dark:hover:bg-gray-600'
                           }`}
                         >
                           <h3 className="font-semibold">{data.label}</h3>
-                          <p className="text-sm text-gray-600">{data.desc}</p>
+                          <p className="text-sm opacity-75">{data.desc}</p>
                         </button>
                       ));
                     } else {
@@ -510,12 +510,12 @@ export default function OnboardingPage() {
                           onClick={() => handleInputChange('budget', budget.key)}
                           className={`p-4 rounded-lg border-2 text-left transition-all ${
                             formData.budget === budget.key
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-gray-200 hover:border-blue-300'
+                              ? 'border-blue-500 bg-blue-50 text-blue-900 dark:bg-blue-900/20 dark:border-blue-400 dark:text-blue-300'
+                              : 'border-gray-300 bg-white text-gray-900 hover:border-blue-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:border-blue-400 dark:hover:bg-gray-600'
                           }`}
                         >
                           <h3 className="font-semibold">{t(`budgetOptions.${budget.key}.label`) || budget.label}</h3>
-                          <p className="text-sm text-gray-600">{t(`budgetOptions.${budget.key}.desc`) || budget.desc}</p>
+                          <p className="text-sm opacity-75">{t(`budgetOptions.${budget.key}.desc`) || budget.desc}</p>
                         </button>
                       ));
                     }
@@ -524,7 +524,7 @@ export default function OnboardingPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                   {t('lifestyle')} <span className="text-red-500">*</span>
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -537,12 +537,12 @@ export default function OnboardingPage() {
                           onClick={() => handleInputChange('lifestyle', key)}
                           className={`p-4 rounded-lg border-2 text-left transition-all ${
                             formData.lifestyle === key
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-gray-200 hover:border-blue-300'
+                              ? 'border-blue-500 bg-blue-50 text-blue-900 dark:bg-blue-900/20 dark:border-blue-400 dark:text-blue-300'
+                              : 'border-gray-300 bg-white text-gray-900 hover:border-blue-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:border-blue-400 dark:hover:bg-gray-600'
                           }`}
                         >
                           <h3 className="font-semibold">{data.label}</h3>
-                          <p className="text-sm text-gray-600">{data.desc}</p>
+                          <p className="text-sm opacity-75">{data.desc}</p>
                         </button>
                       ));
                     } else {
@@ -558,12 +558,12 @@ export default function OnboardingPage() {
                           onClick={() => handleInputChange('lifestyle', lifestyle.key)}
                           className={`p-4 rounded-lg border-2 text-left transition-all ${
                             formData.lifestyle === lifestyle.key
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-gray-200 hover:border-blue-300'
+                              ? 'border-blue-500 bg-blue-50 text-blue-900 dark:bg-blue-900/20 dark:border-blue-400 dark:text-blue-300'
+                              : 'border-gray-300 bg-white text-gray-900 hover:border-blue-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:border-blue-400 dark:hover:bg-gray-600'
                           }`}
                         >
                           <h3 className="font-semibold">{t(`lifestyleOptions.${lifestyle.key}.label`) || lifestyle.label}</h3>
-                          <p className="text-sm text-gray-600">{t(`lifestyleOptions.${lifestyle.key}.desc`) || lifestyle.desc}</p>
+                          <p className="text-sm opacity-75">{t(`lifestyleOptions.${lifestyle.key}.desc`) || lifestyle.desc}</p>
                         </button>
                       ));
                     }
@@ -578,46 +578,46 @@ export default function OnboardingPage() {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Additional Information</h2>
-              <p className="text-gray-600">Optional details to better personalize your experience</p>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Additional Information</h2>
+              <p className="text-gray-600 dark:text-gray-300">Optional details to better personalize your experience</p>
             </div>
             
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Known Allergies or Sensitivities
                 </label>
                 <textarea
                   value={formData.allergies}
                   onChange={(e) => handleInputChange('allergies', e.target.value)}
                   placeholder={t('allergiesPlaceholder')}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                   rows="3"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Current Skincare Routine
                 </label>
                 <textarea
                   value={formData.currentRoutine}
                   onChange={(e) => handleInputChange('currentRoutine', e.target.value)}
                   placeholder={t('routinePlaceholder')}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                   rows="4"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Skincare Goals
                 </label>
                 <textarea
                   value={formData.goals}
                   onChange={(e) => handleInputChange('goals', e.target.value)}
                   placeholder={t('goalsPlaceholder')}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                   rows="3"
                 />
               </div>
@@ -629,33 +629,33 @@ export default function OnboardingPage() {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Review Your Profile</h2>
-              <p className="text-gray-600">Make sure everything looks correct before submitting</p>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Review Your Profile</h2>
+              <p className="text-gray-600 dark:text-gray-300">Make sure everything looks correct before submitting</p>
             </div>
             
-            <div className="bg-gray-50 rounded-lg p-6 space-y-4">
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <h3 className="font-semibold text-gray-900">{t('skinType')}</h3>
-                  <p className="text-gray-600 capitalize">{formData.skinType || t('notSelected')}</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100">{t('skinType')}</h3>
+                  <p className="text-gray-600 dark:text-gray-300 capitalize">{formData.skinType || t('notSelected')}</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">{t('ageRange')}</h3>
-                  <p className="text-gray-600">{formData.ageRange ? t(`ageRanges.${formData.ageRange}`) : t('notSelected')}</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100">{t('ageRange')}</h3>
+                  <p className="text-gray-600 dark:text-gray-300">{formData.ageRange ? t(`ageRanges.${formData.ageRange}`) : t('notSelected')}</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">{t('experienceLevel')}</h3>
-                  <p className="text-gray-600 capitalize">{formData.skincareExperience ? t(`experienceLevels.${formData.skincareExperience}.label`) : t('notSelected')}</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100">{t('experienceLevel')}</h3>
+                  <p className="text-gray-600 dark:text-gray-300 capitalize">{formData.skincareExperience ? t(`experienceLevels.${formData.skincareExperience}.label`) : t('notSelected')}</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">{t('budget')}</h3>
-                  <p className="text-gray-600 capitalize">{formData.budget ? t(`budgetOptions.${formData.budget}.label`) : t('notSelected')}</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100">{t('budget')}</h3>
+                  <p className="text-gray-600 dark:text-gray-300 capitalize">{formData.budget ? t(`budgetOptions.${formData.budget}.label`) : t('notSelected')}</p>
                 </div>
               </div>
               
               <div>
-                <h3 className="font-semibold text-gray-900">{t('skinConcernsLabel')}</h3>
-                <p className="text-gray-600">
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100">{t('skinConcernsLabel')}</h3>
+                <p className="text-gray-600 dark:text-gray-300">
                   {formData.skinConcerns.length > 0 
                     ? formData.skinConcerns.map(concern => {
                         const translation = t(`skinConcerns.${concern}`);
@@ -667,17 +667,17 @@ export default function OnboardingPage() {
               </div>
               
               {(formData.allergies || formData.goals) && (
-                <div className="pt-4 border-t border-gray-200">
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                   {formData.allergies && (
                     <div className="mb-3">
-                      <h3 className="font-semibold text-gray-900">Allergies</h3>
-                      <p className="text-gray-600 text-sm">{formData.allergies}</p>
+                      <h3 className="font-semibold text-gray-900 dark:text-gray-100">Allergies</h3>
+                      <p className="text-gray-600 dark:text-gray-300 text-sm">{formData.allergies}</p>
                     </div>
                   )}
                   {formData.goals && (
                     <div>
-                      <h3 className="font-semibold text-gray-900">Goals</h3>
-                      <p className="text-gray-600 text-sm">{formData.goals}</p>
+                      <h3 className="font-semibold text-gray-900 dark:text-gray-100">Goals</h3>
+                      <p className="text-gray-600 dark:text-gray-300 text-sm">{formData.goals}</p>
                     </div>
                   )}
                 </div>
@@ -730,24 +730,24 @@ export default function OnboardingPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
             {/* Header */}
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('letsGetToKnowYourSkin')}</h1>
-              <p className="text-gray-600">{t('answerQuestions')}</p>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{t('letsGetToKnowYourSkin')}</h1>
+              <p className="text-gray-600 dark:text-gray-300">{t('answerQuestions')}</p>
             </div>
 
             {/* Progress Bar */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">{t('stepOf').replace('{current}', currentStep).replace('{total}', totalSteps)}</span>
-                <span className="text-sm text-gray-500">{Math.round((currentStep / totalSteps) * 100)}% {t('complete')}</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('stepOf').replace('{current}', currentStep).replace('{total}', totalSteps)}</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400">{Math.round((currentStep / totalSteps) * 100)}% {t('complete')}</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                 <div 
-                  className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                  className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300" 
                   style={{ width: `${(currentStep / totalSteps) * 100}%` }}
                 ></div>
               </div>
@@ -755,19 +755,19 @@ export default function OnboardingPage() {
 
           {/* Error/Success Messages */}
           {error && (
-            <div className="mb-6 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 rounded">
+            <div className="mb-6 p-4 bg-red-100 dark:bg-red-900/30 border-l-4 border-red-500 text-red-700 dark:text-red-300 rounded">
               {error}
             </div>
           )}
           
           {success && (
-            <div className="mb-6 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 rounded">
+            <div className="mb-6 p-4 bg-green-100 dark:bg-green-900/30 border-l-4 border-green-500 text-green-700 dark:text-green-300 rounded">
               {success}
             </div>
           )}
 
           {/* Main Content */}
-          <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mb-8 transition-colors">
             {renderStep()}
           </div>
 
@@ -777,7 +777,7 @@ export default function OnboardingPage() {
               {currentStep > 1 && (
                 <button
                   onClick={prevStep}
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                  className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors font-medium"
                 >
                   ← Previous
                 </button>
@@ -785,7 +785,7 @@ export default function OnboardingPage() {
               
               <button
                 onClick={handleSkip}
-                className="px-6 py-3 text-gray-500 hover:text-gray-700 transition-colors font-medium"
+                className="px-6 py-3 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors font-medium"
               >
                 Skip for now
               </button>
@@ -795,7 +795,7 @@ export default function OnboardingPage() {
               {currentStep < totalSteps ? (
                 <button
                   onClick={nextStep}
-                  className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  className="px-8 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium"
                 >
                   Next →
                 </button>
@@ -803,7 +803,7 @@ export default function OnboardingPage() {
                 <button
                   onClick={handleSubmit}
                   disabled={isSubmitting}
-                  className="px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-8 py-3 bg-green-600 dark:bg-green-500 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? 'Saving...' : 'Complete Profile ✨'}
                 </button>
@@ -818,7 +818,7 @@ export default function OnboardingPage() {
                 <div
                   key={step}
                   className={`w-3 h-3 rounded-full transition-colors ${
-                    step <= currentStep ? 'bg-blue-600' : 'bg-gray-300'
+                    step <= currentStep ? 'bg-blue-600 dark:bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'
                   }`}
                 />
               ))}

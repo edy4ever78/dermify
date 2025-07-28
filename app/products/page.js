@@ -97,18 +97,32 @@ function ProductsContent() {
       (product.skinTypes && product.skinTypes[selectedSkinType.toLowerCase()]);
 
     return matchesSearch && matchesCategory && matchesSkinType;
+  }).sort((a, b) => {
+    // Sort by category first, then by name to create a more balanced distribution
+    if (selectedCategory === 'all') {
+      if (a.category !== b.category) {
+        return a.category.localeCompare(b.category);
+      }
+    }
+    return a.name.localeCompare(b.name);
   });
 
   const totalProducts = products.length;
   const totalFilteredProducts = filteredProducts.length;
 
-  const totalPages = Math.ceil(totalFilteredProducts / productsPerPage);
+  const totalPages = totalFilteredProducts > 0 ? Math.ceil(totalFilteredProducts / productsPerPage) : 1;
 
-  const indexOfLastProduct = currentPage * productsPerPage;
+  // Ensure current page doesn't exceed total pages
+  const validCurrentPage = Math.min(currentPage, totalPages);
+
+  const indexOfLastProduct = validCurrentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber) => {
+    const validPageNumber = Math.max(1, Math.min(pageNumber, totalPages || 1));
+    setCurrentPage(validPageNumber);
+  };
 
   // Handle search submission
   const onSearch = (e) => {
@@ -226,7 +240,7 @@ function ProductsContent() {
             <div className="mt-4 flex justify-between items-center">
               <span className="text-sm text-gray-500 dark:text-gray-400">
                 {filteredProducts.length} {t('of')} {totalProducts} {t('productsCount')}
-                {totalPages > 1 && ` (${t('page')} ${currentPage} ${t('of')} ${totalPages})`}
+                {totalPages > 1 && ` (${t('page')} ${validCurrentPage} ${t('of')} ${totalPages})`}
               </span>
 
               <button
@@ -245,25 +259,10 @@ function ProductsContent() {
           {currentProducts.length > 0 ? (
             <div className="space-y-12">
               {filteredCategories.map(category => {
-                const matchingProducts = category.products.filter(product => {
-                  const translatedProduct = getTranslatedProduct(product);
-                  const matchesSearch =
-                    translatedProduct.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    product.brand.toLowerCase().includes(searchTerm.toLowerCase());
+                // Get products for this category from the paginated currentProducts
+                const categoryProducts = currentProducts.filter(product => product.category === category.id);
 
-                  const matchesSkinType = selectedSkinType === 'All' ||
-                    (product.skinTypes && product.skinTypes[selectedSkinType.toLowerCase()]);
-
-                  return matchesSearch && matchesSkinType;
-                });
-
-                if (matchingProducts.length === 0) return null;
-
-                const categoryCurrentProducts = selectedCategory === 'all'
-                  ? matchingProducts.filter(p => currentProducts.some(cp => cp.id === p.id))
-                  : matchingProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-
-                if (categoryCurrentProducts.length === 0) return null;
+                if (categoryProducts.length === 0) return null;
 
                 return (
                   <div key={category.id} className="space-y-4">
@@ -272,12 +271,10 @@ function ProductsContent() {
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{category.name}</h2>
                         <p className="text-gray-500 dark:text-gray-400">{category.description}</p>
                       </div>
-
-                      
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {categoryCurrentProducts.map(product => {
+                      {categoryProducts.map(product => {
                         const translatedProduct = getTranslatedProduct(product);
                         return (
                         <Link

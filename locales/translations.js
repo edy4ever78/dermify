@@ -26,6 +26,7 @@ const translations = {
     // Common
     home: "Home",
     products: "Products",
+    ingredients: "Ingredients",
     routines: "Routines",
     about: "About",
     contact: "Contact",

@@ -1,8 +1,20 @@
 @import "tailwindcss";
+@import "./dermify-ios.css";
+@import "./dermify-ios.css";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* Dermify Color Palette */
+  --primary: #4BA3C7;        /* Soft Blue - Primary accent */
+  --secondary: #A9E5D9;      /* Light Aqua - Secondary */
+  --background-main: #FCFCFC; /* Snow White - Background */
+  --text-main: #2E2E2E;      /* Charcoal - Text */
+  --success: #C8E6C9;        /* Pale Green - Success/Healthy skin */
+  --error: #F28B82;          /* Soft Coral - Error/Alert */
+  --section-highlight: #F6FDFD; /* Section highlights */
+  --primary-hover: #3B92B0;  /* Primary hover state */
 }
 
 /* Tailwind CSS v4 syntax - ignore linting errors */

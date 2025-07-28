@@ -173,7 +173,7 @@ export default function ConcernsPage() {
       
       <Header />
       
-      <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <main className="min-h-screen bg-gradient-to-br from-[#FCFCFC] via-[#F6FDFD] to-[#A9E5D9]/10 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <style jsx>{`
           @keyframes fadeInUp {
             from {

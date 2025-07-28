@@ -42,14 +42,14 @@ export default function Header() {
   
   return (
     <header className={`sticky top-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-lg' : 'bg-white dark:bg-gray-900'
+      isScrolled ? 'bg-[#FCFCFC]/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-lg border-b border-[#A9E5D9]/20 dark:border-gray-800' : 'bg-[#FCFCFC] dark:bg-gray-900 border-b border-[#A9E5D9]/10 dark:border-gray-800'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-14 sm:h-16">
           {/* Logo */}
           <div className="flex items-center flex-shrink-0">
             <Link href="/" className="flex items-center">
-              <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-teal-500 to-blue-500 text-transparent bg-clip-text">
+              <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-[#4BA3C7] to-[#A9E5D9] text-transparent bg-clip-text">
                 Dermify
               </span>
             </Link>
@@ -58,19 +58,19 @@ export default function Header() {
           {/* Desktop Navigation */}
           <div className="hidden lg:block">
             <div className="flex items-center space-x-1 xl:space-x-4">
-              <Link href="/" className="px-2 xl:px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-teal-500 dark:hover:text-teal-400 transition-colors duration-200">
+              <Link href="/" className="px-2 xl:px-3 py-2 rounded-md text-sm font-medium text-[#2E2E2E] dark:text-gray-200 hover:text-[#4BA3C7] dark:hover:text-[#A9E5D9] transition-colors duration-200">
                 {t('navigation.home')}
               </Link>
-              <Link href="/products" className="px-2 xl:px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-teal-500 dark:hover:text-teal-400 transition-colors duration-200">
+              <Link href="/products" className="px-2 xl:px-3 py-2 rounded-md text-sm font-medium text-[#2E2E2E] dark:text-gray-200 hover:text-[#4BA3C7] dark:hover:text-[#A9E5D9] transition-colors duration-200">
                 {t('navigation.products')}
               </Link>
-              <Link href="/ingredients" className="px-2 xl:px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-teal-500 dark:hover:text-teal-400 transition-colors duration-200">
+              <Link href="/ingredients" className="px-2 xl:px-3 py-2 rounded-md text-sm font-medium text-[#2E2E2E] dark:text-gray-200 hover:text-[#4BA3C7] dark:hover:text-[#A9E5D9] transition-colors duration-200">
                 {t('navigation.ingredients')}
               </Link>
-              <Link href="/skin-analysis" className="px-2 xl:px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-teal-500 dark:hover:text-teal-400 transition-colors duration-200">
+              <Link href="/skin-analysis" className="px-2 xl:px-3 py-2 rounded-md text-sm font-medium text-[#2E2E2E] dark:text-gray-200 hover:text-[#4BA3C7] dark:hover:text-[#A9E5D9] transition-colors duration-200">
                 {t('navigation.skinAnalysis')}
               </Link>
-              <Link href="/routines" className="px-2 xl:px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-teal-500 dark:hover:text-teal-400 transition-colors duration-200">
+              <Link href="/routines" className="px-2 xl:px-3 py-2 rounded-md text-sm font-medium text-[#2E2E2E] dark:text-gray-200 hover:text-[#4BA3C7] dark:hover:text-[#A9E5D9] transition-colors duration-200">
                 {t('navigation.routines')}
               </Link>
             </div>
@@ -103,9 +103,9 @@ export default function Header() {
               <div className="relative user-menu hidden sm:block">
                 <button 
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+                  className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-xl text-sm font-medium text-[#2E2E2E] dark:text-gray-200 hover:bg-[#F6FDFD] dark:hover:bg-gray-800 transition-all duration-300 border border-[#A9E5D9]/20 dark:border-gray-700"
                 >
-                  <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center overflow-hidden">
+                  <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-gradient-to-r from-[#4BA3C7] to-[#A9E5D9] flex items-center justify-center overflow-hidden">
                     {user?.avatarUrl ? (
                       <img 
                         src={user.avatarUrl} 
@@ -113,7 +113,7 @@ export default function Header() {
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <span className="text-xs sm:text-sm font-bold text-teal-500">
+                      <span className="text-xs sm:text-sm font-bold text-white">
                         {user?.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 
                          user?.firstName?.charAt(0)?.toUpperCase()}
                       </span>
@@ -128,19 +128,19 @@ export default function Header() {
                 </button>
                 
                 {isUserMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10 border border-gray-200 dark:border-gray-700">
-                    <Link href="/account/profile" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <div className="absolute right-0 mt-2 w-48 bg-[#FCFCFC]/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-xl shadow-xl py-2 z-10 border border-[#A9E5D9]/20 dark:border-gray-700">
+                    <Link href="/account/profile" className="block px-4 py-2 text-sm text-[#2E2E2E] dark:text-gray-300 hover:bg-[#F6FDFD] dark:hover:bg-gray-700 rounded-lg mx-2 transition-colors duration-200">
                       {t('navigation.profile')}
                     </Link>
                     {/* Developer access - only show for authorized emails */}
                     {(user?.email === 'admin@dermify.com' || user?.email === 'dev@dermify.com') && (
-                      <Link href="/dev" className="block px-4 py-2 text-sm text-purple-600 dark:text-purple-400 hover:bg-gray-100 dark:hover:bg-gray-700">
+                      <Link href="/dev" className="block px-4 py-2 text-sm text-[#4BA3C7] dark:text-[#A9E5D9] hover:bg-[#F6FDFD] dark:hover:bg-gray-700 rounded-lg mx-2 transition-colors duration-200">
                         🛠️ Developer
                       </Link>
                     )}
                     <button
                       onClick={logout}
-                      className="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="block w-full text-left px-4 py-2 text-sm text-[#F28B82] dark:text-[#F28B82] hover:bg-[#F6FDFD] dark:hover:bg-gray-700 rounded-lg mx-2 transition-colors duration-200"
                     >
                       {t('navigation.logout')}
                     </button>
@@ -149,10 +149,10 @@ export default function Header() {
               </div>
             ) : (
               <div className="hidden sm:flex items-center space-x-2">
-                <Link href="/signin" className="px-2 sm:px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-teal-500 dark:hover:text-teal-400 transition-colors duration-200">
+                <Link href="/signin" className="px-2 sm:px-3 py-2 rounded-xl text-sm font-medium text-[#2E2E2E] dark:text-gray-200 hover:text-[#4BA3C7] dark:hover:text-[#A9E5D9] hover:bg-[#F6FDFD] dark:hover:bg-gray-800 transition-all duration-300 border border-transparent hover:border-[#A9E5D9]/30">
                   {t('navigation.login')}
                 </Link>
-                <Link href="/signup" className="flex items-center px-2 sm:px-3 py-2 rounded-md text-sm font-medium text-white bg-teal-500 hover:bg-teal-600 transition-colors duration-200">
+                <Link href="/signup" className="flex items-center px-2 sm:px-3 py-2 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-[#4BA3C7] to-[#A9E5D9] hover:from-[#3B92B0] hover:to-[#4BA3C7] transition-all duration-300 shadow-lg hover:shadow-xl">
                   {t('navigation.signup')}
                 </Link>
               </div>
@@ -183,30 +183,30 @@ export default function Header() {
       
       {/* Mobile menu, toggle based on menu state */}
       {isOpen && (
-        <div className="lg:hidden mobile-menu bg-white dark:bg-gray-900 shadow-lg border-t border-gray-200 dark:border-gray-700">
+        <div className="lg:hidden mobile-menu bg-[#FCFCFC]/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-xl border-t border-[#A9E5D9]/20 dark:border-gray-700">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 max-h-screen overflow-y-auto">
-            <Link href="/" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
+            <Link href="/" className="block px-3 py-2 rounded-xl text-base font-medium text-[#2E2E2E] dark:text-gray-200 hover:bg-[#F6FDFD] dark:hover:bg-gray-800 transition-all duration-300">
               {t('navigation.home')}
             </Link>
-            <Link href="/products" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
+            <Link href="/products" className="block px-3 py-2 rounded-xl text-base font-medium text-[#2E2E2E] dark:text-gray-200 hover:bg-[#F6FDFD] dark:hover:bg-gray-800 transition-all duration-300">
               {t('navigation.products')}
             </Link>
-            <Link href="/ingredients" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
+            <Link href="/ingredients" className="block px-3 py-2 rounded-xl text-base font-medium text-[#2E2E2E] dark:text-gray-200 hover:bg-[#F6FDFD] dark:hover:bg-gray-800 transition-all duration-300">
               {t('navigation.ingredients')}
             </Link>
-            <Link href="/skin-analysis" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
+            <Link href="/skin-analysis" className="block px-3 py-2 rounded-xl text-base font-medium text-[#2E2E2E] dark:text-gray-200 hover:bg-[#F6FDFD] dark:hover:bg-gray-800 transition-all duration-300">
               {t('navigation.skinAnalysis')}
             </Link>
-            <Link href="/routines" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
+            <Link href="/routines" className="block px-3 py-2 rounded-xl text-base font-medium text-[#2E2E2E] dark:text-gray-200 hover:bg-[#F6FDFD] dark:hover:bg-gray-800 transition-all duration-300">
               {t('navigation.routines')}
             </Link>
             
             {/* Mobile auth links */}
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+            <div className="border-t border-[#A9E5D9]/20 dark:border-gray-700 pt-4 mt-4">
               {isAuthenticated ? (
                 <>
                   <div className="flex items-center px-3 py-2 mb-2">
-                    <div className="h-8 w-8 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center overflow-hidden mr-3">
+                    <div className="h-8 w-8 rounded-full bg-gradient-to-r from-[#4BA3C7] to-[#A9E5D9] flex items-center justify-center overflow-hidden mr-3">
                       {user?.avatarUrl ? (
                         <img 
                           src={user.avatarUrl} 
@@ -214,38 +214,38 @@ export default function Header() {
                           className="h-full w-full object-cover"
                         />
                       ) : (
-                        <span className="text-sm font-bold text-teal-500">
+                        <span className="text-sm font-bold text-white">
                           {user?.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 
                            user?.firstName?.charAt(0)?.toUpperCase()}
                         </span>
                       )}
                     </div>
-                    <span className="text-base font-medium text-gray-900 dark:text-white truncate">
+                    <span className="text-base font-medium text-[#2E2E2E] dark:text-white truncate">
                       {user?.name || `${user?.firstName} ${user?.lastName}`}
                     </span>
                   </div>
-                  <Link href="/account/profile" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
+                  <Link href="/account/profile" className="block px-3 py-2 rounded-xl text-base font-medium text-[#2E2E2E] dark:text-gray-200 hover:bg-[#F6FDFD] dark:hover:bg-gray-800 transition-all duration-300">
                     {t('navigation.profile')}
                   </Link>
                   {/* Developer access - only show for authorized emails */}
                   {(user?.email === 'admin@dermify.com' || user?.email === 'dev@dermify.com') && (
-                    <Link href="/dev" className="block px-3 py-2 rounded-md text-base font-medium text-purple-600 dark:text-purple-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
+                    <Link href="/dev" className="block px-3 py-2 rounded-xl text-base font-medium text-[#4BA3C7] dark:text-[#A9E5D9] hover:bg-[#F6FDFD] dark:hover:bg-gray-800 transition-all duration-300">
                       🛠️ Developer
                     </Link>
                   )}
                   <button
                     onClick={logout}
-                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200"
+                    className="block w-full text-left px-3 py-2 rounded-xl text-base font-medium text-[#F28B82] dark:text-[#F28B82] hover:bg-[#F6FDFD] dark:hover:bg-gray-800 transition-all duration-300"
                   >
                     {t('navigation.logout')}
                   </button>
                 </>
               ) : (
                 <>
-                  <Link href="/signin" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
+                  <Link href="/signin" className="block px-3 py-2 rounded-xl text-base font-medium text-[#2E2E2E] dark:text-gray-200 hover:bg-[#F6FDFD] dark:hover:bg-gray-800 transition-all duration-300">
                     {t('navigation.login')}
                   </Link>
-                  <Link href="/signup" className="block px-3 py-2 rounded-md text-base font-medium bg-teal-500 text-white hover:bg-teal-600 transition-colors duration-200 mt-2">
+                  <Link href="/signup" className="block px-3 py-2 rounded-xl text-base font-medium bg-gradient-to-r from-[#4BA3C7] to-[#A9E5D9] text-white hover:from-[#3B92B0] hover:to-[#4BA3C7] transition-all duration-300 mt-2">
                     {t('navigation.signup')}
                   </Link>
                 </>

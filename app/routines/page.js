@@ -291,19 +291,21 @@ export default function Routines() {
     return (
       <>
         <Header />
-        <main className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 pb-16">
+        <main className="min-h-screen bg-gradient-to-br from-[#FCFCFC] via-[#F6FDFD] to-[#A9E5D9]/10 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8 pb-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="animate-pulse">
-              <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
-              <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded mb-8 w-2/3 mx-auto"></div>
+              <div className="backdrop-blur-xl bg-[#FCFCFC]/20 dark:bg-gray-800/20 rounded-2xl p-6 mb-6 border border-[#A9E5D9]/20 dark:border-gray-700/30 shadow-lg mx-auto inline-block">
+                <div className="h-12 bg-gradient-to-r from-[#4BA3C7]/20 to-[#A9E5D9]/20 rounded mb-4"></div>
+              </div>
+              <div className="h-6 bg-[#A9E5D9]/20 dark:bg-gray-700 rounded mb-8 w-2/3 mx-auto"></div>
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-white dark:bg-gray-800 rounded-xl shadow-md h-96">
-                    <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded-t-xl"></div>
+                  <div key={i} className="backdrop-blur-xl bg-[#FCFCFC]/80 dark:bg-gray-800/80 rounded-2xl shadow-xl h-96 border border-[#A9E5D9]/20 dark:border-gray-700/30">
+                    <div className="h-48 bg-gradient-to-r from-[#4BA3C7]/10 to-[#A9E5D9]/10 dark:bg-gray-700 rounded-t-2xl"></div>
                     <div className="p-5 space-y-3">
-                      <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
-                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                      <div className="h-6 bg-[#A9E5D9]/20 dark:bg-gray-700 rounded"></div>
+                      <div className="h-4 bg-[#A9E5D9]/15 dark:bg-gray-700 rounded w-3/4"></div>
+                      <div className="h-4 bg-[#A9E5D9]/10 dark:bg-gray-700 rounded w-1/2"></div>
                     </div>
                   </div>
                 ))}
@@ -326,7 +328,7 @@ export default function Routines() {
       
       <Header />
       
-      <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8 pb-16">
+      <main className="min-h-screen bg-gradient-to-br from-[#FCFCFC] via-[#F6FDFD] to-[#A9E5D9]/10 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8 pb-16">
         <style jsx>{`
           @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
