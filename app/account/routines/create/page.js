@@ -569,32 +569,6 @@ export default function CreateRoutinePage() {
       case 1:
         return (
           <div className={`space-y-8 ${fadeInClass}`}>
-            {/* Saved Drafts Section */}
-            {savedDrafts.length > 0 && (
-              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
-                <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-300 mb-4 flex items-center">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
-                  </svg>
-                  Continue Previous Work
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {savedDrafts.slice(0, 2).map((draft) => (
-                    <button
-                      key={draft.id}
-                      onClick={() => loadDraft(draft)}
-                      className="p-3 bg-white dark:bg-gray-800 rounded-lg border border-blue-200 dark:border-blue-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all text-left"
-                    >
-                      <div className="font-medium text-gray-900 dark:text-white">{draft.name || 'Untitled Routine'}</div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
-                        Saved {new Date(draft.savedAt).toLocaleDateString()}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* Quick Start Templates */}
             <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-800">
               <h3 className="text-lg font-semibold text-purple-900 dark:text-purple-300 mb-4 flex items-center">
@@ -1476,9 +1450,6 @@ export default function CreateRoutinePage() {
             </div>
           </div>
         );
-
-      default:
-        return null;
     }
   };
 
